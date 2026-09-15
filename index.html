@@ -426,6 +426,49 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       EXAM READINESS MODAL (Accessible on Mobile & Tablet)
+       ========================================================================= -->
+  <div class="problem-modal-overlay" id="readinessModalOverlay" aria-hidden="true">
+    <div class="problem-modal-card" id="readinessModalCard" role="dialog" aria-modal="true" style="max-width: 440px;">
+      <div class="problem-modal-header" style="background: linear-gradient(135deg, rgba(0, 210, 255, 0.14), rgba(99, 102, 241, 0.16));">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.3rem;">⚡</span>
+          <span style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+            Overall Exam Readiness
+          </span>
+        </div>
+        <button class="modal-close" id="closeReadinessModal" aria-label="Close Readiness Modal">&times;</button>
+      </div>
+      <div class="problem-modal-body" style="padding: 1.5rem; text-align: center; gap: 1.15rem;">
+        <div class="readiness-card" style="margin: 0; background: transparent; border: none; padding: 0; box-shadow: none;">
+          <div class="radial-progress-container" style="margin: 0.25rem auto 0.75rem;">
+            <svg class="radial-svg" viewBox="0 0 100 100">
+              <circle class="radial-bg" cx="50" cy="50" r="40" />
+              <circle class="radial-bar" id="modalRadialProgressBar" cx="50" cy="50" r="40" />
+            </svg>
+            <div class="radial-text" id="modalRadialPctText">0%</div>
+          </div>
+          <div class="readiness-status" id="modalReadinessStatusText" style="font-size: 1.05rem; margin-bottom: 1rem;">Beginner</div>
+          <div class="quick-stats-grid">
+            <div class="stat-pill">
+              <span class="stat-pill-val" id="modalStatTopics">0/34</span>
+              <span class="stat-pill-lbl">Syllabus Topics</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill-val" id="modalStatProblems">0/50</span>
+              <span class="stat-pill-lbl">Problems Solved</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1.15rem;">
+            <button class="filter-btn active" id="modalGoSyllabusBtn" style="justify-content: center; padding: 0.65rem 0.5rem; font-size: 0.82rem;">📋 View Syllabus</button>
+            <button class="filter-btn" id="modalGoPracticeBtn" style="justify-content: center; padding: 0.65rem 0.5rem; font-size: 0.82rem;">⚡ View Practice</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
 

@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.hash = currentView;
       renderCurrentView();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Close mobile sidebar if open
+      document.body.classList.remove('sidebar-open');
     });
   });
 
@@ -162,6 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSidebar();
         renderTheoryView();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Close mobile sidebar drawer
+        document.body.classList.remove('sidebar-open');
       });
 
       sidebarTopicListEl.appendChild(li);
@@ -1002,10 +1006,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Keyboard Escape to close modal
+  // Keyboard Escape to close modals
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && problemModalOverlay && problemModalOverlay.classList.contains('active')) {
-      closeProblemPathModal();
+    if (e.key === 'Escape') {
+      if (problemModalOverlay && problemModalOverlay.classList.contains('active')) {
+        closeProblemPathModal();
+      }
+      if (readinessModalOverlay && readinessModalOverlay.classList.contains('active')) {
+        closeReadinessModalFn();
+      }
+      if (quickSheetModalOverlay && quickSheetModalOverlay.classList.contains('active')) {
+        quickSheetModalOverlay.classList.remove('active');
+        quickSheetModalOverlay.setAttribute('aria-hidden', 'true');
+      }
     }
   });
 
@@ -1048,14 +1061,74 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- TOP NAVBAR READINESS BADGE CLICK ---
+  // --- READINESS BADGE (NAV / MOBILE) ---
   const navReadinessBadge = document.getElementById('navReadinessBadge');
+  const readinessModalOverlay = document.getElementById('readinessModalOverlay');
+  const closeReadinessModal = document.getElementById('closeReadinessModal');
+  const modalGoSyllabusBtn = document.getElementById('modalGoSyllabusBtn');
+  const modalGoPracticeBtn = document.getElementById('modalGoPracticeBtn');
+
+  function openReadinessModal() {
+    if (!readinessModalOverlay) return;
+    // Sync stats
+    const m = Tracker.getMetrics();
+    const mPct = document.getElementById('modalRadialPctText');
+    const mStatus = document.getElementById('modalReadinessStatusText');
+    const mTopics = document.getElementById('modalStatTopics');
+    const mProblems = document.getElementById('modalStatProblems');
+    const mBar = document.getElementById('modalRadialProgressBar');
+    if (mPct) mPct.textContent = `${m.overallReadiness}%`;
+    if (mStatus) { mStatus.textContent = m.grade; mStatus.style.color = m.gradeColor; }
+    if (mTopics) mTopics.textContent = `${m.completedSyllabus}/${m.totalSyllabus}`;
+    if (mProblems) mProblems.textContent = `${m.solvedProblemsCount}/${m.totalProblems}`;
+    if (mBar) {
+      const offset = 251.2 - (251.2 * (m.overallReadiness / 100));
+      mBar.style.strokeDashoffset = offset;
+    }
+    readinessModalOverlay.classList.add('active');
+    readinessModalOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeReadinessModalFn() {
+    if (!readinessModalOverlay) return;
+    readinessModalOverlay.classList.remove('active');
+    readinessModalOverlay.setAttribute('aria-hidden', 'true');
+  }
+
   if (navReadinessBadge) {
     navReadinessBadge.addEventListener('click', () => {
+      openReadinessModal();
+    });
+  }
+
+  if (closeReadinessModal) {
+    closeReadinessModal.addEventListener('click', closeReadinessModalFn);
+  }
+
+  if (readinessModalOverlay) {
+    readinessModalOverlay.addEventListener('click', (e) => {
+      if (e.target === readinessModalOverlay) closeReadinessModalFn();
+    });
+  }
+
+  if (modalGoSyllabusBtn) {
+    modalGoSyllabusBtn.addEventListener('click', () => {
+      closeReadinessModalFn();
       currentView = 'syllabus';
       setActiveNavTab('syllabus');
       renderSyllabusView();
       window.location.hash = 'syllabus';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  if (modalGoPracticeBtn) {
+    modalGoPracticeBtn.addEventListener('click', () => {
+      closeReadinessModalFn();
+      currentView = 'track-sheet';
+      setActiveNavTab('track-sheet');
+      renderTrackSheetView();
+      window.location.hash = 'track-sheet';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
