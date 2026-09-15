@@ -731,7 +731,13 @@ body {
     background: var(--bg-header);
     border-bottom: 1px solid var(--border-header);
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     justify-content: flex-start;
+  }
+
+  .header-center::-webkit-scrollbar {
+    display: none;
   }
 
   [data-theme="light"] .header-center {
@@ -741,6 +747,14 @@ body {
 
   .nav-tabs {
     width: max-content;
+  }
+
+  .nav-tab-btn {
+    flex-shrink: 0;
+  }
+
+  .app-container {
+    padding-top: 56px;
   }
 
   .header-right {
@@ -761,6 +775,13 @@ body {
 
   .readiness-icon {
     background: transparent;
+  }
+}
+
+@media (max-width: 850px) and (min-width: 769px) {
+  .left-sidebar {
+    top: 118px !important;
+    height: calc(100vh - 118px) !important;
   }
 }
 
@@ -1831,6 +1852,8 @@ p code, li code, span code {
   line-height: 1.68;
   color: var(--text-code);
   tab-size: 4;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 /* ASCII ARCHITECTURE / MEMORY MODEL DIAGRAMS */
@@ -3132,11 +3155,15 @@ p code, li code, span code {
   }
 
   /* Tables: horizontal scroll */
-  .doc-table {
+  .doc-table,
+  .doc-article table,
+  .study-card table,
+  .problem-modal-body table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     white-space: nowrap;
+    max-width: 100%;
   }
 
   /* Toast: full-width */
@@ -3239,6 +3266,212 @@ p code, li code, span code {
 [data-theme="light"] .sidebar-mobile-close:hover {
   color: #e11d48;
   border-color: #e11d48;
+}
+
+/* ==========================================================================
+   TOPIC PRACTICE PROBLEM BANK (LEVELS 1 TO 5) IN NOTES VIEW
+   ========================================================================== */
+.topic-practice-bank {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.topic-prob-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.topic-prob-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.topic-prob-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.topic-prob-id {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.topic-prob-statement {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   INTERACTIVE TAB PILLS & FILTER BARS
+   ========================================================================== */
+.filter-pills-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.filter-pill {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.filter-pill:hover {
+  color: var(--text-primary);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.filter-pill.active {
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.16), rgba(99, 102, 241, 0.16));
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.15);
+}
+
+/* ==========================================================================
+   THEORY Q&A BANK STYLES
+   ========================================================================== */
+.qa-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.qa-card:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: var(--shadow-md);
+}
+
+.qa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.qa-question {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.qa-keywords {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.qa-kw-tag {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(0, 210, 255, 0.08);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   FLOWCHART & ALGORITHM PATTERN CARDS
+   ========================================================================== */
+.flow-diagram-box {
+  background: #040711;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: #38bdf8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+  margin: 0.75rem 0;
+}
+
+.pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.pattern-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.2s ease;
+}
+
+.pattern-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   QUICK REVISION MODAL TABS
+   ========================================================================== */
+.quick-modal-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.15);
+  overflow-x: auto;
+}
+
+.quick-modal-tab-btn {
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.quick-modal-tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.quick-modal-tab-btn.active {
+  color: var(--accent-cyan);
+  border-bottom-color: var(--accent-cyan);
 }
 
 /* ─── PRINT ─── */

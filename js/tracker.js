@@ -169,11 +169,11 @@ const Tracker = (function() {
     }
     const problemPercent = Math.min(100, Math.round((solvedProblemsCount / totalProblems) * 100));
 
-    // Quiz (15)
-    const totalQuiz = 15;
+    // Quiz (Dynamic from HandbookData)
+    const totalQuiz = (typeof HandbookData !== 'undefined' && HandbookData.mcqs) ? HandbookData.mcqs.length : 30;
     let quizCorrectCount = 0;
     for (let key in state.quizAnswers) {
-      if (state.quizAnswers[key].isCorrect) quizCorrectCount++;
+      if (state.quizAnswers[key] && state.quizAnswers[key].isCorrect) quizCorrectCount++;
     }
     const quizPercent = totalQuiz > 0 ? Math.min(100, Math.round((quizCorrectCount / totalQuiz) * 100)) : 0;
 

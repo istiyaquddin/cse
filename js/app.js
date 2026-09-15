@@ -20,10 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastContainerEl = document.getElementById('toastContainer');
 
   // State
-  let currentView = 'syllabus'; // 'syllabus' | 'theory' | 'track-sheet' | 'quiz' | 'mistakes'
+  let currentView = 'syllabus'; // 'syllabus' | 'theory' | 'track-sheet' | 'roadmap' | 'quiz' | 'mistakes' | 'prediction' | 'debuglab' | 'theory-qa' | 'flowcharts'
   let currentTopicId = 'ch1_1';
   let activeChapterId = Tracker.getActiveChapter() || 1;
   let activeProblemFilter = 'all';
+  let activeQuizFilter = 'all';
+  let activePredictionFilter = 'all';
+  let activeDebugFilter = 'all';
+  let activeQaFilter = 'all';
+  let activeQaSearch = '';
+  let activeFlowchartTab = 'flowcharts';
 
   // --- INITIALIZATION ---
   initTheme();
@@ -186,6 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
       renderOutputPredictionView();
     } else if (currentView === 'debuglab') {
       renderDebuggingLabView();
+    } else if (currentView === 'theory-qa') {
+      renderTheoryQuestionsView();
+    } else if (currentView === 'flowcharts') {
+      renderFlowchartsView();
     }
   }
 
@@ -531,6 +541,31 @@ document.addEventListener('DOMContentLoaded', () => {
                   <button class="btn-open-path" data-open-modal="${rp.id}" style="align-self: flex-start;">
                     <span>⚡ Solve & View Path</span>
                   </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- 10. Topic Practice Problem Bank (Levels 1 to 5) from Roadmap -->
+        ${(topic.practiceProblems && topic.practiceProblems.length > 0) ? `
+          <div class="study-card" style="border-color: rgba(56, 189, 248, 0.35);">
+            <div class="study-card-header">
+              <span class="study-icon">🎯</span>
+              <h3 class="study-card-title">Topic Practice Problem Bank (Levels 1 to 5)</h3>
+              <span class="study-card-tag">${topic.practiceProblems.length} Problems</span>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.15rem;">
+              Progressive exercises from the <em>Topic-Wise Practice Roadmap</em>. Master all 5 tiers from foundational questions to exam challenges:
+            </p>
+            <div class="topic-practice-bank">
+              ${topic.practiceProblems.map(p => `
+                <div class="topic-prob-card">
+                  <div class="topic-prob-meta">
+                    <span class="topic-prob-id">Problem ${p.problemId || ''}</span>
+                    <span class="diff-pill ${p.levelClass || 'diff-basic'}">${p.level || 'Practice'}</span>
+                  </div>
+                  <div class="topic-prob-statement">${escapeHtml(p.statement)}</div>
                 </div>
               `).join('')}
             </div>
@@ -1163,34 +1198,84 @@ document.addEventListener('DOMContentLoaded', () => {
   // VIEW 4: MIDTERM QUIZ (MCQS)
   // =========================================================================
   function renderQuizView() {
+    const allMcqs = HandbookData.mcqs || [];
+    const filteredMcqs = allMcqs.map((mcq, originalIdx) => ({ mcq, originalIdx })).filter(item => {
+      if (activeQuizFilter === 'ch1') return item.mcq.chapterId === 1;
+      if (activeQuizFilter === 'ch2') return item.mcq.chapterId === 2;
+      if (activeQuizFilter === 'ch3') return item.mcq.chapterId === 3;
+      return true;
+    });
+
+    const m = Tracker.getMetrics();
+
     mainCanvasEl.innerHTML = `
       <div class="content-header">
         <div class="content-badge">
           <span>Exam Simulator</span>
           <span>•</span>
-          <span>15 Questions</span>
+          <span>${allMcqs.length} Questions</span>
         </div>
         <h1 class="content-title">Midterm MCQ Diagnostic Quiz</h1>
         <p class="content-lead">
-          Test your knowledge under simulated midterm conditions. Select an answer to see instant evaluation and technical explanations.
+          Test your knowledge under simulated university midterm conditions. Select an answer to see instant evaluation, correct rationale, and syllabus alignment.
         </p>
+      </div>
+
+      <!-- Chapter Filter Pills -->
+      <div class="filter-pills-row">
+        <button class="filter-pill ${activeQuizFilter === 'all' ? 'active' : ''}" data-quiz-filter="all">
+          All Chapters (${allMcqs.length})
+        </button>
+        <button class="filter-pill ${activeQuizFilter === 'ch1' ? 'active' : ''}" data-quiz-filter="ch1">
+          Ch 1: Fundamentals (${allMcqs.filter(q => q.chapterId === 1).length})
+        </button>
+        <button class="filter-pill ${activeQuizFilter === 'ch2' ? 'active' : ''}" data-quiz-filter="ch2">
+          Ch 2: Operators & I/O (${allMcqs.filter(q => q.chapterId === 2).length})
+        </button>
+        <button class="filter-pill ${activeQuizFilter === 'ch3' ? 'active' : ''}" data-quiz-filter="ch3">
+          Ch 3: Control Statements (${allMcqs.filter(q => q.chapterId === 3).length})
+        </button>
+      </div>
+
+      <!-- Quiz Score Summary Card -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Quiz Progress & Accuracy:</span>
+          <div style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; color: var(--accent-cyan);">
+            ${m.quizCorrectCount} / ${allMcqs.length} Correct (${m.quizPercent}%)
+          </div>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+          Grade: <strong style="color: ${m.gradeColor};">${m.grade}</strong>
+        </div>
       </div>
 
       <div class="quiz-container" id="quizCardsContainer"></div>
     `;
 
+    // Bind Filter Pills
+    mainCanvasEl.querySelectorAll('[data-quiz-filter]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        activeQuizFilter = pill.dataset.quizFilter;
+        renderQuizView();
+      });
+    });
+
     const container = document.getElementById('quizCardsContainer');
-    HandbookData.mcqs.forEach((mcq, idx) => {
-      const saved = Tracker.getQuizAnswer(idx);
+    filteredMcqs.forEach(({ mcq, originalIdx }, displayIdx) => {
+      const saved = Tracker.getQuizAnswer(originalIdx);
       const card = document.createElement('div');
       card.className = 'mcq-card';
       const options = mcq.options || mcq.opts || [];
       const explanation = mcq.explanation || mcq.explain || 'Review standard C language syntax specifications.';
 
       card.innerHTML = `
-        <div class="mcq-qnum">Question ${idx + 1} of ${HandbookData.mcqs.length}</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <div class="mcq-qnum">Question ${displayIdx + 1} of ${filteredMcqs.length} (Overall #${originalIdx + 1})</div>
+          <span class="content-badge" style="font-size: 0.7rem;">Chapter ${mcq.chapterId || 1}</span>
+        </div>
         <div class="mcq-question">${mcq.q}</div>
-        <div class="mcq-options" data-qidx="${idx}">
+        <div class="mcq-options" data-qidx="${originalIdx}">
           ${options.map((opt, optIdx) => {
             let extraClass = '';
             if (saved) {
@@ -1214,7 +1299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
           const selected = parseInt(btn.dataset.opt);
           const isCorrect = selected === mcq.correct;
-          Tracker.recordQuizAnswer(idx, selected, isCorrect);
+          Tracker.recordQuizAnswer(originalIdx, selected, isCorrect);
           renderQuizView();
           showToast(isCorrect ? "Correct answer! 🎯" : "Incorrect. Check explanation!");
         });
@@ -1500,11 +1585,16 @@ document.addEventListener('DOMContentLoaded', () => {
       'exam-traps': 'mistakes',
       'output-prediction': 'prediction',
       'debugging': 'debuglab',
-      'bug-lab': 'debuglab'
+      'bug-lab': 'debuglab',
+      'qa': 'theory-qa',
+      'questions': 'theory-qa',
+      'theory-questions': 'theory-qa',
+      'flowchart': 'flowcharts',
+      'patterns': 'flowcharts'
     };
 
     const targetView = aliasMap[rawHash] || rawHash;
-    if (['syllabus', 'theory', 'track-sheet', 'roadmap', 'quiz', 'mistakes', 'prediction', 'debuglab'].includes(targetView)) {
+    if (['syllabus', 'theory', 'track-sheet', 'roadmap', 'quiz', 'mistakes', 'prediction', 'debuglab', 'theory-qa', 'flowcharts'].includes(targetView)) {
       currentView = targetView;
       setActiveNavTab(targetView);
       renderCurrentView();
@@ -1624,7 +1714,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
                   <div style="margin-bottom: 0.75rem;">
                     <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Output:</span>
-                    <pre style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-emerald); margin: 0.35rem 0 0;">${escapeHtml(q.answer)}</pre>
+                    <pre style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-emerald); margin: 0.35rem 0 0; overflow-x: auto; max-width: 100%; white-space: pre-wrap; word-break: break-all;">${escapeHtml(q.answer)}</pre>
                   </div>
                   <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.6rem;">
                     <strong style="color: var(--text-primary);">Why:</strong> ${q.explanation}

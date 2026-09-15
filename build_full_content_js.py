@@ -2547,12 +2547,29 @@ def get_15_mcqs():
 
 def build():
     import generate_study_blocks
+    import generate_extended_content as gec
+    
     blocks = generate_study_blocks.get_study_blocks()
+    topic_problems = gec.get_topic_practice_problems()
+    comparison_tables = gec.get_comparison_tables()
     
     topics = get_all_topics()
     for t in topics:
-        if t["id"] in blocks:
-            t.update(blocks[t["id"]])
+        tid = t["id"]
+        if tid in blocks:
+            t.update(blocks[tid])
+        
+        # Inject authentic Level 1-5 practice problems from topic-wise roadmap
+        if tid in topic_problems and len(topic_problems[tid]) > 0:
+            # If topic already had custom practice problems, merge them
+            existing = t.get("practiceProblems", [])
+            roadmap_probs = topic_problems[tid]
+            t["practiceProblems"] = existing + roadmap_probs if existing else roadmap_probs
+            
+        # Inject comparison tables into techTable if present
+        if tid in comparison_tables:
+            existing_table = t.get("techTable", "")
+            t["techTable"] = existing_table + "\n" + comparison_tables[tid]
             
     data = {
         "chapters": [
@@ -2562,15 +2579,24 @@ def build():
         ],
         "syllabus": topics,
         "problems": get_50_problems(),
-        "mcqs": get_15_mcqs()
+        "mcqs": gec.get_expanded_mcqs(),
+        "outputPredictionLab": gec.get_output_prediction_lab(),
+        "debuggingLab": gec.get_debugging_lab(),
+        "flowchartBank": gec.get_flowchart_bank(),
+        "algorithmPatterns": gec.get_algorithm_patterns(),
+        "theoryQuestions": gec.get_theory_questions(),
+        "quickRevision": gec.get_quick_revision(),
+        "examTraps": gec.get_exam_traps(),
+        "mustSolveTracks": gec.get_must_solve_tracks()
     }
     
-    js_content = "/**\n * C PROGRAMMING MIDTERM HANDBOOK - COMPLETE DATA REPOSITORY\n * University-Grade Documentation, 34 Syllabus Topics, 50 Practice Bank, 15 MCQs\n * Exam-Focused Study Blocks: Objectives, Concepts, Formulas, Traps, Memory Tricks, and Drills\n */\n\nconst HandbookData = " + json.dumps(data, indent=2) + ";\n"
+    js_content = "/**\n * C PROGRAMMING MIDTERM HANDBOOK - COMPLETE DATA REPOSITORY\n * University-Grade Documentation, 34 Syllabus Topics, 50 Practice Bank, 30 MCQs\n * Output Prediction Lab, Debugging Lab, Flowchart Bank, Algorithm Patterns, Theory Q&A, and Quick Revision\n */\n\nconst HandbookData = " + json.dumps(data, indent=2) + ";\n\nif (typeof window !== 'undefined') {\n  window.HandbookData = HandbookData;\n}\n"
     
-    with open(r"c:\Projects\c-handbook\js\content.js", "w", encoding="utf-8") as f:
+    output_path = os.path.join(os.path.dirname(__file__), "js", "content.js")
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(js_content)
     
-    print("Successfully generated c:\\Projects\\c-handbook\\js\\content.js with full study blocks!")
+    print(f"Successfully generated {output_path} with full study blocks and extended laboratories!")
 
 if __name__ == "__main__":
     build()
