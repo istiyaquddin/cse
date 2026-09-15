@@ -340,138 +340,180 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextTopic = currentIndex < allTopics.length - 1 ? allTopics[currentIndex + 1] : null;
     const relatedProblems = (HandbookData.problems || []).filter(p => p.topicId === topic.id);
 
+    const keyConcepts = topic.keyConcept || [
+      "Core theoretical mechanism evaluated in standard midterm examinations.",
+      "Requires careful syntax precision and understanding of variable lifecycle.",
+      "Essential foundation for solving complex algorithmic programming problems."
+    ];
+
     mainCanvasEl.innerHTML = `
-      <div class="doc-container">
-        <article class="doc-article">
-
-          <!-- Content Header -->
-          <div class="content-header">
-            <div class="content-badge-row">
-              <span class="content-badge">${chapName}</span>
-              <span class="content-badge content-badge-sub">Topic ${topic.number} of ${HandbookData.syllabus.length}</span>
-              <span class="content-badge" style="background: rgba(16, 185, 129, 0.12); color: var(--accent-mint); border-color: rgba(16, 185, 129, 0.3);">${topic.readingTime || '10 min read'}</span>
-            </div>
-            <h1 class="content-title">${topic.title}</h1>
+      <div class="study-container">
+        
+        <!-- 1. Hero / Header Card (Objective & What Is This Topic) -->
+        <div class="study-card study-card-hero">
+          <div class="study-card-meta">
+            <span class="study-badge-chapter">${chapName}</span>
+            <span class="study-badge-num">Topic ${topic.number} of ${HandbookData.syllabus.length}</span>
+            <span class="study-badge-time">${topic.readingTime || '8 min study'}</span>
           </div>
-
-          <!-- Section 1: Overview & Conceptual Deep Dive -->
-          <div class="doc-section-title cyan">
-            <span>1. Core Concepts & Theoretical Deep-Dive</span>
+          <h1 class="study-hero-title">${topic.title}</h1>
+          <div class="study-objective-box">
+            <div class="study-objective-tag">🎯 OBJECTIVE</div>
+            <p class="study-objective-text">${topic.objective || topic.overview || 'Master foundational understanding and practical application.'}</p>
           </div>
-          <div class="doc-prose">
-            ${topic.overview || ''}
-            ${topic.deepDive || ''}
+          <div class="study-what-is-it-box">
+            <div class="study-what-tag">💡 WHAT IS THIS TOPIC?</div>
+            <p class="study-what-text">${topic.whatIsIt || topic.overview || 'Fundamental programming concept in ANSI C.'}</p>
           </div>
+        </div>
 
-          <!-- Section 2: Technical Reference & Comparison Table -->
-          ${topic.techTable ? `
-            <div class="doc-section-title indigo">
-              <span>2. Technical Specifications & Reference Table</span>
-            </div>
-            <div class="doc-table-wrapper">
-              ${topic.techTable}
-            </div>
-          ` : ''}
-
-          <!-- Section 3: Hardware Architecture & Memory Model -->
-          <div class="doc-section-title cyan">
-            <span>3. Hardware Architecture & RAM Memory Trace</span>
+        <!-- 2. Key Concept in 3 Lines -->
+        <div class="study-card study-card-concept">
+          <div class="study-card-header">
+            <span class="study-icon">⚡</span>
+            <h3 class="study-card-title">Key Concept in 3 Lines</h3>
+            <span class="study-card-tag">Fast Revision</span>
           </div>
-          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
-            Physical memory addresses, CPU registers, and execution flow:
-          </p>
-          <div class="diagram-card">
-            <pre>${escapeHtml(topic.diagram)}</pre>
-          </div>
-
-          <!-- Section 4: C Code Implementation & Trace -->
-          <div class="doc-section-title indigo">
-            <span>4. C Source Code & Memory Inspection</span>
-          </div>
-          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
-            Syntactically valid C program. Switch tabs to view console output or memory explanation:
-          </p>
-
-          <div class="code-card" id="activeCodeCard">
-            <div class="code-header">
-              <div class="code-header-left">
-                <div class="window-dots">
-                  <span class="dot dot-red"></span>
-                  <span class="dot dot-yellow"></span>
-                  <span class="dot dot-green"></span>
-                </div>
-                <div class="code-tabs">
-                  <button class="code-tab-btn active" data-tab="code">Source Code (.c)</button>
-                  <button class="code-tab-btn" data-tab="output">Console Output</button>
-                  <button class="code-tab-btn" data-tab="memory">Memory Breakdown</button>
-                </div>
+          <div class="study-concept-grid">
+            ${keyConcepts.map((concept, idx) => `
+              <div class="concept-item">
+                <div class="concept-num">${idx + 1}</div>
+                <div class="concept-text">${concept}</div>
               </div>
-              <div class="code-actions">
-                <button class="code-action-btn" id="runCodeModalBtn">
-                  <span>▶ Compile Guide</span>
-                </button>
-                <button class="code-action-btn" id="copyCodeBtn">
-                  <span>📋 Copy Code</span>
-                </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 3. Core Rule & Formula Card -->
+        ${topic.ruleFormula ? `
+          <div class="study-card study-card-rule">
+            <div class="study-card-header">
+              <span class="study-icon">📐</span>
+              <h3 class="study-card-title">Core Rule, Syntax & Formula</h3>
+              <span class="study-card-tag rule-tag">Strict Syntax</span>
+            </div>
+            <div class="study-rule-content">
+              <pre class="rule-pre"><code>${escapeHtml(topic.ruleFormula)}</code></pre>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- 4. Clean Compilable Working Example & Output -->
+        <div class="study-card study-card-example">
+          <div class="study-card-header">
+            <span class="study-icon">💻</span>
+            <h3 class="study-card-title">Clear Working Example</h3>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button class="code-copy-btn" id="studyCopyCodeBtn">
+                <span>📋 Copy Code</span>
+              </button>
+              <button class="code-copy-btn" id="studyRunGuideBtn">
+                <span>▶ GCC Guide</span>
+              </button>
+            </div>
+          </div>
+          <div class="example-split-layout">
+            <div class="example-code-col">
+              <div class="example-col-label">C Source Code (.c)</div>
+              <pre class="code-pre"><code>${escapeHtml(topic.exampleCode || topic.code)}</code></pre>
+            </div>
+            <div class="example-output-col">
+              <div class="example-col-label">Console Output</div>
+              <pre class="output-pre"><code>${escapeHtml(topic.exampleOutput || topic.output || 'No direct terminal output.')}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Exam Trap Card -->
+        <div class="study-card study-card-trap">
+          <div class="study-card-header">
+            <span class="study-icon">⚠️</span>
+            <h3 class="study-card-title">Most Common Exam Trap</h3>
+            <span class="study-card-tag trap-tag">Watch Out!</span>
+          </div>
+          <div class="trap-body">
+            <div class="trap-box">
+              <strong>🚨 The Pitfall:</strong> ${topic.commonMistake ? topic.commonMistake.trap : (topic.examTraps || 'Pay close attention to semicolon placement and boundary conditions.')}
+            </div>
+            ${topic.commonMistake ? `
+              <div class="trap-why-box">
+                <strong>❓ Why it fails:</strong> ${topic.commonMistake.why}
               </div>
-            </div>
+              <div class="trap-fix-box">
+                <strong>✅ How to fix it:</strong> ${topic.commonMistake.fix}
+              </div>
+            ` : ''}
+          </div>
+        </div>
 
-            <div class="code-body" id="codeCardBody">
-              <pre class="code-pre"><code>${escapeHtml(topic.code)}</code></pre>
+        <!-- 6. Quick Memory Trick Card -->
+        ${topic.memoryTrick ? `
+          <div class="study-card study-card-memory">
+            <div class="study-card-header">
+              <span class="study-icon">🧠</span>
+              <h3 class="study-card-title">Quick Memory Trick</h3>
+              <span class="study-card-tag memory-tag">Mnemonic</span>
+            </div>
+            <div class="memory-body">
+              <div class="memory-quote">${topic.memoryTrick}</div>
             </div>
           </div>
+        ` : ''}
 
-          <!-- Section 5: Midterm Exam Traps & Common Gotchas -->
-          <div class="callout callout-warn">
-            <div class="callout-icon">⚠️</div>
-            <div class="callout-body">
-              <strong>Midterm Exam Traps & Common Student Pitfalls</strong>
-              ${topic.examTraps || 'Practice tracing variable values manually on paper to prevent off-by-one errors and syntax traps!'}
+        <!-- 7. Practice Question Card -->
+        ${topic.practiceQuestion ? `
+          <div class="study-card study-card-practice">
+            <div class="study-card-header">
+              <span class="study-icon">📝</span>
+              <h3 class="study-card-title">Target Midterm Practice</h3>
+              <span class="study-card-tag practice-tag">Self-Test</span>
+            </div>
+            <div class="practice-body">
+              <div class="practice-question">${topic.practiceQuestion.q}</div>
+              <details class="practice-hint-details">
+                <summary class="practice-hint-summary">💡 Reveal Solution Logic & Hint</summary>
+                <div class="practice-hint-content">${topic.practiceQuestion.hint}</div>
+              </details>
             </div>
           </div>
+        ` : ''}
 
-          <!-- Section 6: Topic Practice Problems & Logic Drills -->
-          ${topic.practiceProblems && topic.practiceProblems.length > 0 ? `
-            <div class="doc-section-title emerald" style="margin-top: 3rem;">
-              <span>5. Topic Practice Problems & Logic Drills</span>
+        <!-- 8. Advanced Exploration & Memory Architecture (Collapsible) -->
+        ${(topic.diagram || topic.techTable || topic.overview) ? `
+          <details class="study-card-deepdive">
+            <summary class="deepdive-summary">
+              <span>🔬 Advanced Exploration, Memory Architecture & Tech Specs (Optional Deep-Dive)</span>
+              <span style="font-size: 0.8rem; color: var(--accent-cyan);">Click to Expand ▼</span>
+            </summary>
+            <div class="deepdive-body">
+              ${topic.diagram ? `
+                <div style="font-weight: 700; color: var(--accent-cyan); font-size: 0.88rem;">Hardware & Memory Model Diagram:</div>
+                <div class="diagram-card"><pre>${escapeHtml(topic.diagram)}</pre></div>
+              ` : ''}
+              ${topic.techTable ? `
+                <div style="font-weight: 700; color: var(--accent-indigo); font-size: 0.88rem; margin-top: 1rem;">Technical Specifications:</div>
+                <div class="doc-table-wrapper">${topic.techTable}</div>
+              ` : ''}
+              ${topic.overview ? `
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 0.88rem; margin-top: 1rem;">Extended Theoretical Overview:</div>
+                <div class="deepdive-prose">${topic.overview}${topic.deepDive || ''}</div>
+              ` : ''}
             </div>
-            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
-              Solve these problems on paper using the 7-Step Rule. Click the hint button to verify your logic:
+          </details>
+        ` : ''}
+
+        <!-- 9. Specific 50-Problem Bank Practice Pathways -->
+        ${relatedProblems.length > 0 ? `
+          <div class="study-card" style="border-color: rgba(0, 210, 255, 0.25);">
+            <div class="study-card-header">
+              <span class="study-icon">⚡</span>
+              <h3 class="study-card-title">Mapped 50-Problem Bank Practice Pathways</h3>
+              <span class="study-card-tag">${relatedProblems.length} Problems</span>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.15rem;">
+              The following problems from the 50-Problem Midterm Bank directly test this topic:
             </p>
-
-            <div class="topic-problems-container">
-              ${topic.practiceProblems.map((prob, pIdx) => `
-                <div class="topic-prob-card">
-                  <div class="topic-prob-header">
-                    <span class="diff-pill ${prob.levelClass || 'diff-basic'}">${prob.level}</span>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Problem ${topic.number}.${pIdx + 1}</span>
-                  </div>
-                  <div class="topic-prob-statement">${prob.statement}</div>
-                  <div class="topic-prob-io">
-                    <div><strong>Input:</strong> <code>${prob.input}</code></div>
-                    <div><strong>Expected Output:</strong> <code>${prob.output}</code></div>
-                  </div>
-                  <div style="font-size: 0.82rem; color: var(--accent-cyan); margin-top: 0.4rem;">
-                    <strong>Concept Tested:</strong> ${prob.concept}
-                  </div>
-                  <details class="topic-prob-hint-details">
-                    <summary class="topic-prob-hint-summary">💡 View Logic & Pseudocode Hint</summary>
-                    <div class="topic-prob-hint-body">${prob.hint}</div>
-                  </details>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-
-          <!-- Section 6: Specific 50-Problem Bank Practice Pathways -->
-          ${relatedProblems.length > 0 ? `
-            <div class="doc-section-title cyan" style="margin-top: 3rem;">
-              <span>${topic.practiceProblems && topic.practiceProblems.length > 0 ? '6' : '5'}. Specific 50-Problem Bank Practice Pathways</span>
-            </div>
-            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.1rem;">
-              The following curated problems from the 50-Problem Midterm Bank directly test this topic. Click any problem to open its complete execution pathway, algorithm, and verified C code:
-            </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
               ${relatedProblems.map(rp => `
                 <div class="stat-pill" style="padding: 1.15rem; text-align: left; display: flex; flex-direction: column; justify-content: space-between; gap: 0.85rem; border: 1px solid var(--border-card);">
                   <div>
@@ -488,68 +530,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
               `).join('')}
             </div>
-          ` : ''}
-
-          <!-- Topic Action Controls -->
-          <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-divider); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <button id="toggleTopicCompleteBtn" class="filter-btn ${isCompleted ? 'active' : ''}" style="padding: 0.65rem 1.4rem; font-size: 0.9rem;">
-              ${isCompleted ? '✓ Topic Mastered in Syllabus' : 'Mark as Mastered in Syllabus'}
-            </button>
-            <button id="backToSyllabusBtn" class="filter-btn" style="background: transparent;">
-              📋 Back to Syllabus Track Sheet
-            </button>
           </div>
+        ` : ''}
 
-          <!-- Previous / Next Topic Navigation Footer -->
-          <div class="topic-nav-footer">
-            ${prevTopic ? `
-              <div class="topic-nav-card" id="prevTopicBtn">
-                <span class="topic-nav-lbl">← Previous Lesson</span>
-                <span class="topic-nav-title">${prevTopic.number}. ${prevTopic.title}</span>
-              </div>
-            ` : '<div></div>'}
-            ${nextTopic ? `
-              <div class="topic-nav-card" id="nextTopicBtn" style="text-align: right;">
-                <span class="topic-nav-lbl">Next Lesson →</span>
-                <span class="topic-nav-title">${nextTopic.number}. ${nextTopic.title}</span>
-              </div>
-            ` : '<div></div>'}
-          </div>
+        <!-- 10. Topic Action Controls -->
+        <div style="margin-top: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border-divider); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <button id="toggleTopicCompleteBtn" class="filter-btn ${isCompleted ? 'active' : ''}" style="padding: 0.65rem 1.4rem; font-size: 0.9rem;">
+            ${isCompleted ? '✓ Topic Mastered in Syllabus' : 'Mark as Mastered in Syllabus'}
+          </button>
+          <button id="backToSyllabusBtn" class="filter-btn" style="background: transparent;">
+            📋 Back to Syllabus Track Sheet
+          </button>
+        </div>
 
-        </article>
+        <!-- 11. Previous / Next Topic Navigation Footer -->
+        <div class="topic-nav-footer">
+          ${prevTopic ? `
+            <div class="topic-nav-card" id="prevTopicBtn">
+              <span class="topic-nav-lbl">← Previous Lesson</span>
+              <span class="topic-nav-title">${prevTopic.number}. ${prevTopic.title}</span>
+            </div>
+          ` : '<div></div>'}
+          ${nextTopic ? `
+            <div class="topic-nav-card" id="nextTopicBtn" style="text-align: right;">
+              <span class="topic-nav-lbl">Next Lesson →</span>
+              <span class="topic-nav-title">${nextTopic.number}. ${nextTopic.title}</span>
+            </div>
+          ` : '<div></div>'}
+        </div>
+
       </div>
     `;
 
-    // Bind Code Card Tabs
-    const codeCard = document.getElementById('activeCodeCard');
-    const tabBtns = codeCard.querySelectorAll('.code-tab-btn');
-    const bodyEl = document.getElementById('codeCardBody');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const tab = btn.dataset.tab;
-        if (tab === 'code') {
-          bodyEl.innerHTML = `<pre class="code-pre"><code>${escapeHtml(topic.code)}</code></pre>`;
-        } else if (tab === 'output') {
-          bodyEl.innerHTML = `<pre class="code-pre" style="color: var(--accent-emerald);"><code>${escapeHtml(topic.output)}</code></pre>`;
-        } else if (tab === 'memory') {
-          const memText = topic.codeExplanation || topic.memoryExplain || 'Physical memory address mapping and CPU instruction execution trace.';
-          bodyEl.innerHTML = `<div style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; padding: 0.5rem 0;">${memText}</div>`;
-        }
+    // Bind Copy Code Button
+    const copyBtn = document.getElementById('studyCopyCodeBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const codeText = topic.exampleCode || topic.code;
+        navigator.clipboard.writeText(codeText).then(() => {
+          showToast("Code copied to clipboard! 📋");
+        });
       });
-    });
+    }
 
-    // Copy Code Button
-    document.getElementById('copyCodeBtn').addEventListener('click', () => {
-      navigator.clipboard.writeText(topic.code).then(() => {
-        showToast("Code copied to clipboard! 📋");
-      });
-    });
-
-    // Run Guide Modal
-    document.getElementById('runCodeModalBtn').addEventListener('click', openRunModal);
+    // Bind Run Guide Modal Button
+    const runBtn = document.getElementById('studyRunGuideBtn');
+    if (runBtn) {
+      runBtn.addEventListener('click', openRunModal);
+    }
 
     // Toggle Mastery
     document.getElementById('toggleTopicCompleteBtn').addEventListener('click', () => {
@@ -1495,6 +1523,38 @@ document.addEventListener('DOMContentLoaded', () => {
   if (runModalEl) {
     runModalEl.addEventListener('click', (e) => {
       if (e.target === runModalEl) runModalEl.classList.remove('active');
+    });
+  }
+
+  // --- QUICK REVISION CHEAT SHEET MODAL ---
+  const quickSheetBtn = document.getElementById('quickSheetBtn');
+  const quickSheetModalOverlay = document.getElementById('quickSheetModalOverlay');
+  const closeQuickSheetModal = document.getElementById('closeQuickSheetModal');
+
+  if (quickSheetBtn) {
+    quickSheetBtn.addEventListener('click', () => {
+      if (quickSheetModalOverlay) {
+        quickSheetModalOverlay.classList.add('active');
+        quickSheetModalOverlay.setAttribute('aria-hidden', 'false');
+      }
+    });
+  }
+
+  if (closeQuickSheetModal) {
+    closeQuickSheetModal.addEventListener('click', () => {
+      if (quickSheetModalOverlay) {
+        quickSheetModalOverlay.classList.remove('active');
+        quickSheetModalOverlay.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
+  if (quickSheetModalOverlay) {
+    quickSheetModalOverlay.addEventListener('click', (e) => {
+      if (e.target === quickSheetModalOverlay) {
+        quickSheetModalOverlay.classList.remove('active');
+        quickSheetModalOverlay.setAttribute('aria-hidden', 'true');
+      }
     });
   }
 

@@ -36,7 +36,7 @@
           </div>
 
           <div class="brand-subtitle">
-            CSE 101
+            Midterm Study Guide
           </div>
         </div>
 
@@ -60,7 +60,7 @@
         <button
           class="nav-tab-btn active"
           data-view="syllabus"
-          title="Midterm Examination Syllabus"
+          title="Midterm Examination Syllabus Checklist"
         >
           <span class="nav-tab-icon">📋</span>
 
@@ -71,31 +71,31 @@
         </button>
 
 
-        <!-- Lessons -->
+        <!-- Notes -->
         <button
           class="nav-tab-btn"
           data-view="theory"
-          title="Interactive In-Depth Theory & Lessons"
+          title="Structured Topic Study Notes & Explanations"
         >
           <span class="nav-tab-icon">📖</span>
 
           <span class="nav-tab-content">
-            <span class="nav-tab-text">Lessons</span>
-            <span class="nav-tab-tag">Notes</span>
+            <span class="nav-tab-text">Notes</span>
+            <span class="nav-tab-tag">34</span>
           </span>
         </button>
 
 
-        <!-- Problems -->
+        <!-- Practice -->
         <button
           class="nav-tab-btn"
           data-view="track-sheet"
-          title="50 Graduated Practice Problems"
+          title="50 Practice Bank Problems & Execution Paths"
         >
           <span class="nav-tab-icon">⚡</span>
 
           <span class="nav-tab-content">
-            <span class="nav-tab-text">Problems</span>
+            <span class="nav-tab-text">Practice</span>
             <span class="nav-tab-tag">50</span>
           </span>
         </button>
@@ -135,13 +135,13 @@
         <button
           class="nav-tab-btn"
           data-view="mistakes"
-          title="20 Midterm Exam Traps & Common Mistakes"
+          title="20 Common Exam Mistakes & Traps"
         >
           <span class="nav-tab-icon">⚠️</span>
 
           <span class="nav-tab-content">
-            <span class="nav-tab-text">Traps</span>
-            <span class="nav-tab-tag">20</span>
+            <span class="nav-tab-text">Mistakes</span>
+            <span class="nav-tab-tag">20 Traps</span>
           </span>
         </button>
 
@@ -152,6 +152,17 @@
 
     <!-- ================= RIGHT: STATUS ================= -->
     <div class="header-right">
+
+      <!-- Mobile Sidebar Toggle (hamburger) -->
+      <button
+        class="icon-btn sidebar-toggle-btn"
+        id="sidebarToggleBtn"
+        title="Toggle Topic Navigator"
+        aria-label="Toggle Sidebar"
+        onclick="document.body.classList.toggle('sidebar-open')"
+      >
+        <span>☰</span>
+      </button>
 
       <!-- Readiness -->
       <button
@@ -185,6 +196,15 @@
 
       </button>
 
+      <!-- Quick Revision Sheet Button -->
+      <button
+        class="quick-sheet-btn"
+        id="quickSheetBtn"
+        title="Open Midterm Quick Revision Cheat Sheet"
+      >
+        <span class="quick-sheet-icon">⚡</span>
+        <span class="quick-sheet-text">Cheat Sheet</span>
+      </button>
 
       <!-- Theme Toggle -->
       <button
@@ -203,10 +223,15 @@
   <!-- =========================================================================
        APP CONTAINER
        ========================================================================= -->
+  <!-- Sidebar overlay backdrop (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.body.classList.remove('sidebar-open')"></div>
+
   <div class="app-container">
 
     <!-- LEFT SIDEBAR: CHAPTER SWITCHER & TOPICS -->
     <aside class="left-sidebar" id="leftSidebar">
+      <!-- Close button for mobile drawer -->
+      <button class="sidebar-mobile-close" onclick="document.body.classList.remove('sidebar-open')" title="Close Sidebar">✕ Close</button>
       <div>
         <div class="sidebar-section-title">Select Chapter</div>
         <div class="chapter-select-box" id="chapterSelectBox">
@@ -339,6 +364,112 @@
       </div>
       <div class="problem-modal-body" id="problemModalBody">
         <!-- Dynamically rendered by app.js -->
+      </div>
+    </div>
+  <!-- =========================================================================
+       QUICK REVISION CHEAT SHEET MODAL
+       ========================================================================= -->
+  <div class="problem-modal-overlay" id="quickSheetModalOverlay" aria-hidden="true">
+    <div class="problem-modal-card" id="quickSheetModalCard" role="dialog" aria-modal="true" style="max-width: 920px;">
+      <div class="problem-modal-header" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(99, 102, 241, 0.12));">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.4rem;">⚡</span>
+          <span style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">
+            Midterm Quick Revision & Cheat Sheet
+          </span>
+        </div>
+        <button class="modal-close" id="closeQuickSheetModal" aria-label="Close Quick Sheet Modal">&times;</button>
+      </div>
+
+      <div class="problem-modal-body" style="padding: 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; max-height: 75vh; overflow-y: auto;">
+        
+        <!-- Block 1: Operator Precedence & Associativity Hierarchy -->
+        <div class="study-card" style="margin: 0; padding: 1.25rem 1.4rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>1. Operator Precedence Hierarchy (Top to Bottom)</span>
+          </div>
+          <table class="doc-table" style="font-size: 0.86rem;">
+            <thead>
+              <tr><th>Rank</th><th>Category</th><th>Operators</th><th>Associativity</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>1</strong></td><td>Primary</td><td><code>() [] -> .</code></td><td>Left to Right</td></tr>
+              <tr><td><strong>2</strong></td><td>Unary</td><td><code>++ -- ! sizeof &amp; * + -</code></td><td><strong>Right to Left</strong></td></tr>
+              <tr><td><strong>3</strong></td><td>Multiplicative</td><td><code>* / %</code></td><td>Left to Right</td></tr>
+              <tr><td><strong>4</strong></td><td>Additive</td><td><code>+ -</code></td><td>Left to Right</td></tr>
+              <tr><td><strong>5</strong></td><td>Relational</td><td><code>&lt; &lt;= &gt; &gt;=</code></td><td>Left to Right</td></tr>
+              <tr><td><strong>6</strong></td><td>Equality</td><td><code>== !=</code></td><td>Left to Right</td></tr>
+              <tr><td><strong>7</strong></td><td>Logical AND</td><td><code>&amp;&amp;</code> (Short-circuit!)</td><td>Left to Right</td></tr>
+              <tr><td><strong>8</strong></td><td>Logical OR</td><td><code>||</code> (Short-circuit!)</td><td>Left to Right</td></tr>
+              <tr><td><strong>9</strong></td><td>Conditional</td><td><code>?:</code></td><td><strong>Right to Left</strong></td></tr>
+              <tr><td><strong>10</strong></td><td>Assignment</td><td><code>= += -= *= /= %=</code></td><td><strong>Right to Left</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Block 2: Format Specifiers & I/O Functions Cheat Sheet -->
+        <div class="study-card" style="margin: 0; padding: 1.25rem 1.4rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-indigo); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>2. Format Specifiers & Input/Output Cheat Sheet</span>
+          </div>
+          <table class="doc-table" style="font-size: 0.86rem;">
+            <thead>
+              <tr><th>Specifier</th><th>Data Type</th><th>Typical Size</th><th>Key scanf / printf Rule</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>%d</code> / <code>%i</code></td><td><code>int</code></td><td>4 Bytes</td><td>Signed 32-bit integer (-2.14B to +2.14B)</td></tr>
+              <tr><td><code>%f</code></td><td><code>float</code></td><td>4 Bytes</td><td>6 decimal places precision</td></tr>
+              <tr><td><code>%lf</code></td><td><code>double</code></td><td>8 Bytes</td><td><strong>Mandatory in scanf!</strong> (printf accepts %f or %lf)</td></tr>
+              <tr><td><code>%c</code></td><td><code>char</code></td><td>1 Byte</td><td>Reads spaces/newlines! Use <code>scanf(" %c", &amp;ch);</code> to skip buffer</td></tr>
+              <tr><td><code>%s</code></td><td><code>char[]</code></td><td>Variable</td><td>Stops reading at whitespace! No <code>&amp;</code> needed in scanf</td></tr>
+              <tr><td><code>%p</code></td><td><code>void*</code></td><td>8 Bytes</td><td>Hexadecimal RAM address of variable</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Block 3: Type Conversion Master Traps -->
+        <div class="study-card" style="margin: 0; padding: 1.25rem 1.4rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: #fbbf24; margin-bottom: 0.75rem;">
+            3. Type Conversion Master Formulas
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; font-size: 0.88rem;">
+            <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <code>5 / 2 = 2</code>
+              <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.25rem;">Integer division truncates fraction</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <code>5.0 / 2 = 2.5</code>
+              <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.25rem;">Implicit promotion to double</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <code>(float)5 / 2 = 2.5</code>
+              <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.25rem;">Explicit cast before division</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <code>(int)5.85 = 5</code>
+              <p style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.25rem;">Truncates fraction toward zero</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Block 4: Loop 3-Second Selection Decision Rule -->
+        <div class="study-card" style="margin: 0; padding: 1.25rem 1.4rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: #34d399; margin-bottom: 0.75rem;">
+            4. The 3-Second Loop Decision Rule
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+            <div style="padding: 0.6rem 0.85rem; background: rgba(56, 189, 248, 0.08); border-left: 3px solid var(--accent-sky); border-radius: 4px;">
+              <strong>Counter known in advance (1..N, Arrays):</strong> Use <code>for</code> loop.
+            </div>
+            <div style="padding: 0.6rem 0.85rem; background: rgba(99, 102, 241, 0.08); border-left: 3px solid var(--accent-indigo); border-radius: 4px;">
+              <strong>Condition-dependent, unknown iterations (reading till 0, digit extraction):</strong> Use <code>while</code> loop.
+            </div>
+            <div style="padding: 0.6rem 0.85rem; background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--accent-emerald); border-radius: 4px;">
+              <strong>Must execute at least once (interactive menus, range validators):</strong> Use <code>do...while</code> loop.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

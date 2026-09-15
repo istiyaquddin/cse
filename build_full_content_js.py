@@ -2546,23 +2546,32 @@ def get_15_mcqs():
     ]
 
 def build():
+    import generate_study_blocks
+    blocks = generate_study_blocks.get_study_blocks()
+    
+    topics = get_all_topics()
+    for t in topics:
+        if t["id"] in blocks:
+            t.update(blocks[t["id"]])
+            
     data = {
         "chapters": [
             {"id": 1, "name": "1. Fundamentals of Computer and C", "short": "Fundamentals"},
             {"id": 2, "name": "2. Operators, Input and Output", "short": "Operators & I/O"},
             {"id": 3, "name": "3. Control Statements", "short": "Control Statements"}
         ],
-        "syllabus": get_all_topics(),
+        "syllabus": topics,
         "problems": get_50_problems(),
         "mcqs": get_15_mcqs()
     }
     
-    js_content = "/**\n * C PROGRAMMING MIDTERM HANDBOOK - COMPLETE DATA REPOSITORY\n * University-Grade Documentation, 31 Syllabus Topics, 50 Practice Bank, 15 MCQs\n */\n\nconst HandbookData = " + json.dumps(data, indent=2) + ";\n"
+    js_content = "/**\n * C PROGRAMMING MIDTERM HANDBOOK - COMPLETE DATA REPOSITORY\n * University-Grade Documentation, 34 Syllabus Topics, 50 Practice Bank, 15 MCQs\n * Exam-Focused Study Blocks: Objectives, Concepts, Formulas, Traps, Memory Tricks, and Drills\n */\n\nconst HandbookData = " + json.dumps(data, indent=2) + ";\n"
     
     with open(r"c:\Projects\c-handbook\js\content.js", "w", encoding="utf-8") as f:
         f.write(js_content)
     
-    print("Successfully generated c:\\Projects\\c-handbook\\js\\content.js")
+    print("Successfully generated c:\\Projects\\c-handbook\\js\\content.js with full study blocks!")
 
 if __name__ == "__main__":
     build()
+
