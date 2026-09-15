@@ -9,6 +9,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const uiIcon = (name, className = 'ui-icon') =>
+    `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#icon-${name}"></use></svg>`;
+  const cleanIconPrefix = value => String(value || '').replace(/^[^\p{L}\p{N}]+/u, '').trim();
+
   // DOM Elements
   const chapterSelectBoxEl = document.getElementById('chapterSelectBox');
   const sidebarTopicListEl = document.getElementById('sidebarTopicList');
@@ -70,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateThemeIcon(theme) {
     if (themeToggleBtn) {
-      themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+      const iconEl = document.getElementById('themeToggleIcon');
+      if (iconEl) iconEl.innerHTML = uiIcon(theme === 'dark' ? 'sun' : 'moon');
     }
   }
 
@@ -304,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (c2Count) c2Count.textContent = `${m.ch2Done} / ${m.ch2Total}`;
         if (c3Count) c3Count.textContent = `${m.ch3Done} / ${m.ch3Total}`;
 
-        showToast(newState ? "Marked topic as mastered! 🎯" : "Topic reset to uncompleted");
+        showToast(newState ? "Marked topic as mastered!" : "Topic reset to uncompleted");
       });
 
       // Clicking "Study Lesson" opens the lesson in Theory tab
@@ -360,11 +365,11 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <h1 class="study-hero-title">${topic.title}</h1>
           <div class="study-objective-box">
-            <div class="study-objective-tag">🎯 OBJECTIVE</div>
+            <div class="study-objective-tag">${uiIcon('target')} OBJECTIVE</div>
             <p class="study-objective-text">${topic.objective || topic.overview || 'Master foundational understanding and practical application.'}</p>
           </div>
           <div class="study-what-is-it-box">
-            <div class="study-what-tag">💡 WHAT IS THIS TOPIC?</div>
+            <div class="study-what-tag">${uiIcon('lightbulb')} WHAT IS THIS TOPIC?</div>
             <p class="study-what-text">${topic.whatIsIt || topic.overview || 'Fundamental programming concept in ANSI C.'}</p>
           </div>
         </div>
@@ -372,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- 2. Key Concept in 3 Lines -->
         <div class="study-card study-card-concept">
           <div class="study-card-header">
-            <span class="study-icon">⚡</span>
+            <span class="study-icon">${uiIcon('bolt')}</span>
             <h3 class="study-card-title">Key Concept in 3 Lines</h3>
             <span class="study-card-tag">Fast Revision</span>
           </div>
@@ -390,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${topic.ruleFormula ? `
           <div class="study-card study-card-rule">
             <div class="study-card-header">
-              <span class="study-icon">📐</span>
+              <span class="study-icon">${uiIcon('path')}</span>
               <h3 class="study-card-title">Core Rule, Syntax & Formula</h3>
               <span class="study-card-tag rule-tag">Strict Syntax</span>
             </div>
@@ -401,13 +406,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ` : ''}
 
         <!-- 4. Clean Compilable Working Example & Output -->
-        <div class="study-card study-card-example">
+          <div class="study-card study-card-example">
           <div class="study-card-header">
-            <span class="study-icon">💻</span>
+            <span class="study-icon">${uiIcon('code')}</span>
             <h3 class="study-card-title">Clear Working Example</h3>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
               <button class="code-copy-btn" id="studyCopyCodeBtn">
-                <span>📋 Copy Code</span>
+                <span>${uiIcon('clipboard')} Copy Code</span>
               </button>
               <button class="code-copy-btn" id="studyRunGuideBtn">
                 <span>▶ GCC Guide</span>
@@ -429,20 +434,20 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- 5. Exam Trap Card -->
         <div class="study-card study-card-trap">
           <div class="study-card-header">
-            <span class="study-icon">⚠️</span>
+            <span class="study-icon">${uiIcon('warning')}</span>
             <h3 class="study-card-title">Most Common Exam Trap</h3>
             <span class="study-card-tag trap-tag">Watch Out!</span>
           </div>
           <div class="trap-body">
             <div class="trap-box">
-              <strong>🚨 The Pitfall:</strong> ${topic.commonMistake ? topic.commonMistake.trap : (topic.examTraps || 'Pay close attention to semicolon placement and boundary conditions.')}
+              <strong>${uiIcon('warning')} The Pitfall:</strong> ${topic.commonMistake ? topic.commonMistake.trap : (topic.examTraps || 'Pay close attention to semicolon placement and boundary conditions.')}
             </div>
             ${topic.commonMistake ? `
               <div class="trap-why-box">
-                <strong>❓ Why it fails:</strong> ${topic.commonMistake.why}
+                <strong>Why it fails:</strong> ${topic.commonMistake.why}
               </div>
               <div class="trap-fix-box">
-                <strong>✅ How to fix it:</strong> ${topic.commonMistake.fix}
+                <strong>How to fix it:</strong> ${topic.commonMistake.fix}
               </div>
             ` : ''}
           </div>
@@ -452,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${topic.memoryTrick ? `
           <div class="study-card study-card-memory">
             <div class="study-card-header">
-              <span class="study-icon">🧠</span>
+              <span class="study-icon">${uiIcon('brain')}</span>
               <h3 class="study-card-title">Quick Memory Trick</h3>
               <span class="study-card-tag memory-tag">Mnemonic</span>
             </div>
@@ -466,14 +471,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ${topic.practiceQuestion ? `
           <div class="study-card study-card-practice">
             <div class="study-card-header">
-              <span class="study-icon">📝</span>
+              <span class="study-icon">${uiIcon('note')}</span>
               <h3 class="study-card-title">Target Midterm Practice</h3>
               <span class="study-card-tag practice-tag">Self-Test</span>
             </div>
             <div class="practice-body">
               <div class="practice-question">${topic.practiceQuestion.q}</div>
               <details class="practice-hint-details">
-                <summary class="practice-hint-summary">💡 Reveal Solution Logic & Hint</summary>
+                <summary class="practice-hint-summary">${uiIcon('lightbulb')} Reveal Solution Logic & Hint</summary>
                 <div class="practice-hint-content">${topic.practiceQuestion.hint}</div>
               </details>
             </div>
@@ -484,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${(topic.diagram || topic.techTable || topic.overview) ? `
           <details class="study-card-deepdive">
             <summary class="deepdive-summary">
-              <span>🔬 Advanced Exploration, Memory Architecture & Tech Specs (Optional Deep-Dive)</span>
+              <span>${uiIcon('search')} Advanced Exploration, Memory Architecture & Tech Specs (Optional Deep-Dive)</span>
               <span style="font-size: 0.8rem; color: var(--accent-cyan);">Click to Expand ▼</span>
             </summary>
             <div class="deepdive-body">
@@ -508,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${relatedProblems.length > 0 ? `
           <div class="study-card" style="border-color: rgba(0, 210, 255, 0.25);">
             <div class="study-card-header">
-              <span class="study-icon">⚡</span>
+              <span class="study-icon">${uiIcon('bolt')}</span>
               <h3 class="study-card-title">Mapped 50-Problem Bank Practice Pathways</h3>
               <span class="study-card-tag">${relatedProblems.length} Problems</span>
             </div>
@@ -527,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="font-size: 0.82rem; color: var(--text-muted);">${rp.focus}</div>
                   </div>
                   <button class="btn-open-path" data-open-modal="${rp.id}" style="align-self: flex-start;">
-                    <span>⚡ Solve & View Path</span>
+                    <span>${uiIcon('path')} Solve & View Path</span>
                   </button>
                 </div>
               `).join('')}
@@ -539,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${(topic.practiceProblems && topic.practiceProblems.length > 0) ? `
           <div class="study-card" style="border-color: rgba(56, 189, 248, 0.35);">
             <div class="study-card-header">
-              <span class="study-icon">🎯</span>
+              <span class="study-icon">${uiIcon('target')}</span>
               <h3 class="study-card-title">Topic Practice Problem Bank (Levels 1 to 5)</h3>
               <span class="study-card-tag">${topic.practiceProblems.length} Problems</span>
             </div>
@@ -551,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="topic-prob-card">
                   <div class="topic-prob-meta">
                     <span class="topic-prob-id">Problem ${p.problemId || ''}</span>
-                    <span class="diff-pill ${p.levelClass || 'diff-basic'}">${p.level || 'Practice'}</span>
+                    <span class="diff-pill ${p.levelClass || 'diff-basic'}">${cleanIconPrefix(p.level || 'Practice')}</span>
                   </div>
                   <div class="topic-prob-statement">${escapeHtml(p.statement)}</div>
                 </div>
@@ -566,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${isCompleted ? '✓ Topic Mastered in Syllabus' : 'Mark as Mastered in Syllabus'}
           </button>
           <button id="backToSyllabusBtn" class="filter-btn" style="background: transparent;">
-            📋 Back to Syllabus Track Sheet
+            ${uiIcon('clipboard')} Back to Syllabus Track Sheet
           </button>
         </div>
 
@@ -595,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
       copyBtn.addEventListener('click', () => {
         const codeText = topic.exampleCode || topic.code;
         navigator.clipboard.writeText(codeText).then(() => {
-          showToast("Code copied to clipboard! 📋");
+          showToast("Code copied to clipboard!");
         });
       });
     }
@@ -612,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderChapterSelector();
       renderSidebar();
       renderTheoryView();
-      showToast(Tracker.isSyllabusTopicCompleted(topic.id) ? "Marked as mastered! 🎯" : "Topic reset");
+      showToast(Tracker.isSyllabusTopicCompleted(topic.id) ? "Marked as mastered!" : "Topic reset");
     });
 
     // Back to Syllabus
@@ -662,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <h1 class="content-title">50-Problem Midterm Practice Bank</h1>
         <p class="content-lead">
-          Every single problem has an explicit <strong>Curriculum Pathway</strong>. Click any problem or <strong>[Path & Code 🔍]</strong> to view step-by-step logic, sample I/O, and verified C solutions.
+          Every single problem has an explicit <strong>Curriculum Pathway</strong>. Click any problem or <strong>[Path & Code]</strong> to view step-by-step logic, sample I/O, and verified C solutions.
         </p>
       </div>
 
@@ -729,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let statusLabel = '○ Unsolved';
       let statusClass = '';
       if (status === 'practicing') {
-        statusLabel = '⏳ In Progress';
+        statusLabel = 'In Progress';
         statusClass = 'practicing';
       } else if (status === 'solved') {
         statusLabel = '✓ Solved';
@@ -744,13 +749,13 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
         <td>
           <button class="curriculum-path-badge" data-topic-jump="${p.topicId}" title="Jump to theory lesson: ${p.topicTitle || ''}">
-            <span>📘</span> ${pathText}
+            ${uiIcon('book')} ${pathText}
           </button>
         </td>
         <td><span class="diff-pill ${diffClass}">${diffLabel}</span></td>
         <td>
           <button class="btn-open-path" data-open-modal="${p.id}" title="Open specific pathway & C solution">
-            Path & Code 🔍
+            ${uiIcon('search')} Path & Code
           </button>
         </td>
         <td>
@@ -830,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let statusLabel = '○ Mark as Solved';
     let statusClass = '';
     if (status === 'practicing') {
-      statusLabel = '⏳ In Progress';
+      statusLabel = 'In Progress';
       statusClass = 'practicing';
     } else if (status === 'solved') {
       statusLabel = '✓ Solved';
@@ -841,7 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <!-- Curriculum Pathway Banner -->
       <div class="pm-pathway-banner">
         <div class="pm-pathway-info">
-          <div class="pm-pathway-label">📘 Official Curriculum Pathway</div>
+          <div class="pm-pathway-label">${uiIcon('book')} Official Curriculum Pathway</div>
           <div class="pm-pathway-title">
             <span>${p.chapterName || 'Chapter'}</span>
             <span>➔</span>
@@ -849,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         <button class="pm-jump-theory-btn" id="pmJumpTheoryBtn" data-target-topic="${p.topicId}">
-          <span>📖 Jump to Theory Lesson</span>
+          <span>${uiIcon('book')} Jump to Theory Lesson</span>
         </button>
       </div>
 
@@ -858,15 +863,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <h2 class="pm-title">P-${p.num.toString().padStart(2, '0')}: ${p.title}</h2>
         <div class="pm-meta-row">
           <span class="diff-pill ${p.difficultyClass}">${p.difficultyLabel}</span>
-          <span class="pm-pill">⏱️ ${p.estTime}</span>
-          <span class="pm-pill">🎯 Focus: ${p.focus}</span>
+          <span class="pm-pill">${uiIcon('note')} ${p.estTime}</span>
+          <span class="pm-pill">${uiIcon('target')} Focus: ${p.focus}</span>
         </div>
       </div>
 
       <!-- Concept Card -->
       <div class="pm-section-card">
         <div class="pm-section-title">
-          <span>🧠 Core Concept & Syllabus Objective</span>
+          <span>${uiIcon('brain')} Core Concept & Syllabus Objective</span>
         </div>
         <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
           ${p.concept || 'Algorithmic implementation and standard C language mechanics.'}
@@ -876,7 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <!-- Step-by-Step Logic Pathway -->
       <div class="pm-section-card">
         <div class="pm-section-title">
-          <span>⚡ Algorithmic Thinking & Execution Pathway</span>
+          <span>${uiIcon('bolt')} Algorithmic Thinking & Execution Pathway</span>
         </div>
         <div class="pm-step-list">
           ${(p.algorithmSteps || []).map((step, idx) => `
@@ -904,10 +909,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="pm-solution-container">
         <div class="pm-solution-header">
           <span class="pm-solution-lang">
-            <span>💻</span> C (C99 / C11 Standard - GCC Verified)
+            ${uiIcon('code')} C (C99 / C11 Standard - GCC Verified)
           </span>
           <button class="pm-copy-btn" id="pmCopyCodeBtn">
-            <span>📋 Copy Code</span>
+            <span>${uiIcon('clipboard')} Copy Code</span>
           </button>
         </div>
         <pre class="pm-code-pre"><code>${escapeHtml(p.solutionCode || '// Code solution')}</code></pre>
@@ -959,9 +964,9 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.clipboard.writeText(p.solutionCode || '').then(() => {
           copyBtn.innerHTML = '<span>✓ Copied!</span>';
           copyBtn.style.color = 'var(--accent-mint)';
-          showToast('C Solution copied to clipboard! 📋');
+          showToast('C Solution copied to clipboard!');
           setTimeout(() => {
-            copyBtn.innerHTML = '<span>📋 Copy Code</span>';
+            copyBtn.innerHTML = `<span>${uiIcon('clipboard')} Copy Code</span>`;
             copyBtn.style.color = '';
           }, 2000);
         });
@@ -1062,7 +1067,39 @@ document.addEventListener('DOMContentLoaded', () => {
       const offset = 251.2 - (251.2 * (m.overallReadiness / 100));
       radialBar.style.strokeDashoffset = offset;
     }
+
+    // --- Sync nav tab live progress data ---
+    const syllabusCount   = document.getElementById('navSyllabusCount');
+    const syllabusFill    = document.getElementById('navSyllabusFill');
+    const notesCount      = document.getElementById('navNotesCount');
+    const notesFill       = document.getElementById('navNotesFill');
+    const practiceCount   = document.getElementById('navPracticeCount');
+    const practiceFill    = document.getElementById('navPracticeFill');
+
+    const sylPct  = m.totalSyllabus > 0 ? Math.round((m.completedSyllabus / m.totalSyllabus) * 100) : 0;
+    const probPct = m.totalProblems > 0 ? Math.round((m.solvedProblemsCount / m.totalProblems) * 100) : 0;
+
+    if (syllabusCount) syllabusCount.textContent  = `${m.completedSyllabus}/${m.totalSyllabus}`;
+    if (syllabusFill)  syllabusFill.style.width   = `${sylPct}%`;
+    if (notesCount)    notesCount.textContent      = `${m.completedSyllabus}/${m.totalSyllabus}`;
+    if (notesFill)     notesFill.style.width       = `${sylPct}%`;
+    if (practiceCount) practiceCount.textContent   = `${m.solvedProblemsCount}/${m.totalProblems}`;
+    if (practiceFill)  practiceFill.style.width    = `${probPct}%`;
+
+    // Color the mini fill bars based on progress
+    [syllabusFill, notesFill].forEach(el => {
+      if (!el) return;
+      el.style.background = sylPct >= 100 ? 'var(--accent-emerald)' :
+                            sylPct >= 60  ? 'var(--accent-cyan)'    :
+                            sylPct >= 30  ? 'var(--accent-amber)'   : 'rgba(148,163,184,0.5)';
+    });
+    if (practiceFill) {
+      practiceFill.style.background = probPct >= 100 ? 'var(--accent-emerald)' :
+                                      probPct >= 60  ? 'var(--accent-indigo)'  :
+                                      probPct >= 30  ? 'var(--accent-amber)'   : 'rgba(148,163,184,0.5)';
+    }
   }
+
 
   // --- READINESS BADGE (NAV / MOBILE) ---
   const navReadinessBadge = document.getElementById('navReadinessBadge');
@@ -1316,7 +1353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.push(`
           <div class="browse-section">
             <div class="browse-section-header" style="border-color:${color}; color:${color};">
-              <span class="browse-section-icon">📘</span>
+              <span class="browse-section-icon">${uiIcon('book')}</span>
               <span>${ch.name}</span>
               <span class="browse-section-count">${filtered.length} topics</span>
             </div>
@@ -1341,7 +1378,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (filteredProbs.length > 0) {
         const diffColors = { 1: 'var(--accent-emerald)', 2: 'var(--accent-amber)', 3: 'var(--accent-rose)' };
-        const diffLabels = { 1: '🟢 Very Basic', 2: '🟡 Basic', 3: '🔴 Exam Level' };
+        const diffLabels = { 1: 'Level 1: Very Basic', 2: 'Level 2: Basic', 3: 'Level 3: Exam Level' };
 
         const rows = filteredProbs.map(p => {
           const status = Tracker.getProblemStatus(p.id);
@@ -1367,7 +1404,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sections.push(`
           <div class="browse-section">
             <div class="browse-section-header" style="border-color:var(--accent-rose); color:var(--accent-rose);">
-              <span class="browse-section-icon">⚡</span>
+              <span class="browse-section-icon">${uiIcon('bolt')}</span>
               <span>50-Problem Practice Bank</span>
               <span class="browse-section-count">${filteredProbs.length} problems</span>
             </div>
@@ -1392,7 +1429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     browseAllBody.innerHTML = sections.length > 0
       ? sections.join('')
       : `<div style="text-align:center; padding:3rem 1rem; color:var(--text-muted);">
-          <div style="font-size:2.5rem; margin-bottom:0.75rem;">🔍</div>
+          <div style="font-size:2.5rem; margin-bottom:0.75rem;">${uiIcon('search')}</div>
           <div style="font-size:1rem; font-weight:600;">No results for "${browseQuery}"</div>
           <div style="font-size:0.85rem; margin-top:0.35rem;">Try a topic name, badge, or problem number</div>
         </div>`;
@@ -1481,10 +1518,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let contentHtml = `
       <!-- Modal Navigation Tabs -->
       <div class="quick-modal-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
-        <button class="filter-pill ${tier === '15min' ? 'active' : ''}" data-qr-tier="15min">⚡ 15-Minute Flash Card</button>
-        <button class="filter-pill ${tier === '1hour' ? 'active' : ''}" data-qr-tier="1hour">⏱️ 1-Hour Traps & Flow</button>
-        <button class="filter-pill ${tier === '3hour' ? 'active' : ''}" data-qr-tier="3hour">📘 3-Hour Core Traces</button>
-        <button class="filter-pill ${tier === '1day' ? 'active' : ''}" data-qr-tier="1day">📚 1-Day Full Drill</button>
+        <button class="filter-pill ${tier === '15min' ? 'active' : ''}" data-qr-tier="15min">${uiIcon('bolt')} 15-Minute Flash Card</button>
+        <button class="filter-pill ${tier === '1hour' ? 'active' : ''}" data-qr-tier="1hour">${uiIcon('note')} 1-Hour Traps & Flow</button>
+        <button class="filter-pill ${tier === '3hour' ? 'active' : ''}" data-qr-tier="3hour">${uiIcon('book')} 3-Hour Core Traces</button>
+        <button class="filter-pill ${tier === '1day' ? 'active' : ''}" data-qr-tier="1day">${uiIcon('clipboard')} 1-Day Full Drill</button>
       </div>
     `;
 
@@ -1493,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', () => {
       contentHtml += `
         <div class="study-card" style="margin: 0; padding: 1.25rem;">
           <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.75rem;">
-            ⚡ ${card.title} (10 Absolute Truths)
+            ${uiIcon('bolt')} ${card.title} (10 Absolute Truths)
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.6rem;">
             ${(card.items || []).map((item, i) => `
@@ -1509,7 +1546,7 @@ document.addEventListener('DOMContentLoaded', () => {
       contentHtml += `
         <div class="study-card" style="margin: 0; padding: 1.25rem;">
           <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-sky); margin-bottom: 0.75rem;">
-            ⏱️ 1-Hour Exam Traps & Flow Check
+            ${uiIcon('note')} 1-Hour Exam Traps & Flow Check
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.6rem;">
             ${items.map((item, i) => `
@@ -1525,7 +1562,7 @@ document.addEventListener('DOMContentLoaded', () => {
       contentHtml += `
         <div class="study-card" style="margin: 0; padding: 1.25rem;">
           <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-indigo); margin-bottom: 0.75rem;">
-            📘 3-Hour Core Traces & Skeletons Drill
+            ${uiIcon('book')} 3-Hour Core Traces & Skeletons Drill
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.6rem;">
             ${items.map((item, i) => `
@@ -1541,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', () => {
       contentHtml += `
         <div class="study-card" style="margin: 0; padding: 1.25rem;">
           <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-emerald); margin-bottom: 0.75rem;">
-            📚 1-Day Full Syllabus Master Drill
+            ${uiIcon('clipboard')} 1-Day Full Syllabus Master Drill
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.6rem;">
             ${items.map((item, i) => `

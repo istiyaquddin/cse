@@ -1,6 +1,6 @@
 /**
  * C PROGRAMMING MIDTERM HANDBOOK - STUDENT TRACKER ENGINE
- * Tracks all 31 official syllabus topics across Chapters 1, 2, and 3,
+ * Tracks all official syllabus topics across Chapters 1, 2, and 3,
  * the 50-problem matrix, and MCQ scores with localStorage persistence.
  */
 
@@ -39,7 +39,7 @@ const Tracker = (function() {
     window.dispatchEvent(new CustomEvent('tracker:updated', { detail: getMetrics() }));
   }
 
-  // --- SYLLABUS TOPIC CHECKLIST (31 TOPICS) ---
+  // --- SYLLABUS TOPIC CHECKLIST ---
   function toggleSyllabusTopic(topicId) {
     if (state.syllabusProgress[topicId]) {
       delete state.syllabusProgress[topicId];
@@ -74,7 +74,7 @@ const Tracker = (function() {
     return state.activeChapterId || 1;
   }
 
-  // --- PROBLEM STATUS (50 PROBLEMS) ---
+  // --- PROBLEM STATUS ---
   function cycleProblemStatus(problemId) {
     const current = state.problemStatus[problemId] || 'unsolved';
     let next = 'unsolved';
@@ -114,7 +114,7 @@ const Tracker = (function() {
     return state.theme || 'dark';
   }
 
-  // --- ROADMAP MUST-SOLVE ITEMS (35 CORE PROBLEMS) ---
+  // --- ROADMAP MUST-SOLVE ITEMS ---
   function toggleRoadmapItem(itemId) {
     state.roadmapProgress = state.roadmapProgress || {};
     if (state.roadmapProgress[itemId]) {
@@ -147,7 +147,7 @@ const Tracker = (function() {
 
   // --- MASTER READINESS METRICS ---
   function getMetrics() {
-    const totalSyllabus = HandbookData.syllabus.length; // 31
+    const totalSyllabus = HandbookData.syllabus.length;
     const completedSyllabus = Object.keys(state.syllabusProgress).length;
     const syllabusPercent = totalSyllabus > 0 ? Math.min(100, Math.round((completedSyllabus / totalSyllabus) * 100)) : 0;
 
@@ -159,8 +159,7 @@ const Tracker = (function() {
     const ch3Total = HandbookData.syllabus.filter(t => t.chapterId === 3).length;
     const ch3Done = getChapterCompletedCount(3);
 
-    // Problems (50)
-    const totalProblems = 50;
+    const totalProblems = HandbookData.problems.length;
     let solvedProblemsCount = 0;
     let practicingCount = 0;
     for (let key in state.problemStatus) {
@@ -168,6 +167,11 @@ const Tracker = (function() {
       else if (state.problemStatus[key] === 'practicing') practicingCount++;
     }
     const problemPercent = Math.min(100, Math.round((solvedProblemsCount / totalProblems) * 100));
+
+    const quizAnswers = Object.values(state.quizAnswers);
+    const totalQuiz = quizAnswers.length;
+    const quizCorrectCount = quizAnswers.filter(answer => answer.isCorrect).length;
+    const quizPercent = totalQuiz > 0 ? Math.round((quizCorrectCount / totalQuiz) * 100) : 0;
 
     // Overall Readiness: 50% Syllabus Coverage + 50% Problem Solving
     const overallReadiness = Math.round(
