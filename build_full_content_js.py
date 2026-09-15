@@ -1,0 +1,2568 @@
+# -*- coding: utf-8 -*-
+"""
+build_full_content_js.py
+Generates the complete, high-depth js/content.js for all 31 syllabus topics,
+50 practice matrix problems, and 15 scored diagnostic MCQs.
+
+Architecture:
+- Pure Theory Topics (11 topics): practiceProblems is empty ([]) so no artificial coding problems are rendered.
+- Problem Solving Topics (20 topics): practiceProblems contains 2-4 authentic, custom-crafted university midterm exam problems.
+"""
+
+import json
+import os
+
+def get_all_topics():
+    topics = []
+    
+    # =========================================================================
+    # CHAPTER 1: FUNDAMENTALS OF COMPUTER AND C
+    # =========================================================================
+
+    # --- TOPIC 1: Basic organization of computer (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_1", "chapterId": 1, "number": 1,
+        "title": "Basic organization of computer",
+        "badge": "Hardware & Architecture",
+        "readingTime": "10 min read",
+        "overview": "<p>A <strong>computer</strong> is an electronic, programmable data-processing machine that accepts raw data as <strong>Input</strong>, processes it under stored program instructions in the <strong>Central Processing Unit (CPU)</strong>, stores intermediate and final results in <strong>Memory</strong>, and generates meaningful information as <strong>Output</strong>.</p><p>In modern computer science, this foundational model is known as the <strong>Von Neumann Architecture</strong> (proposed by John von Neumann in 1945). It is characterized by a shared physical memory space that stores both program instructions (code) and operational data.</p><p>When you write and run a C program, you are directly manipulating physical hardware: transistors switch states, bits move across copper bus lines, CPU registers hold temporary operands, and volatile RAM holds your variables.</p>",
+        "deepDive": "<p>The computer consists of five essential functional subsystems connected by the <strong>System Bus</strong>:</p><ul><li><strong>1. Input Unit:</strong> Converts human-understandable information into binary electrical signals (<code>0</code>s and <code>1</code>s) using transducers. (Keyboard, Mouse, Scanner).</li><li><strong>2. Arithmetic Logic Unit (ALU):</strong> The computational engine of the CPU. It executes mathematical operations (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>) and relational/logical comparisons (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&amp;&amp;</code>, <code>||</code>).</li><li><strong>3. Control Unit (CU):</strong> The supervisor or conductor of the computer. It fetches instructions sequentially from memory, decodes what operation must occur, and issues micro-timed electrical signals to the ALU, RAM, and I/O devices.</li><li><strong>4. CPU Registers:</strong> High-speed internal memory cells located directly on the CPU silicon chip operating at CPU clock frequency (sub-nanosecond access). Examples: <em>Program Counter (PC)</em> holding the address of the next instruction, <em>Instruction Register (IR)</em> holding the current instruction, and the <em>Accumulator (ACC)</em>.</li><li><strong>5. Memory Unit (Primary vs Secondary):</strong><ul><li><strong>Primary Memory (RAM):</strong> High-speed volatile semiconductor memory directly accessible by the CPU via address and data buses. Loses all data on power interruption.</li><li><strong>Secondary Storage (SSD/HDD):</strong> High-capacity non-volatile magnetic or flash storage. CPU cannot execute code directly from storage; the OS must first load it into RAM.</li></ul></li></ul>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Parameter</th><th>Primary Memory (RAM)</th><th>Secondary Storage (SSD/HDD)</th></tr></thead><tbody><tr><td><strong>Speed</strong></td><td>Extremely fast (10-50 nanoseconds)</td><td>Slow to moderate (microseconds to milliseconds)</td></tr><tr><td><strong>Volatility</strong></td><td>Volatile (Erased upon power off)</td><td>Non-volatile (Persists permanently)</td></tr><tr><td><strong>Direct CPU Access</strong></td><td>Yes, directly via system bus</td><td>No, must be loaded into RAM by OS first</td></tr><tr><td><strong>Capacity & Cost</strong></td><td>Moderate (8 GB - 64 GB), High cost/GB</td><td>Massive (512 GB - 4 TB), Low cost/GB</td></tr><tr><td><strong>Typical Content</strong></td><td>Running OS kernel, active C program stack/heap</td><td>Saved source files (.c), compiled binaries (.exe)</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                         VON NEUMANN ARCHITECTURE                        |\n|                                                                         |\n|  +--------------------+        CONTROL BUS         +-----------------+  |\n|  |                    |===========================>|                 |  |\n|  |                    |        ADDRESS BUS         |                 |  |\n|  |                    |===========================>|                 |  |\n|  |                    |         DATA BUS           |                 |  |\n|  |                    |<==========================>|                 |  |\n|  |     INPUT UNIT     |                            |   OUTPUT UNIT   |  |\n|  |  (Keyboard, Mouse) |    CENTRAL PROCESSING UNIT | (Monitor, Print)|  |\n|  |         |          |             (CPU)          |        ^        |  |\n|  |         +--------->|  +-----------------------+ |--------+        |  |\n|  |                    |  | Control Unit (CU)     | |                 |  |\n|  |                    |  +-----------------------+ |                 |  |\n|  |                    |  | Arithmetic Logic Unit | |                 |  |\n|  |                    |  | (ALU)                 | |                 |  |\n|  |                    |  +-----------------------+ |                 |  |\n|  |                    |  | Registers (PC, IR, ACC| |                 |  |\n|  |                    |  +-----------------------+ |                 |  |\n|  +--------------------+              ^             +-----------------+  |\n|                                      |                                  |\n|                                      v                                  |\n|                        +---------------------------+                    |\n|                        |   PRIMARY MEMORY (RAM)    |                    |\n|                        |  [Instructions & Data]    |                    |\n|                        +---------------------------+                    |\n|                                      ^                                  |\n|                                      | (Load / Store)                   |\n|                                      v                                  |\n|                        +---------------------------+                    |\n|                        |     SECONDARY STORAGE     |                    |\n|                        |     (SSD / HDD / NVMe)    |                    |\n|                        +---------------------------+                    |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    int a = 15;\n    int b = 25;\n    int sum = a + b;\n    printf(\"Sum = %d\\n\", sum);\n    printf(\"RAM Memory Address of 'sum': %p\\n\", (void*)&sum);\n    return 0;\n}",
+        "output": "Sum = 40\nRAM Memory Address of 'sum': 0x7ffd9a5b3fec",
+        "codeExplanation": "Demonstrates the complete Von Neumann execution cycle: Variables 'a' and 'b' reside in RAM. The Control Unit directs the CPU to fetch them into registers, the ALU computes the sum (40), stores the result back in RAM, and sends it to the Output device (stdout console).",
+        "examTraps": "In midterm exams, students often confuse CPU Registers with RAM. Remember: Registers are INSIDE the CPU chip and operate at clock speed; RAM is external memory connected via the system bus. Also remember that the CPU cannot directly run code from an SSD/HDD without loading it into RAM first!",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 2: Definition of software (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_2", "chapterId": 1, "number": 2,
+        "title": "Definition of software",
+        "badge": "Software Foundations",
+        "readingTime": "8 min read",
+        "overview": "<p><strong>Software</strong> is a comprehensive collection of computer programs, procedures, rules, and associated documentation that instructs computer hardware what operations to perform, how to perform them, and in what exact sequence.</p><p>While computer <strong>Hardware</strong> consists of tangible physical electronic circuits, silicon microprocessors, and mechanical drives, <strong>Software</strong> represents the intangible logical intelligence. Hardware without software is inert silicon and plastic; software without hardware is abstract mathematics with no execution medium.</p>",
+        "deepDive": "<p>A software program fundamentally consists of two components:</p><ol><li><strong>Instructions (Code):</strong> Ordered imperative commands (opcodes) that tell the CPU which mathematical and control flow operations to carry out.</li><li><strong>Data:</strong> The operands, constants, text characters, and numbers that the instructions read, manipulate, transform, and write.</li></ol><p>Software does not wear out mechanically like physical machines. Instead, software undergoes logical degradation known as <em>software rot</em> (bugs, security vulnerabilities, or obsolescence against changing hardware interfaces).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Characteristic</th><th>Hardware</th><th>Software</th></tr></thead><tbody><tr><td><strong>Nature</strong></td><td>Physical, tangible (can be touched)</td><td>Logical, intangible (encoded in bits)</td></tr><tr><td><strong>Creation Process</strong></td><td>Manufactured in silicon foundries/factories</td><td>Engineered and programmed by human developers</td></tr><tr><td><strong>Wear and Tear</strong></td><td>Wears out mechanically and thermally over time</td><td>Does not wear out; deteriorates due to unmaintained bugs</td></tr><tr><td><strong>Fault Repair</strong></td><td>Requires physical component replacement</td><td>Requires debugging, patching, and recompilation</td></tr><tr><td><strong>Replication Cost</strong></td><td>Expensive (materials, assembly, shipping)</td><td>Near zero cost (instant digital copy)</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                  THE COMPLETE COMPUTATIONAL ECOSYSTEM                   |\n|                                                                         |\n|    +---------------------------------------------------------------+    |\n|    |                             USER                              |    |\n|    +-------------------------------+-------------------------------+    |\n|                                    | (Interacts via UI)                 |\n|                                    v                                    |\n|    +---------------------------------------------------------------+    |\n|    |                      APPLICATION SOFTWARE                     |    |\n|    |           (Chrome, VS Code, Video Games, C Programs)          |    |\n|    +-------------------------------+-------------------------------+    |\n|                                    | (System Calls)                     |\n|                                    v                                    |\n|    +---------------------------------------------------------------+    |\n|    |                        SYSTEM SOFTWARE                        |    |\n|    |         (Operating System Kernel, Device Drivers, GCC)        |    |\n|    +-------------------------------+-------------------------------+    |\n|                                    | (Machine Instructions)             |\n|                                    v                                    |\n|    +---------------------------------------------------------------+    |\n|    |                       PHYSICAL HARDWARE                       |    |\n|    |            (CPU Transistors, RAM, SSD, GPU, Network)          |    |\n|    +-------------------------------+-------------------------------+    |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    const char *message = \"Software brings hardware to life!\";\n    printf(\"%s\\n\", message);\n    return 0;\n}",
+        "output": "Software brings hardware to life!",
+        "codeExplanation": "The C compiler transforms your source code software into an executable binary file (.exe). When launched, the operating system copies this software into RAM and the CPU executes its instructions line-by-line.",
+        "examTraps": "A common exam mistake is classifying Firmware as Hardware. Firmware is actually software that is permanently programmed into non-volatile read-only memory (ROM/Flash) on a hardware device (like your motherboard BIOS or microwave microcontroller).",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 3: Classification of software (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_3", "chapterId": 1, "number": 3,
+        "title": "Classification of software",
+        "badge": "Systems & Applications",
+        "readingTime": "9 min read",
+        "overview": "<p>Computer software is broadly divided into two primary classifications: <strong>System Software</strong> and <strong>Application Software</strong>, with specialized subcategories including <strong>Utility Programs</strong> and <strong>Device Drivers</strong>.</p><p>Understanding this distinction is vital for C programmers because C was specifically designed as a systems programming language to construct operating systems, compilers, and hardware drivers.</p>",
+        "deepDive": "<h3>1. System Software</h3><p>System Software manages, monitors, and controls the internal operations of computer hardware and provides a stable execution environment for application software. It is hardware-dependent and operates with high privileges.</p><ul><li><strong>Operating Systems (OS):</strong> Windows, Linux, macOS, UNIX. Coordinates CPU scheduling, RAM allocation, file systems, and hardware security.</li><li><strong>Language Translators:</strong> Compilers (GCC, Clang), Interpreters (Python), Assemblers.</li><li><strong>Device Drivers:</strong> Bridges communication between OS and physical hardware peripherals (GPU, printer).</li><li><strong>Utilities:</strong> Disk defragmenters, disk cleanup, antivirus.</li></ul><h3>2. Application Software</h3><p>Application Software is written to perform specific productivity, business, scientific, or entertainment tasks directly for the end user.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Parameter</th><th>System Software</th><th>Application Software</th></tr></thead><tbody><tr><td><strong>Purpose</strong></td><td>Controls hardware & provides execution platform</td><td>Solves specific user tasks and business problems</td></tr><tr><td><strong>Proximity to Hardware</strong></td><td>Very close; interacts directly with CPU/RAM registers</td><td>Far; insulated from hardware by OS system calls</td></tr><tr><td><strong>Programming Language</strong></td><td>Built with low-level/middle-level languages (C, C++, Assembly)</td><td>Built with high-level languages (Java, Python, C#, JS)</td></tr><tr><td><strong>User Interaction</strong></td><td>Background operation; rarely interacts directly with user</td><td>Foreground operation; direct graphical or console UI</td></tr><tr><td><strong>Dependency</strong></td><td>Can run independently of application software</td><td>Cannot run without underlying system software (OS)</td></tr></tbody></table>",
+        "diagram": "                      CLASSIFICATION OF SOFTWARE\n                                  |\n        +-------------------------+-------------------------+\n        |                                                   |\n  SYSTEM SOFTWARE                                   APPLICATION SOFTWARE\n        |                                                   |\n  +-----+-----+-----+                                 +-----+-----+\n  |     |     |     |                                 |           |\n  OS   COMP  UTIL  DRIVERS                         GENERAL    CUSTOMIZED\n(Linux)(GCC) (Defrag)(GPU)                        (Browser)   (Banking)",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Application -> System Software -> Hardware display!\\n\");\n    return 0;\n}",
+        "output": "Application -> System Software -> Hardware display!",
+        "codeExplanation": "Every time your C program prints text or reads a keyboard key, it requests assistance from System Software through standard library system call interfaces.",
+        "examTraps": "A classic midterm exam trap: 'Is the GCC compiler System Software or Application Software?' GCC is SYSTEM SOFTWARE because it is a developer tool that translates code into machine language for the CPU, even though it runs as an executable program.",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 4: Problem solving steps (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_4", "chapterId": 1, "number": 4,
+        "title": "Problem solving steps",
+        "badge": "Engineering Methodology",
+        "readingTime": "11 min read",
+        "overview": "<p>Programming is not merely typing syntax; programming is <strong>systematic problem solving</strong>. To convert an ambiguous real-world human problem into a correct, efficient C program, software engineers follow the <strong>Software Development Life Cycle (SDLC)</strong> problem-solving steps.</p><p>Rushing directly to the keyboard to write C code before designing algorithms is the number one cause of bugs, infinite loops, and failed programming exams.</p>",
+        "deepDive": "<p>The 6 mandatory problem-solving steps are executed in strict chronological order:</p><ol><li><strong>1. Problem Definition / Specification:</strong> Clearly understand what is given, what is missing, and what constraints exist.</li><li><strong>2. Problem Analysis:</strong> Determine equations, inputs required, outputs expected, and memory data types needed.</li><li><strong>3. Algorithm Design:</strong> Write a finite sequence of step-by-step unambiguous English instructions.</li><li><strong>4. Flowcharting:</strong> Draw a visual ANSI flowchart representing the algorithm with geometric decision diamonds and process rectangles.</li><li><strong>5. Coding & Implementation:</strong> Translate algorithm into syntactically valid C language statements.</li><li><strong>6. Testing & Debugging:</strong> Compile with GCC, trace on paper, and eliminate syntax errors, runtime crashes, and logical bugs.</li></ol>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Step</th><th>Name</th><th>Deliverable / Action</th><th>Midterm Focus</th></tr></thead><tbody><tr><td>1</td><td>Problem Definition</td><td>Requirements statement</td><td>Identify constraints</td></tr><tr><td>2</td><td>Analysis</td><td>Formulas, Input/Output variables</td><td>Select correct data types</td></tr><tr><td>3</td><td>Algorithm Design</td><td>Pseudocode / Step 1..N steps</td><td>Must be finite and unambiguous</td></tr><tr><td>4</td><td>Flowcharting</td><td>ANSI standard diagram</td><td>Diamond = Decision; Rect = Process</td></tr><tr><td>5</td><td>Coding</td><td>Valid .c source code</td><td>Strict C syntax & format specifiers</td></tr><tr><td>6</td><td>Testing/Debugging</td><td>Test table & dry run verification</td><td>Trace on paper with sample numbers</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                  THE 6 PROBLEM-SOLVING ENGINEERING STEPS                 |\n|                                                                         |\n|  [Step 1: Problem Definition]                                           |\n|               |                                                         |\n|               v                                                         |\n|  [Step 2: Problem Analysis] --------> (Identify Inputs, Outputs, Types) |\n|               |                                                         |\n|               v                                                         |\n|  [Step 3: Algorithm Design] --------> (Step-by-step Plain English Logic)|\n|               |                                                         |\n|               v                                                         |\n|  [Step 4: Flowchart Drawing] -------> (ANSI Geometric Symbol Diagram)   |\n|               |                                                         |\n|               v                                                         |\n|  [Step 5: Coding in C] -------------> (Compile with GCC: Source Code)   |\n|               |                                                         |\n|               v                                                         |\n|  [Step 6: Testing & Debugging] -----> (Dry Run Table on Paper)          |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    float principal = 10000.0f;\n    float rate = 7.5f;\n    float time = 3.0f;\n    float simple_interest = (principal * rate * time) / 100.0f;\n    float total_amount = principal + simple_interest;\n    \n    printf(\"Principal       : $%.2f\\n\", principal);\n    printf(\"Simple Interest : $%.2f\\n\", simple_interest);\n    printf(\"Total Balance   : $%.2f\\n\", total_amount);\n    return 0;\n}",
+        "output": "Principal       : $10000.00\nSimple Interest : $2250.00\nTotal Balance   : $12250.00",
+        "codeExplanation": "By completing Step 2 (Analysis) before coding, we recognized that dividing by 100 must be floating point division (100.0f) rather than integer division, preventing truncation to 0.",
+        "examTraps": "In exams, when asked to write an Algorithm, students frequently write C code! Remember: An algorithm is PLAIN ENGLISH pseudocode (e.g. 'Step 1: Read a and b', 'Step 2: Calculate sum = a + b', 'Step 3: Display sum'). Do NOT write #include or semicolons in an algorithm question.",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 5: Flow charts (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch1_5", "chapterId": 1, "number": 5,
+        "title": "Flow charts",
+        "badge": "Visual Logic Design",
+        "readingTime": "11 min read",
+        "overview": "<p>A <strong>flowchart</strong> is a standardized graphical diagram that illustrates the sequential steps, decisions, and loop iterations of an algorithm using standard geometric ANSI symbols connected by directional flow arrows.</p><p>Flowcharts allow programmers to visualize logical branches (<code>if-else</code>) and cycles (<code>while</code>, <code>for</code>) before typing code, making it easy to identify infinite loops and dead logic paths.</p>",
+        "deepDive": "<p>The 5 fundamental ANSI standard flowchart symbols used in university exams:</p><ul><li><strong>1. Terminal (Oval / Rounded Rectangle):</strong> Represents START and STOP (or END) of the program.</li><li><strong>2. Input / Output (Parallelogram):</strong> Represents reading data (scanf) or displaying data (printf).</li><li><strong>3. Process (Rectangle):</strong> Represents arithmetic computations and variable assignments.</li><li><strong>4. Decision (Rhombus / Diamond):</strong> Represents a logical conditional test (e.g. a > b?). Has one entry and two labeled exits: <strong>TRUE (YES)</strong> and <strong>FALSE (NO)</strong>.</li><li><strong>5. Flowline (Arrows):</strong> Indicates the direction of execution control flow.</li></ul>",
+        "techTable": "<table class='doc-table'><thead><tr><th>ANSI Symbol Shape</th><th>Name</th><th>Purpose in C Programming</th><th>C Syntax Equivalent</th></tr></thead><tbody><tr><td>Oval / Pill</td><td>Terminal</td><td>Start / End of program execution</td><td><code>main() { ... return 0; }</code></td></tr><tr><td>Parallelogram</td><td>Input / Output</td><td>Read keyboard input or print to screen</td><td><code>scanf()</code>, <code>printf()</code></td></tr><tr><td>Rectangle</td><td>Processing</td><td>Arithmetic calculations & assignments</td><td><code>x = a + b;</code>, <code>i++;</code></td></tr><tr><td>Diamond</td><td>Decision</td><td>Conditional branching (True / False)</td><td><code>if (x &gt; 0)</code>, <code>while (i &lt;= 10)</code></td></tr><tr><td>Arrow</td><td>Flowline</td><td>Direction of control flow</td><td>Next instruction execution</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                  SAMPLE FLOWCHART: EVEN / ODD DECISION                  |\n|                                                                         |\n|                              /-----------\\                              |\n|                             (    START    )  <-- Terminal               |\n|                              \\-----+-----/                              |\n|                                    |                                    |\n|                                    v                                    |\n|                                /-------/                                |\n|                               / READ N/      <-- Input/Output           |\n|                              /-------/                                  |\n|                                  |                                      |\n|                                  v                                      |\n|                                 / \\                                     |\n|                               /     \\   YES                             |\n|                             < N%2==0 >-------> /--------------/         |\n|                               \\     /         / PRINT \"EVEN\" /          |\n|                                 \\ /          /--------------/           |\n|                                  |                   |                  |\n|                               NO |                   |                  |\n|                                  v                   |                  |\n|                          /-------------/             |                  |\n|                         / PRINT \"ODD\" /              |                  |\n|                        /-------------/               |                  |\n|                               |                      |                  |\n|                               +----------+-----------+                  |\n|                                          |                              |\n|                                          v                              |\n|                                    /-----------\\                        |\n|                                   (    STOP     )                       |\n|                                    \\-----------/                        |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    int n = 28;\n    if (n % 2 == 0) {\n        printf(\"%d is EVEN\\n\", n);\n    } else {\n        printf(\"%d is ODD\\n\", n);\n    }\n    return 0;\n}",
+        "output": "28 is EVEN",
+        "codeExplanation": "Every element in the C program has a 1-to-1 mapping to the flowchart: scanf is the input parallelogram, if (n % 2 == 0) is the diamond, each printf is an output parallelogram, and return 0 is the terminal stop.",
+        "examTraps": "In exam flowcharts, the most frequent error is omitting the 'True' and 'False' labels on the diamond decision exits! A diamond without labels is meaningless because the grader cannot tell which path runs when the condition is satisfied.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Foundational Flowcharting",
+                "levelClass": "diff-very-basic",
+                "statement": "Draw an ANSI-compliant flowchart to read two integers A and B, determine the larger number, and display it. If both numbers are equal, display 'Both are Equal'.",
+                "input": "A = 45, B = 20",
+                "output": "Largest = 45",
+                "concept": "Decision diamond branching with 3-way conditional outcome",
+                "hint": "Start with Terminal oval. Draw Parallelogram (Read A, B). First Decision Diamond: (A == B)? If True -> Print 'Both are Equal' -> Stop. If False -> Second Decision Diamond: (A > B)? If True -> Print A; If False -> Print B. Reconnect flowlines to Stop."
+            },
+            {
+                "level": "Level 2: Loop Iteration Flowchart",
+                "levelClass": "diff-basic",
+                "statement": "Construct a flowchart to calculate the sum of the first N natural numbers (1 + 2 + ... + N) using an initialization rectangle, a counter variable i, an accumulator sum, and a loopback flowline.",
+                "input": "N = 5",
+                "output": "Sum = 15",
+                "concept": "Loopback cycle and iteration condition diamond",
+                "hint": "Terminal Start -> Read N -> Process (sum = 0, i = 1) -> Decision Diamond (i <= N). If YES: Process (sum = sum + i, i = i + 1) and draw a flowline pointing BACK to the top of the Decision Diamond. If NO: Parallelogram (Print sum) -> Terminal Stop."
+            },
+            {
+                "level": "Level 3: Midterm Trace Drill",
+                "levelClass": "diff-exam",
+                "statement": "Trace the execution path of the Even/Odd decision flowchart for negative integers: N = -6 and N = 0. Write the corresponding C condition and verify whether N % 2 == 0 handles negative numbers accurately under C99.",
+                "input": "N = -6",
+                "output": "-6 is EVEN",
+                "concept": "Flowchart boundary execution and C99 modulo behavior on negatives",
+                "hint": "Under C99, -6 % 2 produces exactly 0. The condition (-6 % 2 == 0) evaluates to True (1). For N = 0, 0 % 2 is 0 (True). Both take the YES branch to print 'EVEN'."
+            }
+        ]
+    })
+
+    # --- TOPIC 6: Introduction of C (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_6", "chapterId": 1, "number": 6,
+        "title": "Introduction of C - history and characteristics",
+        "badge": "Language Foundations",
+        "readingTime": "12 min read",
+        "overview": "<p>The <strong>C programming language</strong> was developed between 1969 and 1972 by computer scientist <strong>Dennis Ritchie</strong> at Bell Telephone Laboratories (New Jersey) on a DEC PDP-11 computer to implement the <strong>UNIX Operating System</strong>.</p><p>Today, C remains the foundation of systems software: Linux kernel, Windows NT, Git, PostgreSQL, and Python runtimes are implemented in C.</p>",
+        "deepDive": "<h3>Why C is a Middle-Level Language</h3><ul><li><strong>High-Level:</strong> Structured control flow (if-else, while, for), typed variables, modular functions.</li><li><strong>Low-Level:</strong> Direct raw pointer memory access, bitwise manipulation, zero runtime overhead.</li></ul><h3>The 4-Stage Compilation Pipeline</h3><p>Preprocessing (<code>.c</code> to <code>.i</code>) -> Compilation (<code>.i</code> to <code>.s</code> assembly) -> Assembly (<code>.s</code> to <code>.o</code> object) -> Linking (<code>.o + libc</code> to <code>.exe</code> executable).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Stage</th><th>Tool</th><th>Input</th><th>Output</th><th>Action</th></tr></thead><tbody><tr><td>1. Preprocessor</td><td><code>cpp</code></td><td><code>main.c</code></td><td><code>main.i</code></td><td>Expands #include, #define, removes comments</td></tr><tr><td>2. Compiler</td><td><code>cc1</code></td><td><code>main.i</code></td><td><code>main.s</code></td><td>Translates C to CPU Assembly language</td></tr><tr><td>3. Assembler</td><td><code>as</code></td><td><code>main.s</code></td><td><code>main.o</code></td><td>Converts assembly to machine binary</td></tr><tr><td>4. Linker</td><td><code>ld</code></td><td><code>main.o + libc</code></td><td><code>main.exe</code></td><td>Resolves symbols & produces standalone executable</td></tr></tbody></table>",
+        "diagram": "[ main.c ] ---> (Preprocessor: cpp) ---> [ main.i ]\n                    |\n                    v\n             (Compiler: cc1)       ---> [ main.s (Assembly) ]\n                    |\n                    v\n             (Assembler: as)       ---> [ main.o (Object) ]\n                    |\n                    v\n             (Linker: ld) + libc   ---> [ main.exe (Executable) ]",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    int var = 42;\n    int *ptr = &var;\n    printf(\"Value: %d, Address: %p\\n\", var, (void*)ptr);\n    return 0;\n}",
+        "output": "Value: 42, Address: 0x7ffd9a5b3fec",
+        "codeExplanation": "Shows middle-level balance: readable high-level variable alongside low-level memory pointer inspection.",
+        "examTraps": "Writing 'void main()' is non-standard and rejected by modern compilers. Always write 'int main(void)' and 'return 0;'.",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 7: Identifiers (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_7", "chapterId": 1, "number": 7,
+        "title": "Identifiers", "badge": "Naming Rules", "readingTime": "9 min read",
+        "overview": "<p>An <strong>identifier</strong> is a user-defined name given to program entities such as variables, functions, and arrays.</p>",
+        "deepDive": "<p><strong>Rules for Valid Identifiers:</strong> 1. Allowed: A-Z, a-z, 0-9, _. 2. First character MUST be a letter or underscore. 3. No special characters or spaces. 4. Cannot be a C keyword. 5. Case-sensitive (total vs Total are distinct).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Identifier</th><th>Validity</th><th>Reason</th></tr></thead><tbody><tr><td><code>total_marks</code></td><td>VALID</td><td>Letters and underscore</td></tr><tr><td><code>2nd_rank</code></td><td>INVALID</td><td>Cannot begin with a digit</td></tr><tr><td><code>my salary</code></td><td>INVALID</td><td>Spaces forbidden</td></tr><tr><td><code>float</code></td><td>INVALID</td><td>Reserved keyword</td></tr><tr><td><code>Float</code></td><td>VALID</td><td>Capitalized, not a keyword</td></tr></tbody></table>",
+        "diagram": "VALID:   student_name,  _temp,   count2,  MAX_LIMIT\nINVALID: 2nd_rank,      my-var,  int,     student name",
+        "code": "#include <stdio.h>\nint main(void) {\n    int student_score = 95;\n    int _rank = 1;\n    printf(\"Score: %d, Rank: %d\\n\", student_score, _rank);\n    return 0;\n}",
+        "output": "Score: 95, Rank: 1",
+        "codeExplanation": "Symbol table maps student_score and _rank to physical RAM stack offsets.",
+        "examTraps": "'float' is invalid (keyword); 'Float' is valid (case-sensitive).",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 8: Keywords (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_8", "chapterId": 1, "number": 8,
+        "title": "Keywords", "badge": "Reserved Words", "readingTime": "9 min read",
+        "overview": "<p><strong>Keywords</strong> are 32 reserved words in C89 whose meanings are permanently defined by the compiler grammar. All are lowercase.</p>",
+        "deepDive": "<p>Categorized into: Data Types (char, int, float, double, short, long, signed, unsigned), Conditionals (if, else, switch, case, default, goto), Loops (while, do, for, break, continue), Structs (struct, union, enum, typedef), Storage (auto, register, static, extern, const, volatile, void, sizeof, return).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Category</th><th>Keywords</th></tr></thead><tbody><tr><td>Data Types</td><td><code>char, int, float, double, short, long, signed, unsigned</code></td></tr><tr><td>Control Flow</td><td><code>if, else, switch, case, default, break, continue, return, goto</code></td></tr><tr><td>Loops</td><td><code>while, do, for</code></td></tr></tbody></table>",
+        "diagram": "THE 32 C89 KEYWORDS:\nauto     break    case     char     const    continue default  do\ndouble   else     enum     extern   float    for      goto     if\nint      long     register return   short    signed   sizeof   static\nstruct   switch   typedef  union    unsigned void     volatile while",
+        "code": "#include <stdio.h>\nint main(void) {\n    const int MAX = 100;\n    printf(\"Max: %d\\n\", MAX);\n    return 0;\n}",
+        "output": "Max: 100",
+        "codeExplanation": "Keywords like const, int, return define the grammatical structure of C programs.",
+        "examTraps": "'main' and 'printf' are NOT keywords! They are function identifiers.",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 9: Data types (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch1_9", "chapterId": 1, "number": 9,
+        "title": "Data types", "badge": "Memory & Precision", "readingTime": "14 min read",
+        "overview": "<p>A <strong>data type</strong> specifies the bytes allocated in RAM, range of values, and allowed operations. Primary types: char (1B), int (4B), float (4B), double (8B), void.</p>",
+        "deepDive": "<p>char stores ASCII (signed: -128 to 127; unsigned: 0 to 255). int is 4 bytes (-2.14B to +2.14B). float gives 6-7 decimal places, double gives 15-17.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Type</th><th>Bytes</th><th>Specifier</th><th>Range</th></tr></thead><tbody><tr><td><code>char</code></td><td>1</td><td><code>%c</code></td><td>-128 to +127</td></tr><tr><td><code>int</code></td><td>4</td><td><code>%d</code></td><td>-2,147,483,648 to +2,147,483,647</td></tr><tr><td><code>float</code></td><td>4</td><td><code>%f</code></td><td>6-7 decimal digits</td></tr><tr><td><code>double</code></td><td>8</td><td><code>%lf</code></td><td>15-17 decimal digits</td></tr></tbody></table>",
+        "diagram": "RAM ALLOCATION:\nchar:   [ 1 Byte  ] (ASCII)\nint:    [ 4 Bytes ] (Two's complement)\ndouble: [ 8 Bytes ] (IEEE 754 precision)",
+        "code": "#include <stdio.h>\nint main(void) {\n    printf(\"char: %zu byte, int: %zu bytes, double: %zu bytes\\n\", sizeof(char), sizeof(int), sizeof(double));\n    return 0;\n}",
+        "output": "char: 1 byte, int: 4 bytes, double: 8 bytes",
+        "codeExplanation": "sizeof() evaluates byte size at compile time.",
+        "examTraps": "Integer division trap: 5 / 2 gives 2 (truncated)! To get 2.5, at least one operand must be float: 5.0 / 2.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Precision Calculation",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program that takes three integer exam scores (e.g. 85, 90, 88) and computes their precise average as a floating-point number formatted to 2 decimal places. Prevent integer division truncation.",
+                "input": "85 90 88",
+                "output": "Average = 87.67",
+                "concept": "Integer division truncation vs floating-point literal division",
+                "hint": "The sum of 85 + 90 + 88 = 263. If you divide by integer 3, C truncates the result to 87.00. You must divide by float literal 3.0f or write ((float)sum / 3)."
+            },
+            {
+                "level": "Level 2: Character Arithmetic",
+                "levelClass": "diff-basic",
+                "statement": "Read a lowercase character (e.g. 'g') from the keyboard. Convert it to uppercase using ASCII arithmetic without calling any library function, and print both the character and its decimal ASCII code.",
+                "input": "g",
+                "output": "Uppercase: G | ASCII Code: 71",
+                "concept": "Character data type and ASCII integer code arithmetic",
+                "hint": "In ASCII, 'a' is 97 and 'A' is 65. The fixed distance between lowercase and uppercase is 32 ('a' - 'A' = 32). Simply subtract 32: char upper = ch - 32;."
+            },
+            {
+                "level": "Level 3: Midterm Memory Footprint",
+                "levelClass": "diff-exam",
+                "statement": "Write a program using sizeof() to display the exact RAM memory footprint in bytes for: char, short, int, long, float, double, and the character literal 'A'. Explain why sizeof('A') is 4 in C, but 1 in C++.",
+                "input": "None (System Inspection)",
+                "output": "char: 1, int: 4, double: 8, 'A': 4",
+                "concept": "Data type memory footprint and character constant type promotion",
+                "hint": "In standard C, character constants like 'A' are treated as int type (integer character constants), so sizeof('A') == sizeof(int) == 4 bytes. In C++, 'A' has type char (1 byte)."
+            }
+        ]
+    })
+
+    # --- TOPIC 10: Constants (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_10", "chapterId": 1, "number": 10,
+        "title": "Constants", "badge": "Literals & Immutability", "readingTime": "10 min read",
+        "overview": "<p>A <strong>constant</strong> is a fixed value that cannot be modified during program execution. Types: Decimal (45), Octal (055), Hex (0x2D), Character ('A'), String (\"Text\\0\").</p>",
+        "deepDive": "<p>Octal starts with 0 (055 = 45). Hex starts with 0x (0x2D = 45). Character literals use single quotes (1 byte); string literals use double quotes (ends with '\\0').</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Constant</th><th>Syntax</th><th>RAM Storage</th></tr></thead><tbody><tr><td>Decimal</td><td><code>45</code></td><td>4 bytes</td></tr><tr><td>Octal</td><td><code>055</code></td><td>4 bytes ($5\\times 8 + 5 = 45$)</td></tr><tr><td>Hexadecimal</td><td><code>0x2D</code></td><td>4 bytes ($2\\times 16 + 13 = 45$)</td></tr><tr><td>Character</td><td><code>'A'</code></td><td>1 byte (ASCII 65)</td></tr><tr><td>String</td><td><code>\"A\"</code></td><td>2 bytes ('A' + '\\0')</td></tr></tbody></table>",
+        "diagram": "LITERAL COMPARISON:\n'A'  ====> [ 65 ] (1 Byte)\n\"A\"  ====> [ 'A' | '\\0' ] (2 Bytes)",
+        "code": "#include <stdio.h>\nint main(void) {\n    int dec = 45, oct = 055, hex = 0x2D;\n    printf(\"Dec: %d, Oct: %d, Hex: %d\\n\", dec, oct, hex);\n    return 0;\n}",
+        "output": "Dec: 45, Oct: 45, Hex: 45",
+        "codeExplanation": "All three variables hold identical binary values.",
+        "examTraps": "'A' is 1 byte; \"A\" is 2 bytes due to the null terminator '\\0'.",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 11: Variables (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch1_11", "chapterId": 1, "number": 11,
+        "title": "Variables", "badge": "Memory Allocation", "readingTime": "12 min read",
+        "overview": "<p>A <strong>variable</strong> is a named location in RAM memory whose contents can change during execution.</p>",
+        "deepDive": "<p>Attributes: Identifier, Data Type, RAM Address (&x), Value. Uninitialized local variables hold garbage values!</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Action</th><th>Code</th><th>RAM State</th></tr></thead><tbody><tr><td>Declaration</td><td><code>int x;</code></td><td>Allocates 4 bytes (contains garbage)</td></tr><tr><td>Initialization</td><td><code>int x = 10;</code></td><td>Allocates 4 bytes & writes 10</td></tr><tr><td>Assignment</td><td><code>x = 25;</code></td><td>Overwrites with 25</td></tr></tbody></table>",
+        "diagram": "VARIABLE IN RAM:\nIdentifier: x\nAddress:    0x7ffd50\nType:       int (4 Bytes)\nValue:      25",
+        "code": "#include <stdio.h>\nint main(void) {\n    int a = 10, b = 20, temp;\n    temp = a; a = b; b = temp;\n    printf(\"Swapped: a=%d, b=%d\\n\", a, b);\n    return 0;\n}",
+        "output": "Swapped: a=20, b=10",
+        "codeExplanation": "Swapping with temporary variable preserves original value during transfer.",
+        "examTraps": "Swap without temp variable: a = a + b; b = a - b; a = a - b;!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Value Swapping with Temp",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program to input two integer variables x and y, print their values, swap their contents using a third temporary variable, and print the swapped results.",
+                "input": "x = 10, y = 25",
+                "output": "Before: x=10, y=25 | After: x=25, y=10",
+                "concept": "Variable state mutation and memory transfer using a temporary buffer",
+                "hint": "int temp = x; x = y; y = temp; Make sure you do not overwrite x before preserving its value in temp."
+            },
+            {
+                "level": "Level 2: Swapping Without Temp",
+                "levelClass": "diff-basic",
+                "statement": "Swap two integer variables a and b WITHOUT using any third temporary variable. Use only arithmetic addition and subtraction operations.",
+                "input": "a = 15, b = 40",
+                "output": "Before: a=15, b=40 | After: a=40, b=15",
+                "concept": "Mathematical variable state manipulation without auxiliary memory",
+                "hint": "Step 1: a = a + b; (a holds sum 55). Step 2: b = a - b; (b holds 55 - 40 = 15). Step 3: a = a - b; (a holds 55 - 15 = 40)."
+            },
+            {
+                "level": "Level 3: Temperature Conversion",
+                "levelClass": "diff-exam",
+                "statement": "Convert temperature from Fahrenheit to Celsius using formula C = (F - 32) * (5.0 / 9.0). Write a program taking Fahrenheit as double and printing Celsius to 2 decimal places. What happens if you write 5/9?",
+                "input": "Fahrenheit = 98.6",
+                "output": "Celsius = 37.00°C",
+                "concept": "Floating-point precision formulas and constant types in variables",
+                "hint": "Writing 5 / 9 results in integer division yielding 0, which makes C evaluate to 0.0! Always write 5.0 / 9.0."
+            }
+        ]
+    })
+
+    # --- TOPIC 12: Statements (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_12", "chapterId": 1, "number": 12,
+        "title": "Statements", "badge": "Syntax Grammar", "readingTime": "8 min read",
+        "overview": "<p>A <strong>statement</strong> is a complete command in C terminated by a semicolon (<code>;</code>).</p>",
+        "deepDive": "<p>Types: Declaration, Expression (x = a + b;), Compound ({ ... }), Selection (if, switch), Iteration (while, for), Jump (break, return), Null (;).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Type</th><th>Example</th></tr></thead><tbody><tr><td>Expression</td><td><code>x = 10 + 5;</code></td></tr><tr><td>Compound</td><td><code>{ int a = 5; b = a; }</code></td></tr><tr><td>Null</td><td><code>;</code></td></tr></tbody></table>",
+        "diagram": "STATEMENT ANATOMY:\nx = a + b ;  <-- Semicolon is the statement terminator",
+        "code": "#include <stdio.h>\nint main(void) {\n    int x = 10;\n    { int temp = x * 2; printf(\"Block: %d\\n\", temp); }\n    return 0;\n}",
+        "output": "Block: 20",
+        "codeExplanation": "Braces create compound statement with isolated local scope.",
+        "examTraps": "Semicolon after while: `while(i <= 5);` creates an infinite loop!",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 13: Symbolic Constants (PURE THEORY) ---
+    topics.append({
+        "id": "ch1_13", "chapterId": 1, "number": 13,
+        "title": "Symbolic constants", "badge": "Preprocessor Macros", "readingTime": "9 min read",
+        "overview": "<p>A <strong>symbolic constant</strong> is created using <code>#define NAME value</code> for compile-time literal text replacement.</p>",
+        "deepDive": "<p>Allocates 0 bytes in RAM. Rules: All uppercase by convention, NO semicolon at end, NO equals sign.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Feature</th><th>#define</th><th>const int</th></tr></thead><tbody><tr><td>Stage</td><td>Preprocessor text replacement</td><td>Compiler type checked</td></tr><tr><td>RAM Memory</td><td>0 bytes</td><td>Normal RAM variable</td></tr></tbody></table>",
+        "diagram": "Source:      #define PI 3.14159\nPreprocess:  area = 3.14159 * r * r;",
+        "code": "#include <stdio.h>\n#define PI 3.14159\nint main(void) {\n    float r = 5.0f;\n    printf(\"Area: %.2f\\n\", PI * r * r);\n    return 0;\n}",
+        "output": "Area: 78.54",
+        "codeExplanation": "PI is replaced with 3.14159 before compilation.",
+        "examTraps": "Never put a semicolon after #define: `#define PI 3.14;` breaks calculations.",
+        "practiceProblems": []
+    })
+
+    # =========================================================================
+    # CHAPTER 2: OPERATORS, INPUT AND OUTPUT
+    # =========================================================================
+
+    # --- TOPIC 14: Arithmetic operators (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_1", "chapterId": 2, "number": 14,
+        "title": "Arithmetic operators", "badge": "Math Computations", "readingTime": "11 min read",
+        "overview": "<p>Arithmetic operators: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>.</p>",
+        "deepDive": "<p>Integer division truncates decimals (7 / 2 = 3). Modulus % requires integer operands; sign matches numerator in C99 (-17 % 5 = -2).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Expression</th><th>Result</th></tr></thead><tbody><tr><td><code>17 / 5</code></td><td><code>3</code></td></tr><tr><td><code>17.0 / 5</code></td><td><code>3.4</code></td></tr><tr><td><code>-17 % 5</code></td><td><code>-2</code></td></tr></tbody></table>",
+        "diagram": "DIGIT EXTRACTION:\ndigit = n % 10;   (Extracts last digit)\nn     = n / 10;   (Removes last digit)",
+        "code": "#include <stdio.h>\nint main(void) {\n    int s = 7322;\n    printf(\"%d hr, %d min, %d sec\\n\", s/3600, (s%3600)/60, s%60);\n    return 0;\n}",
+        "output": "2 hr, 2 min, 2 sec",
+        "codeExplanation": "Decomposes seconds using / and %.",
+        "examTraps": "Float modulus (`5.5 % 2`) is illegal in C.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Time Decomposition",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program that takes an integer total duration in seconds (e.g. 7322) and decomposes it into Hours, Minutes, and Remaining Seconds using / and % operators.",
+                "input": "7322",
+                "output": "2 Hours, 2 Minutes, 2 Seconds",
+                "concept": "Integer quotient (/) and modulus remainder (%) decomposition",
+                "hint": "hours = total_sec / 3600; rem = total_sec % 3600; minutes = rem / 60; seconds = rem % 60;"
+            },
+            {
+                "level": "Level 2: 3-Digit Sum Extraction",
+                "levelClass": "diff-basic",
+                "statement": "Input a 3-digit positive integer (e.g. 384). Extract each digit using % 10 and / 10, print individual digits, and calculate their sum (3 + 8 + 4 = 15).",
+                "input": "384",
+                "output": "Hundreds: 3, Tens: 8, Units: 4 | Sum of Digits: 15",
+                "concept": "Digit extraction using repeated modulo and integer division",
+                "hint": "units = n % 10; n = n / 10; tens = n % 10; hundreds = n / 10; sum = units + tens + hundreds;"
+            },
+            {
+                "level": "Level 3: C99 Modulus Sign Rule",
+                "levelClass": "diff-exam",
+                "statement": "What are the exact results of -17 % 5 and 17 % -5 under C99? Write a test code snippet and explain the C99 sign rule for the modulus operator.",
+                "input": "None (Output Tracing)",
+                "output": "-17 % 5 = -2 | 17 % -5 = 2",
+                "concept": "C99 dividend sign rule for modulus operator",
+                "hint": "In C99, the result of a % b always takes the sign of the dividend (left operand a). The sign of the divisor b has zero effect on the result."
+            }
+        ]
+    })
+
+    # --- TOPIC 15: Unary operators (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_2", "chapterId": 2, "number": 15,
+        "title": "Unary operators", "badge": "Increment & Decrement", "readingTime": "12 min read",
+        "overview": "<p>Unary operators operate on one operand: <code>++a</code> (prefix), <code>a++</code> (postfix), <code>--a</code>, <code>a--</code>, <code>sizeof</code>.</p>",
+        "deepDive": "<p>Prefix increments first, then returns new value. Postfix returns current value, then increments. sizeof does not evaluate expressions at runtime.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Form</th><th>Mechanism</th></tr></thead><tbody><tr><td><code>++a</code></td><td>Increments first $\\implies$ returns new value</td></tr><tr><td><code>a++</code></td><td>Returns current value $\\implies$ increments after</td></tr></tbody></table>",
+        "diagram": "PREFIX:  y = ++x; (x becomes 6, y receives 6)\nPOSTFIX: y = x++; (y receives 5, x becomes 6)",
+        "code": "#include <stdio.h>\nint main(void) {\n    int a = 5, b = 5;\n    printf(\"++a: %d, b++: %d\\n\", ++a, b++);\n    printf(\"final a: %d, final b: %d\\n\", a, b);\n    return 0;\n}",
+        "output": "++a: 6, b++: 5\nfinal a: 6, final b: 6",
+        "codeExplanation": "Prefix changes value immediately; postfix defers until after expression.",
+        "examTraps": "`sizeof(x++)` does NOT increment x!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Prefix vs Postfix Tracing",
+                "levelClass": "diff-very-basic",
+                "statement": "Trace the step-by-step variable values on paper: int a = 5; int b = ++a; int c = a++; What are the final values of a, b, and c?",
+                "input": "a = 5",
+                "output": "a = 7, b = 6, c = 6",
+                "concept": "Prefix increment (modify first) vs Postfix increment (use first, modify after)",
+                "hint": "++a increments a to 6, then assigns 6 to b. Next, a++ assigns current value 6 to c, then increments a to 7."
+            },
+            {
+                "level": "Level 2: Expression Evaluation Table",
+                "levelClass": "diff-basic",
+                "statement": "Trace on paper: int x = 4, y = 3; int res = ++x * 2 + y-- - x; What are the values of res, x, and y after execution?",
+                "input": "x = 4, y = 3",
+                "output": "res = 8, x = 5, y = 2",
+                "concept": "Unary operator precedence and evaluation in arithmetic expressions",
+                "hint": "1. ++x runs (x becomes 5, yields 5). 2. 5 * 2 = 10. 3. y-- yields 3 (y becomes 2). 4. Subtraction of x (5). Total: 10 + 3 - 5 = 8."
+            },
+            {
+                "level": "Level 3: sizeof Side-Effect Trap",
+                "levelClass": "diff-exam",
+                "statement": "Predict the output of: int n = 10; printf(\"%zu\\n\", sizeof(n++)); printf(\"n = %d\\n\", n); Why does n remain 10 after sizeof?",
+                "input": "None (Midterm Code Snippet)",
+                "output": "4 (or byte size of int)\nn = 10",
+                "concept": "Compile-time evaluation of sizeof without runtime side-effects",
+                "hint": "sizeof is an operator evaluated at compile-time by the compiler analyzing the operand's type. The expression n++ is never executed at runtime!"
+            }
+        ]
+    })
+
+    # --- TOPIC 16: Relational operators (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_3", "chapterId": 2, "number": 16,
+        "title": "Relational operators", "badge": "Comparisons & Truth", "readingTime": "9 min read",
+        "overview": "<p>Relational operators compare values: <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code>. Returns 1 for True, 0 for False.</p>",
+        "deepDive": "<p>Chained comparison trap: `5 < x < 10` does NOT check range! Evaluates (5 < x) to 0 or 1, then compares with 10 (always True).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Expression</th><th>Result</th></tr></thead><tbody><tr><td><code>10 &gt; 5</code></td><td><code>1</code> (True)</td></tr><tr><td><code>4 == 9</code></td><td><code>0</code> (False)</td></tr><tr><td><code>5 &gt; 3 &gt; 1</code></td><td><code>0</code> (1 &gt; 1 is 0)</td></tr></tbody></table>",
+        "diagram": "TRAP: 3 < x < 10\nStep 1: (3 < x) -> 0 or 1\nStep 2: (0 or 1) < 10 -> ALWAYS 1!",
+        "code": "#include <stdio.h>\nint main(void) {\n    int x = 25;\n    printf(\"Proper check: %d\\n\", (x > 5 && x < 10));\n    return 0;\n}",
+        "output": "Proper check: 0",
+        "codeExplanation": "Shows correct logical range checking with &&.",
+        "examTraps": "Equality `==` vs assignment `=`. `if (x = 5)` is always True!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: The Chained Comparison Pitfall",
+                "levelClass": "diff-very-basic",
+                "statement": "Explain why writing if (18 <= age <= 60) is a major logic bug in C. Trace the evaluation for age = 75, and provide the correct C syntax.",
+                "input": "age = 75",
+                "output": "Buggy evaluates to 1 (True); Correct evaluates to 0 (False)",
+                "concept": "Left-to-right associativity of relational operators vs logical AND",
+                "hint": "C evaluates (18 <= 75) which produces 1. Then it evaluates (1 <= 60) which is 1 (True)! The correct syntax is: if (age >= 18 && age <= 60)."
+            },
+            {
+                "level": "Level 2: Relational Truth Arithmetic",
+                "levelClass": "diff-basic",
+                "statement": "Evaluate the exact numeric value: int res = (12 > 7) + (5 == 9) * 10 + (8 <= 8); Show each intermediate reduction step.",
+                "input": "None",
+                "output": "res = 2",
+                "concept": "Relational operators yielding integer truth values 1 and 0",
+                "hint": "(12 > 7) yields 1. (5 == 9) yields 0. 0 * 10 = 0. (8 <= 8) yields 1. Total: 1 + 0 + 1 = 2."
+            },
+            {
+                "level": "Level 3: Assignment vs Equality Trap",
+                "levelClass": "diff-exam",
+                "statement": "What is the console output of: int x = 0; if (x = 5) printf(\"Alpha\\n\"); else printf(\"Beta\\n\"); Explain why Alpha is printed.",
+                "input": "Code dry run",
+                "output": "Alpha",
+                "concept": "Assignment operator (=) returning value inside condition instead of equality (==)",
+                "hint": "x = 5 writes 5 into x and produces the value 5. In C, any non-zero value is treated as True, so the if block executes unconditionally!"
+            }
+        ]
+    })
+
+    # --- TOPIC 17: Logical operators (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_4", "chapterId": 2, "number": 17,
+        "title": "Logical operators", "badge": "Short-Circuit Logic", "readingTime": "11 min read",
+        "overview": "<p>Logical operators: AND (<code>&amp;&amp;</code>), OR (<code>||</code>), NOT (<code>!</code>). Uses short-circuit evaluation.</p>",
+        "deepDive": "<p>In `A && B`, if A is 0, B is NEVER executed. In `A || B`, if A is 1, B is NEVER executed.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>A</th><th>B</th><th>A &amp;&amp; B</th><th>A || B</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td></tr></tbody></table>",
+        "diagram": "SHORT-CIRCUIT:\n0 && (++x)  ====> x is NOT incremented!\n1 || (++y)  ====> y is NOT incremented!",
+        "code": "#include <stdio.h>\nint main(void) {\n    int a = 0, b = 5;\n    int res = a && ++b;\n    printf(\"res=%d, b=%d\\n\", res, b);\n    return 0;\n}",
+        "output": "res=0, b=5",
+        "codeExplanation": "Because a is 0, ++b is completely skipped.",
+        "examTraps": "Short-circuit side effect questions are university exam favorites.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Short-Circuit AND Evaluation",
+                "levelClass": "diff-very-basic",
+                "statement": "Predict the values of a, b, and r after: int a = 0, b = 10; int r = a && (++b > 5); Explain why variable b did not increment.",
+                "input": "a = 0, b = 10",
+                "output": "r = 0, a = 0, b = 10",
+                "concept": "Short-circuit evaluation of logical AND (&&)",
+                "hint": "Because the left operand a is 0 (False), the result of && is guaranteed to be 0. C completely skips evaluating (++b > 5), leaving b unchanged."
+            },
+            {
+                "level": "Level 2: Leap Year Compound Expression",
+                "levelClass": "diff-basic",
+                "statement": "Construct a single C logical expression using ||, &&, and % to check whether an integer year is a Leap Year (divisible by 400, OR divisible by 4 and NOT divisible by 100).",
+                "input": "year = 2024 (Leap), year = 1900 (Not Leap)",
+                "output": "2024: 1 (True) | 1900: 0 (False)",
+                "concept": "Compound boolean conditions with mixed logical operators",
+                "hint": "(year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0))"
+            },
+            {
+                "level": "Level 3: Triangle Validity Verification",
+                "levelClass": "diff-exam",
+                "statement": "Write a program that inputs three side lengths a, b, and c, and checks if they can form a valid triangle using logical operators. (Sum of any two sides must be strictly greater than the third side).",
+                "input": "a = 3, b = 4, c = 5 (Valid) | a = 1, b = 2, c = 5 (Invalid)",
+                "output": "Valid Triangle",
+                "concept": "Triangle Inequality Theorem with compound logical AND",
+                "hint": "if (a + b > c && a + c > b && b + c > a) printf(\"Valid\\n\"); else printf(\"Invalid\\n\");"
+            }
+        ]
+    })
+
+    # --- TOPIC 18: Assignment operators (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_5", "chapterId": 2, "number": 18,
+        "title": "Assignment operators", "badge": "Compound Operations", "readingTime": "9 min read",
+        "overview": "<p>Assignment operators store values in memory: Simple (<code>=</code>) and Compound (<code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code>).</p>",
+        "deepDive": "<p>Associativity is RIGHT-TO-LEFT: `a = b = c = 10;` assigns 10 to c, then b, then a. Compound: `x += 5` expands to `x = x + 5`.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Operator</th><th>Equivalent</th></tr></thead><tbody><tr><td><code>a += b</code></td><td><code>a = a + b</code></td></tr><tr><td><code>a *= b + 1</code></td><td><code>a = a * (b + 1)</code> (Parens around RHS!)</td></tr></tbody></table>",
+        "diagram": "RIGHT-TO-LEFT ASSOCIATIVITY:\na = b = c = 5;\n1. c = 5\n2. b = 5\n3. a = 5",
+        "code": "#include <stdio.h>\nint main(void) {\n    int x = 10;\n    x += 5; x *= 2;\n    printf(\"x = %d\\n\", x);\n    return 0;\n}",
+        "output": "x = 30",
+        "codeExplanation": "x becomes 15, then 30.",
+        "examTraps": "In `x *= y + 2;`, it evaluates as `x = x * (y + 2);`, NOT `x * y + 2`!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Compound Assignment Precedence Trap",
+                "levelClass": "diff-very-basic",
+                "statement": "Given int x = 5, y = 3; what is the value of x after executing x *= y + 2;? Explain why the result is 25 and NOT 17.",
+                "input": "x = 5, y = 3",
+                "output": "x = 25",
+                "concept": "Compound assignment right-hand-side expression grouping",
+                "hint": "Compound assignment x *= expr is equivalent to x = x * (expr). The right-hand side (y + 2 = 5) is evaluated completely first, then multiplied: 5 * 5 = 25."
+            },
+            {
+                "level": "Level 2: Chained Assignment Associativity",
+                "levelClass": "diff-basic",
+                "statement": "Trace the step-by-step execution: int a, b, c; a = b = c = 12 + 8; What are the final values of all three variables and what is the associativity direction?",
+                "input": "None",
+                "output": "a = 20, b = 20, c = 20",
+                "concept": "Right-to-left associativity of assignment operator (=)",
+                "hint": "12 + 8 = 20. Then c = 20, then b = 20, then a = 20. Evaluated Right to Left."
+            }
+        ]
+    })
+
+    # --- TOPIC 19: Conditional operator (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_6", "chapterId": 2, "number": 19,
+        "title": "Conditional operator", "badge": "Ternary Inline Logic", "readingTime": "9 min read",
+        "overview": "<p>The <strong>conditional operator</strong> (<code>? :</code>) is C's only ternary operator: <code>condition ? expr1 : expr2;</code>.</p>",
+        "deepDive": "<p>If condition is True, expr1 evaluates; else expr2 evaluates. Can be nested: `max = (a > b) ? a : b;`.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Task</th><th>Ternary Syntax</th></tr></thead><tbody><tr><td>Max of 2</td><td><code>max = (a &gt; b) ? a : b;</code></td></tr><tr><td>Even/Odd</td><td><code>(n % 2 == 0) ? \"Even\" : \"Odd\"</code></td></tr></tbody></table>",
+        "diagram": "TERNARY EXECUTION:\n(condition) ? [ True Path ] : [ False Path ]",
+        "code": "#include <stdio.h>\nint main(void) {\n    int a = 15, b = 25;\n    int max = (a > b) ? a : b;\n    printf(\"Max: %d\\n\", max);\n    return 0;\n}",
+        "output": "Max: 25",
+        "codeExplanation": "Evaluates condition inline and assigns larger operand.",
+        "examTraps": "Ternary operator has very low precedence; always wrap in parentheses when used in arithmetic.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Maximum of Two Numbers",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program that takes two integer inputs a and b and uses the ternary operator (?:) to assign the larger value to a variable max in a single concise line.",
+                "input": "a = 45, b = 82",
+                "output": "Maximum = 82",
+                "concept": "Basic ternary conditional syntax (condition ? expr1 : expr2)",
+                "hint": "int max = (a > b) ? a : b;"
+            },
+            {
+                "level": "Level 2: Maximum of Three Numbers",
+                "levelClass": "diff-basic",
+                "statement": "Find the largest of three numbers a, b, and c using a single nested ternary expression without using any if statements or logical && operators.",
+                "input": "a = 12, b = 45, c = 28",
+                "output": "Largest = 45",
+                "concept": "Nested ternary conditional expressions",
+                "hint": "int largest = (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);"
+            },
+            {
+                "level": "Level 3: Inline Absolute Value & Status",
+                "levelClass": "diff-exam",
+                "statement": "Write an inline ternary expression to calculate the absolute value of integer n (-15 becomes 15), and print whether n is 'Positive', 'Negative', or 'Zero' using chained ternary strings.",
+                "input": "n = -15",
+                "output": "Absolute: 15 | Status: Negative",
+                "concept": "Inline mathematical absolute value and chained ternary string classification",
+                "hint": "int abs_val = (n < 0) ? -n : n; const char *status = (n > 0) ? \"Positive\" : (n < 0 ? \"Negative\" : \"Zero\");"
+            }
+        ]
+    })
+
+    # --- TOPIC 20: Operator precedence (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_7", "chapterId": 2, "number": 20,
+        "title": "Operator precedence", "badge": "Evaluation Hierarchy", "readingTime": "12 min read",
+        "overview": "<p><strong>Operator precedence</strong> determines the grouping and evaluation order of operators in complex expressions.</p>",
+        "deepDive": "<p>Hierarchy: 1. () [] 2. ++ -- ! (Unary R-to-L) 3. * / % 4. + - 5. &lt; &lt;= &gt; &gt;= 6. == != 7. &amp;&amp; 8. || 9. ? : 10. = += (R-to-L) 11. , (comma).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Rank</th><th>Operators</th><th>Associativity</th></tr></thead><tbody><tr><td>1</td><td><code>() [] -&gt; .</code></td><td>Left to Right</td></tr><tr><td>2</td><td><code>++ -- ! ~ sizeof (type)</code></td><td>Right to Left</td></tr><tr><td>3</td><td><code>* / %</code></td><td>Left to Right</td></tr><tr><td>4</td><td><code>+ -</code></td><td>Left to Right</td></tr><tr><td>5</td><td><code>&lt; &lt;= &gt; &gt;=</code></td><td>Left to Right</td></tr><tr><td>6</td><td><code>== !=</code></td><td>Left to Right</td></tr><tr><td>7</td><td><code>&amp;&amp;</code></td><td>Left to Right</td></tr><tr><td>8</td><td><code>||</code></td><td>Left to Right</td></tr><tr><td>9</td><td><code>= += -= *= /=</code></td><td>Right to Left</td></tr></tbody></table>",
+        "diagram": "EVALUATION STEP-BY-STEP:\n5 + 3 * 2\n1. Multiplication (3 * 2 = 6)\n2. Addition (5 + 6 = 11)",
+        "code": "#include <stdio.h>\nint main(void) {\n    int res = 10 - 4 / 2 + 3 * 2;\n    printf(\"Result: %d\\n\", res);\n    return 0;\n}",
+        "output": "Result: 14",
+        "codeExplanation": "4/2=2, 3*2=6 -> 10 - 2 + 6 = 14.",
+        "examTraps": "Division and multiplication have EQUAL precedence; associativity is Left to Right: 10 / 2 * 3 = 15, not 1!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Manual Step-by-Step Expression Reduction",
+                "levelClass": "diff-very-basic",
+                "statement": "Evaluate the following expression manually step-by-step showing each operator reduction on paper: int ans = 100 / 5 * 2 + 18 % 4 - 3; What is the final value of ans?",
+                "input": "None",
+                "output": "ans = 39",
+                "concept": "Precedence and Left-to-Right associativity of /, *, % versus +, -",
+                "hint": "1. 100 / 5 = 20. 2. 20 * 2 = 40. 3. 18 % 4 = 2. 4. 40 + 2 = 42. 5. 42 - 3 = 39."
+            },
+            {
+                "level": "Level 2: Mixed Operator Precedence Reduction",
+                "levelClass": "diff-basic",
+                "statement": "Determine the boolean value of: int res = 5 + 3 * 2 > 10 && 4 - 2 * 3 < 0; Write out the full reduction table for arithmetic, relational, and logical operators.",
+                "input": "None",
+                "output": "res = 1 (True)",
+                "concept": "Precedence hierarchy across Arithmetic > Relational > Logical operators",
+                "hint": "Arithmetic first: 3*2=6 -> 5+6=11; 2*3=6 -> 4-6=-2. Relational next: 11 > 10 is 1 (True); -2 < 0 is 1 (True). Logical last: 1 && 1 is 1."
+            }
+        ]
+    })
+
+    # --- TOPIC 21: Expressions (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_8", "chapterId": 2, "number": 21,
+        "title": "Expressions", "badge": "Syntax & Semantics", "readingTime": "9 min read",
+        "overview": "<p>An <strong>expression</strong> is a combination of operands and operators that reduces to a single resulting value.</p>",
+        "deepDive": "<p>Categories: Arithmetic, Relational, Logical, Assignment, Comma. Comma operator (,) evaluates left-to-right and returns rightmost value.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Expression</th><th>Evaluates To</th></tr></thead><tbody><tr><td><code>x = (5, 10, 15)</code></td><td><code>15</code> (Comma operator returns rightmost)</td></tr></tbody></table>",
+        "diagram": "COMMA OPERATOR:\nx = (a = 2, b = 3, a + b);  ====> x receives 5",
+        "code": "#include <stdio.h>\nint main(void) {\n    int x = (1, 2, 3);\n    printf(\"x = %d\\n\", x);\n    return 0;\n}",
+        "output": "x = 3",
+        "codeExplanation": "Comma operator evaluates each term and yields rightmost value.",
+        "examTraps": "Comma operator has the absolute lowest precedence in C.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Comma Operator in Assignments",
+                "levelClass": "diff-very-basic",
+                "statement": "Predict the output of the program: int a, b; int x = (a = 3, b = 5, a * b + 2); printf(\"x = %d, a = %d, b = %d\\n\", x, a, b);",
+                "input": "Code dry run",
+                "output": "x = 17, a = 3, b = 5",
+                "concept": "Comma operator sequence evaluation returning the rightmost sub-expression",
+                "hint": "The comma operator evaluates each expression left-to-right. The value produced for x is the final expression: a * b + 2 = 3 * 5 + 2 = 17."
+            },
+            {
+                "level": "Level 2: Mixed-Mode Arithmetic Hierarchy",
+                "levelClass": "diff-basic",
+                "statement": "Evaluate the exact value and type of: float res = 5 / 2 * 2.0f + 7 / 2; Why is the result 7.00 and NOT 8.50?",
+                "input": "None",
+                "output": "res = 7.00",
+                "concept": "Mixed-mode integer division truncation before float promotion",
+                "hint": "5 / 2 truncates to integer 2. Then 2 * 2.0f evaluates to float 4.0f. Then 7 / 2 truncates to integer 3. Total: 4.0f + 3 = 7.0f."
+            }
+        ]
+    })
+
+    # --- TOPIC 22: Type conversions (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_9", "chapterId": 2, "number": 22,
+        "title": "Type conversions", "badge": "Casting & Promotion", "readingTime": "11 min read",
+        "overview": "<p><strong>Type conversion</strong> alters a variable's data type: Implicit (Coercion by compiler) and Explicit (Type casting by programmer).</p>",
+        "deepDive": "<p>Implicit Promotion Hierarchy: char/short -> int -> unsigned int -> long -> float -> double -> long double. Explicit casting: `(float)a / b;`.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Type</th><th>Code</th><th>Result</th></tr></thead><tbody><tr><td>Implicit</td><td><code>float f = 5;</code></td><td>5.0f (Promoted automatically)</td></tr><tr><td>Explicit</td><td><code>(float)5 / 2</code></td><td>2.5f (Forced floating division)</td></tr><tr><td>Truncation</td><td><code>int x = 3.99;</code></td><td>3 (Decimal discarded completely)</td></tr></tbody></table>",
+        "diagram": "PROMOTION HIERARCHY:\nchar/short ===> int ===> float ===> double",
+        "code": "#include <stdio.h>\nint main(void) {\n    int a = 5, b = 2;\n    float bad = a / b;\n    float good = (float)a / b;\n    printf(\"bad: %.2f, good: %.2f\\n\", bad, good);\n    return 0;\n}",
+        "output": "bad: 2.00, good: 2.50",
+        "codeExplanation": "Explicit casting (float)a prevents integer division truncation.",
+        "examTraps": "Assigning float to int does NOT round; it strictly truncates: `int x = 9.99` becomes 9!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Explicit Type Casting for Accuracy",
+                "levelClass": "diff-very-basic",
+                "statement": "A student scores 42 marks out of 50 in an exam. Write a program to calculate the exact percentage using explicit casting (float) to prevent truncation to zero.",
+                "input": "obtained = 42, total = 50",
+                "output": "Percentage = 84.00%",
+                "concept": "Explicit type casting (float) in arithmetic division",
+                "hint": "float percentage = ((float)obtained / total) * 100.0f; Without (float), 42 / 50 evaluates to integer 0."
+            },
+            {
+                "level": "Level 2: Narrowing Conversion & Overflow",
+                "levelClass": "diff-basic",
+                "statement": "What happens when integer 300 is cast into a signed 8-bit char (char c = (char)300;)? Write code to print the decimal value of c and explain bit truncation.",
+                "input": "int x = 300",
+                "output": "c = 44",
+                "concept": "Narrowing type conversion, bit truncation, and two's complement wrap-around",
+                "hint": "300 in binary is 00000001 00101100. Casting to 8-bit char discards the high byte, leaving 00101100 which equals 32 + 8 + 4 = 44 in decimal."
+            }
+        ]
+    })
+
+    # --- TOPIC 23: Library functions (PURE THEORY) ---
+    topics.append({
+        "id": "ch2_10", "chapterId": 2, "number": 23,
+        "title": "Library functions", "badge": "Standard API", "readingTime": "10 min read",
+        "overview": "<p><strong>Library functions</strong> are pre-compiled functions provided by the C Standard Runtime Library (libc) declared in standard header files (<code>&lt;stdio.h&gt;</code>, <code>&lt;math.h&gt;</code>, <code>&lt;ctype.h&gt;</code>, <code>&lt;stdlib.h&gt;</code>).</p>",
+        "deepDive": "<p>Common headers: &lt;stdio.h&gt; (printf, scanf), &lt;math.h&gt; (sqrt, pow, fmod, abs), &lt;ctype.h&gt; (toupper, tolower, isdigit), &lt;stdlib.h&gt; (exit, rand, abs).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Header</th><th>Functions</th><th>Usage</th></tr></thead><tbody><tr><td><code>&lt;math.h&gt;</code></td><td><code>sqrt(x), pow(x,y), fmod(x,y)</code></td><td>Math calculations (links with -lm)</td></tr><tr><td><code>&lt;ctype.h&gt;</code></td><td><code>isalpha(c), isdigit(c)</code></td><td>Character testing</td></tr></tbody></table>",
+        "diagram": "C STANDARD LIBRARY ARCHITECTURE:\nYour Code ---> #include <math.h> ---> Linker (-lm) ---> libc.a binary",
+        "code": "#include <stdio.h>\n#include <math.h>\nint main(void) {\n    printf(\"sqrt(25.0) = %.1f, pow(2,3) = %.1f\\n\", sqrt(25.0), pow(2.0, 3.0));\n    return 0;\n}",
+        "output": "sqrt(25.0) = 5.0, pow(2,3) = 8.0",
+        "codeExplanation": "Demonstrates math library functions.",
+        "examTraps": "On Linux/GCC, compiling programs with `<math.h>` requires the `-lm` flag (e.g. `gcc main.c -lm`) to link the math library!",
+        "practiceProblems": []
+    })
+
+    # --- TOPIC 24: scanf() (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_11", "chapterId": 2, "number": 24,
+        "title": "scanf()", "badge": "Formatted Input", "readingTime": "12 min read",
+        "overview": "<p><code>scanf()</code> reads formatted input from standard input (keyboard) and stores values into variables via memory addresses.</p>",
+        "deepDive": "<p>Requires the address-of operator <code>&amp;</code> for non-pointer variables: <code>scanf(\"%d\", &amp;n);</code>. Returns the number of successfully scanned items.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Type</th><th>Format Specifier</th><th>scanf Example</th></tr></thead><tbody><tr><td>int</td><td><code>%d</code></td><td><code>scanf(\"%d\", &amp;age);</code></td></tr><tr><td>float</td><td><code>%f</code></td><td><code>scanf(\"%f\", &amp;rate);</code></td></tr><tr><td>double</td><td><code>%lf</code></td><td><code>scanf(\"%lf\", &amp;pi);</code> (Note %lf is required!)</td></tr><tr><td>char</td><td><code>%c</code></td><td><code>scanf(\" %c\", &amp;ch);</code> (Space skips newline!)</td></tr></tbody></table>",
+        "diagram": "KEYBOARD INPUT BUFFER TO RAM:\nKeyboard buffer: ['2', '5', '\\n']\nscanf(\"%d\", &age) ====> reads 25 into address &age, leaves '\\n' in buffer!",
+        "code": "#include <stdio.h>\nint main(void) {\n    int age;\n    printf(\"Enter age: \");\n    if (scanf(\"%d\", &age) == 1) {\n        printf(\"Age entered: %d\\n\", age);\n    }\n    return 0;\n}",
+        "output": "Enter age: 20\nAge entered: 20",
+        "codeExplanation": "Validates return value of scanf to confirm successful read.",
+        "examTraps": "Forgetting '&' causes Segmentation Fault crashes! For double, scanf REQUIRES '%lf' (unlike printf which accepts %f).",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Heterogeneous Multi-Input Reading",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program to read three different variables in a single scanf() statement: Student Roll (int), CGPA (double), and Section (char). Echo them in a formatted output line.",
+                "input": "101 3.85 A",
+                "output": "Roll: 101 | CGPA: 3.85 | Section: A",
+                "concept": "Multi-variable input parsing with proper format specifiers (%d, %lf, %c)",
+                "hint": "scanf(\"%d %lf %c\", &roll, &cgpa, &section); Remember that double in scanf strictly requires %lf!"
+            },
+            {
+                "level": "Level 2: Return Value Input Validation",
+                "levelClass": "diff-basic",
+                "statement": "Write a program that prompts the user for two integers. Use the return value of scanf() to verify whether the user entered valid numbers or invalid text characters.",
+                "input": "15 25 (Valid) | 15 abc (Invalid)",
+                "output": "Valid: 2 items read | Error: Invalid integer format entered!",
+                "concept": "Validating user input using the integer return count of scanf()",
+                "hint": "if (scanf(\"%d %d\", &a, &b) == 2) printf(\"Success\\n\"); else printf(\"Input error\\n\");"
+            }
+        ]
+    })
+
+    # --- TOPIC 25: getchar() and gets() (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_12", "chapterId": 2, "number": 25,
+        "title": "getchar() and gets()", "badge": "Character & Line Input", "readingTime": "10 min read",
+        "overview": "<p><code>getchar()</code> reads one single character from stdin. <code>gets()</code> reads a full line until newline.</p>",
+        "deepDive": "<p>getchar returns int to accommodate EOF (-1). The Newline Buffer Trap: When you enter a number and press Enter, '\\n' sits in the buffer. The next getchar/scanf(\"%c\") reads that leftover '\\n' instantly! Fix: `scanf(\" %c\", &amp;ch);`.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Function</th><th>Input Type</th><th>Buffer Behavior</th></tr></thead><tbody><tr><td><code>getchar()</code></td><td>Single character</td><td>Reads next byte in buffer (including '\\n')</td></tr><tr><td><code>gets()</code></td><td>Full line string</td><td><strong>Unsafe!</strong> Deprecated in C99, removed in C11 (use fgets)</td></tr></tbody></table>",
+        "diagram": "THE NEWLINE BUFFER TRAP:\n[ '2' | '0' | '\\n' ]\nscanf(\"%d\") consumes '20' ---> Buffer now has: [ '\\n' ]\ngetchar() immediately reads '\\n'! (Appears to skip input!)",
+        "code": "#include <stdio.h>\nint main(void) {\n    int age;\n    char grade;\n    printf(\"Enter age: \");\n    scanf(\"%d\", &age);\n    printf(\"Enter grade: \");\n    scanf(\" %c\", &grade); // Space skips leftover newline!\n    printf(\"Age: %d, Grade: %c\\n\", age, grade);\n    return 0;\n}",
+        "output": "Enter age: 20\nEnter grade: A\nAge: 20, Grade: A",
+        "codeExplanation": "Space before %c instructs scanf to ignore whitespace and newlines.",
+        "examTraps": "gets() has no buffer bounds checking, causing dangerous buffer overflows. Modern C uses fgets(), but university exams still test gets() theory.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Fixing the Newline Buffer Trap",
+                "levelClass": "diff-very-basic",
+                "statement": "Demonstrate the 'Leftover Newline Buffer Trap'. Write a program that reads an integer with scanf(\"%d\", &age), then reads a character with getchar(). Show how to fix the skipped input using scanf(\" %c\", &ch) or a dummy getchar().",
+                "input": "21 then Enter, then M",
+                "output": "Age: 21, Gender: M",
+                "concept": "Input buffer leftover newline trap and buffer clearing methods",
+                "hint": "Pressing Enter leaves '\\n' in stdin. Adding a leading space in scanf(\" %c\", &ch) tells C to skip all leading whitespace and newlines."
+            },
+            {
+                "level": "Level 2: Character Streaming Loop",
+                "levelClass": "diff-basic",
+                "statement": "Write a program using getchar() in a while loop that reads characters typed by the user one by one until a newline ('\\n') is encountered, and counts the total number of vowels entered.",
+                "input": "university",
+                "output": "Vowel count = 5",
+                "concept": "Character streaming and condition testing with getchar()",
+                "hint": "char ch; int count = 0; while ((ch = getchar()) != '\\n') { if (ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u') count++; }"
+            }
+        ]
+    })
+
+    # --- TOPIC 26: printf(), putchar(), puts() & formatted I/O (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch2_13", "chapterId": 2, "number": 26,
+        "title": "printf(), putchar(), puts(), and formatted input/output", "badge": "Formatted Output", "readingTime": "12 min read",
+        "overview": "<p>Output functions: <code>printf()</code> (formatted streams), <code>putchar()</code> (single character), and <code>puts()</code> (string with automatic newline).</p>",
+        "deepDive": "<p>Format Modifiers: <code>%5d</code> (right-aligned in 5 spaces), <code>%-5d</code> (left-aligned), <code>%05d</code> (zero-padded), <code>%.2f</code> (rounds to 2 decimal places).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Specifier</th><th>Input 45</th><th>Output</th><th>Description</th></tr></thead><tbody><tr><td><code>%5d</code></td><td>45</td><td><code>|   45|</code></td><td>Width 5, right-aligned</td></tr><tr><td><code>%-5d</code></td><td>45</td><td><code>|45   |</code></td><td>Width 5, left-aligned</td></tr><tr><td><code>%05d</code></td><td>45</td><td><code>|00045|</code></td><td>Width 5, zero-padded</td></tr><tr><td><code>%.2f</code></td><td>3.14159</td><td><code>|3.14|</code></td><td>Rounds to 2 decimal places</td></tr></tbody></table>",
+        "diagram": "FORMAT WIDTH & ALIGNMENT:\n%5d   ====> [   45 ]  (3 spaces + 45)\n%-5d  ====> [ 45   ]  (45 + 3 spaces)\n%05d  ====> [ 00045 ]  (3 zeros + 45)",
+        "code": "#include <stdio.h>\nint main(void) {\n    int n = 45;\n    float f = 3.14159f;\n    printf(\"|%5d|\\n\", n);\n    printf(\"|%-5d|\\n\", n);\n    printf(\"|%05d|\\n\", n);\n    printf(\"|%8.2f|\\n\", f);\n    puts(\"puts() prints a string and automatically adds a newline!\");\n    return 0;\n}",
+        "output": "|   45|\n|45   |\n|00045|\n|    3.14|\nputs() prints a string and automatically adds a newline!",
+        "codeExplanation": "Demonstrates formatted alignment and precision flags.",
+        "examTraps": "puts() automatically prints a newline '\\n' at the end; printf() does not unless you specify \\n.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Tabular Invoice Printing",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program to print a formatted grocery receipt. Item Name must be left-aligned in 15 spaces (%-15s), Quantity right-aligned in 5 spaces (%5d), and Price right-aligned in 8 spaces with 2 decimals (%8.2f).",
+                "input": "Apples 5 2.50 | Milk 2 3.75",
+                "output": "Clean aligned columnar invoice table",
+                "concept": "Field width, alignment flags, and precision formatting in printf",
+                "hint": "printf(\"%-15s %5d %8.2f\\n\", item, qty, price);"
+            },
+            {
+                "level": "Level 2: Multi-Base and Zero-Padding",
+                "levelClass": "diff-basic",
+                "statement": "Read an integer from the user and print it in: (1) Decimal (%d), (2) Octal (%o), (3) Hexadecimal (%X), and (4) Zero-padded to exactly 6 digits (%06d).",
+                "input": "45",
+                "output": "Dec: 45 | Oct: 55 | Hex: 2D | Padded: 000045",
+                "concept": "Number base specifiers (%d, %o, %X) and zero-fill width modifiers (%06d)",
+                "hint": "printf(\"Dec: %d | Oct: %o | Hex: %X | Padded: %06d\\n\", n, n, n, n);"
+            }
+        ]
+    })
+
+    # =========================================================================
+    # CHAPTER 3: CONTROL STATEMENTS
+    # =========================================================================
+
+    # --- TOPIC 27: if and if-else (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_1", "chapterId": 3, "number": 27,
+        "title": "if and if-else statements", "badge": "Decision Branching", "readingTime": "12 min read",
+        "overview": "<p>Conditional branching: <code>if</code> executes code if condition is non-zero (True). <code>if-else</code> provides two mutually exclusive execution paths.</p>",
+        "deepDive": "<p>Syntax: `if (condition) { ... } else { ... }`. In C, non-zero is True, 0 is False. Else-if ladders handle multi-category scoring (Grades, Taxes).</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Construct</th><th>Syntax</th><th>Behavior</th></tr></thead><tbody><tr><td>Simple if</td><td><code>if (cond) { ... }</code></td><td>Runs only if True</td></tr><tr><td>if-else</td><td><code>if (cond) { ... } else { ... }</code></td><td>Dual exclusive paths</td></tr><tr><td>Ladder</td><td><code>if ... else if ... else</code></td><td>First matching condition runs</td></tr></tbody></table>",
+        "diagram": "DECISION FLOW:\n       /\\\n YES  /  \\  NO\n< Condition >-----> [ Else Block ]\n \\        /\n  \\      /\n[ If Block ]",
+        "code": "#include <stdio.h>\nint main(void) {\n    int marks = 85;\n    if (marks >= 80) printf(\"Grade: A+\\n\");\n    else if (marks >= 70) printf(\"Grade: A\\n\");\n    else printf(\"Grade: Pass\\n\");\n    return 0;\n}",
+        "output": "Grade: A+",
+        "codeExplanation": "Evaluates conditions sequentially from top to bottom.",
+        "examTraps": "Putting a semicolon after if: `if (score >= 50); printf(\"Pass\");` runs the printf unconditionally!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Parity and Sign Classifier",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program that takes an integer and classifies it into: 'Positive Even', 'Positive Odd', 'Negative Even', 'Negative Odd', or 'Zero'.",
+                "input": "-14",
+                "output": "-14 is Negative Even",
+                "concept": "Multi-way if-else decision branching and parity checking",
+                "hint": "Check if (n == 0) first. Then if (n > 0) check (n % 2 == 0). Handle negative similarly."
+            },
+            {
+                "level": "Level 2: Character Type Classifier",
+                "levelClass": "diff-basic",
+                "statement": "Read a single character from keyboard. Determine whether it is an Uppercase Alphabet, Lowercase Alphabet, Numeric Digit (0-9), or Special Symbol using an if-else-if ladder.",
+                "input": "'B' or '7' or '#'",
+                "output": "'B': Uppercase Alphabet | '7': Numeric Digit | '#': Special Symbol",
+                "concept": "Character range testing with else-if ladders and ASCII boundary checks",
+                "hint": "if (ch >= 'A' && ch <= 'Z') ... else if (ch >= 'a' && ch <= 'z') ... else if (ch >= '0' && ch <= '9') ... else ..."
+            },
+            {
+                "level": "Level 3: Vowel or Consonant Detector",
+                "levelClass": "diff-exam",
+                "statement": "Read a single letter. Check whether it is a Vowel or Consonant. Your program must correctly handle both uppercase and lowercase letters (e.g. 'E' and 'e').",
+                "input": "o",
+                "output": "o is a Vowel",
+                "concept": "Case-insensitive character checking with compound logical OR in if-else",
+                "hint": "if (ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u'||ch=='A'||ch=='E'||ch=='I'||ch=='O'||ch=='U')"
+            }
+        ]
+    })
+
+    # --- TOPIC 28: Nested if and dangling else (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_2", "chapterId": 3, "number": 28,
+        "title": "Nested if and dangling else", "badge": "Hierarchical Logic", "readingTime": "11 min read",
+        "overview": "<p>An <code>if</code> statement inside another <code>if</code> or <code>else</code>. The <strong>Dangling Else</strong> problem is an exam staple.</p>",
+        "deepDive": "<p>The Dangling Else Rule: An <code>else</code> clause always pairs with the <strong>nearest preceding unmatched <code>if</code></strong> at the same nesting level, regardless of indentation!</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Case</th><th>Syntax</th><th>Which if owns the else?</th></tr></thead><tbody><tr><td>Without braces</td><td><code>if (a) if (b) s1; else s2;</code></td><td>Belongs to <code>if (b)</code>!</td></tr><tr><td>With braces</td><td><code>if (a) { if (b) s1; } else s2;</code></td><td>Belongs to <code>if (a)</code>!</td></tr></tbody></table>",
+        "diagram": "DANGLING ELSE TRAP:\nif (x > 10)\n    if (y > 5) printf(\"A\");\nelse printf(\"B\");  <-- Belongs to (y > 5), NOT (x > 10)!",
+        "code": "#include <stdio.h>\nint main(void) {\n    int a = 12, b = 25, c = 18;\n    int largest;\n    if (a >= b) {\n        if (a >= c) largest = a;\n        else largest = c;\n    } else {\n        if (b >= c) largest = b;\n        else largest = c;\n    }\n    printf(\"Largest: %d\\n\", largest);\n    return 0;\n}",
+        "output": "Largest: 25",
+        "codeExplanation": "Finds largest of three numbers using pure nested if-else without logical operators.",
+        "examTraps": "Never trust visual indentation in C! Braces {} dictate ownership, not whitespace.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Largest of Three (No Logical Operators)",
+                "levelClass": "diff-very-basic",
+                "statement": "Find the largest of three distinct integers a, b, and c using pure nested if-else statements WITHOUT using any logical operators (&& or ||).",
+                "input": "a = 25, b = 78, c = 52",
+                "output": "Largest = 78",
+                "concept": "Binary tree decision logic using nested if-else",
+                "hint": "if (a >= b) { if (a >= c) max = a; else max = c; } else { if (b >= c) max = b; else max = c; }"
+            },
+            {
+                "level": "Level 2: Tiered Electricity Slab Billing",
+                "levelClass": "diff-basic",
+                "statement": "Calculate an electricity bill based on unit slabs: First 100 units at $1.50/unit; next 100 units (101-200) at $2.50/unit; units above 200 at $3.50/unit. If the bill exceeds $500, add a 15% surcharge.",
+                "input": "units = 250",
+                "output": "Base: $575.00 | Surcharge: $86.25 | Total: $661.25",
+                "concept": "Tiered slab calculation and cumulative conditional surcharges",
+                "hint": "For 250 units: 100*1.50 + 100*2.50 + 50*3.50 = 575. Surcharge = 575 * 0.15 = 86.25."
+            },
+            {
+                "level": "Level 3: Dangling Else Trap Resolution",
+                "levelClass": "diff-exam",
+                "statement": "What does this code print? int x = 5, y = 20; if (x > 10) if (y > 15) printf(\"Alpha\"); else printf(\"Beta\"); Explain how using braces changes the logic.",
+                "input": "x = 5, y = 20",
+                "output": "Nothing is printed!",
+                "concept": "The Dangling Else Ambiguity rule in C grammar",
+                "hint": "The else attaches to the nearest preceding unmatched if, which is if (y > 15). Since x > 10 is False, the entire inner if-else is skipped!"
+            }
+        ]
+    })
+
+    # --- TOPIC 29: Switch statement (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_3", "chapterId": 3, "number": 29,
+        "title": "Switch statement", "badge": "Multi-Way Branching", "readingTime": "11 min read",
+        "overview": "<p><code>switch</code> provides multi-way jump branching based on discrete integer or character constants.</p>",
+        "deepDive": "<p>Rules: 1. Expression must be integer or char (float is ILLEGAL). 2. Case labels must be compile-time constants (variables are ILLEGAL). 3. <code>break</code> prevents fall-through into following cases.</p>",
+        "techTable": "<table class='doc-table'><thead><tr><th>Construct</th><th>switch Rule</th><th>Midterm Validity</th></tr></thead><tbody><tr><td><code>case 3.5:</code></td><td>Float case label</td><td><strong>ILLEGAL</strong> (Syntax error)</td></tr><tr><td><code>case 'A':</code></td><td>Char constant (ASCII 65)</td><td><strong>LEGAL</strong></td></tr><tr><td><code>case x:</code></td><td>Variable identifier</td><td><strong>ILLEGAL</strong> (Must be constant)</td></tr></tbody></table>",
+        "diagram": "SWITCH JUMP TABLE:\nswitch (choice) {\n  case 1: action1; break;\n  case 2: action2; break;\n  default: default_action;\n}",
+        "code": "#include <stdio.h>\nint main(void) {\n    char op = '*';\n    int a = 6, b = 7;\n    switch (op) {\n        case '+': printf(\"%d\\n\", a + b); break;\n        case '*': printf(\"%d\\n\", a * b); break;\n        default:  printf(\"Invalid\\n\"); break;\n    }\n    return 0;\n}",
+        "output": "42",
+        "codeExplanation": "Switches on char operator and runs matching case.",
+        "examTraps": "Omitting 'break' causes deliberate or accidental Fall-Through into subsequent cases!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Menu-Driven Arithmetic Calculator",
+                "levelClass": "diff-very-basic",
+                "statement": "Build a menu-driven arithmetic calculator using switch. The user enters an operator character (+, -, *, /) and two numbers. Guard against division by zero in case '/'.",
+                "input": "* 6 7",
+                "output": "6 * 7 = 42",
+                "concept": "switch statement on char data type and division by zero protection",
+                "hint": "switch(op) { case '+': ... break; case '/': if (b == 0) ... else ... break; default: ... }"
+            },
+            {
+                "level": "Level 2: Month Days with Case Fall-Through",
+                "levelClass": "diff-basic",
+                "statement": "Input a month number (1 to 12) and print the days in that month using switch intentional case fall-through (group 31-day months together, 30-day months together, and Feb as 28/29).",
+                "input": "Month = 4 (April)",
+                "output": "30 Days",
+                "concept": "Intentional switch case fall-through without break statements",
+                "hint": "case 1: case 3: case 5: case 7: case 8: case 10: case 12: printf(\"31 Days\\n\"); break; case 4: case 6: case 9: case 11: printf(\"30 Days\\n\"); break; case 2: printf(\"28 or 29 Days\\n\"); break;"
+            },
+            {
+                "level": "Level 3: Vowel Checker via Switch Fall-Through",
+                "levelClass": "diff-exam",
+                "statement": "Write a program using switch to check whether an entered alphabet character is a Vowel or Consonant, leveraging case fall-through for all 10 vowel variations (a, e, i, o, u, A, E, I, O, U).",
+                "input": "E",
+                "output": "E is a VOWEL",
+                "concept": "Character case labels and multi-label fall-through in switch",
+                "hint": "case 'a': case 'e': case 'i': case 'o': case 'u': case 'A': case 'E': case 'I': case 'O': case 'U': printf(\"Vowel\\n\"); break; default: printf(\"Consonant\\n\");"
+            }
+        ]
+    })
+
+    # --- TOPIC 30: Looping - while (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_4",
+        "chapterId": 3,
+        "number": 30,
+        "title": "Looping - while (Pre-Test & Indefinite Iteration)",
+        "badge": "Entry-Controlled Loops",
+        "readingTime": "14 min read",
+        "overview": "<p>Loops are used when you need to <strong>repeat a block of code multiple times</strong> without writing identical statements redundantly.</p><blockquote><strong>Core Concept:</strong> Loop = Repeat a task without writing the same code again and again.</blockquote><p>The <code>while</code> loop is an <strong>entry-controlled (pre-test) loop</strong>. It tests its conditional expression <em>before</em> executing the loop body. If the condition evaluates to False on the very first check, the body executes <strong>zero times</strong>.</p>",
+        "deepDive": "<h3>1. Syntax and Pre-Test Mechanics</h3><pre><code>while(condition)\n{\n    // code block to repeat\n}</code></pre><p>Execution follows an entry-checking sequence:</p><ol><li>Evaluate <code>condition</code>.</li><li>If <strong>TRUE (non-zero)</strong>: execute the loop body statements sequentially.</li><li>Update the loop control variable.</li><li>Jump back to step 1 and re-check.</li><li>If <strong>FALSE (0)</strong>: terminate loop immediately and continue to next statement.</li></ol><h3>2. When Should You Use while?</h3><p>Use <code>while</code> when you <strong>don\'t know in advance how many times the loop will run</strong> (unknown repetitions dependent on user inputs or runtime calculations).</p><ul><li><strong>Scenario A: Sentinel-Controlled Input (Read until 0):</strong><pre><code>int n;\nscanf(\"%d\", &n);\nwhile(n != 0) {\n    printf(\"You entered %d\\n\", n);\n    scanf(\"%d\", &n);\n}</code></pre>We cannot predict whether the user will type 3 numbers or 30 numbers before entering 0. The iteration count is indeterminate.</li><li><strong>Scenario B: Password Verification:</strong><pre><code>int password;\nscanf(\"%d\", &password);\nwhile(password != 1234) {\n    printf(\"Wrong password. Try again: \");\n    scanf(\"%d\", &password);\n}\nprintf(\"Access granted!\\n\");</code></pre>We don\'t know how many attempts the user requires.</li></ul><h3>3. Loop + Counter Pattern</h3><p>A <strong>counter</strong> keeps track of how many times an event happens (e.g. counting even numbers):<pre><code>int count = 0;\nfor(int i = 1; i <= 100; i++) {\n    if(i % 2 == 0) count++;\n}\nprintf(\"Even numbers = %d\\n\", count);</code></pre></p><h3>4. Loop + Accumulator Pattern</h3><p>An <strong>accumulator</strong> maintains a continuously updated total (<code>sum += i</code> or <code>product *= i</code>):<pre><code>int sum = 0;\nwhile(n > 0) {\n    sum += (n % 10);\n    n /= 10;\n}</code></pre></p><h3>5. Infinite Loop Trap & Missing Update</h3><p>A loop that never terminates is an <strong>infinite loop</strong> (e.g. <code>while(1)</code>). A critical beginner trap is omitting the update step:<pre><code>int i = 1;\nwhile(i <= 5) {\n    printf(\"%d \", i);\n    // Missing i++; causes infinite loop!\n}</code></pre></p>",
+        "techTable": "<table class=\'doc-table\'><thead><tr><th>Loop Element</th><th>C Syntax & Role</th><th>Exam Rule / Trap</th></tr></thead><tbody><tr><td><strong>Initialization</strong></td><td><code>int i = 1;</code> (Sets initial state)</td><td>Must be declared and initialized before entering loop</td></tr><tr><td><strong>Condition</strong></td><td><code>while (i &lt;= 5)</code> (Pre-test decision)</td><td>Evaluated BEFORE body; 0 executions possible</td></tr><tr><td><strong>Update</strong></td><td><code>i++;</code> or <code>n /= 10;</code> (Advances state)</td><td>Omitting update creates CPU-freezing infinite loop</td></tr><tr><td><strong>Accidental Semicolon</strong></td><td><code>while (i &lt;= 5);</code> (Null loop body)</td><td>Semicolon treated as empty body; hangs program</td></tr><tr><td><strong>Canonical Infinite</strong></td><td><code>while (1) { ... }</code></td><td>Requires explicit internal <code>break;</code> to exit</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                       WHILE EXECUTION FLOWCHART                         |\n|                                                                         |\n|                                   |                                     |\n|                                   v                                     |\n|                         [ Check Condition ]                             |\n|                              /         \\                               |\n|                     (TRUE)  /           \\  (FALSE)                     |\n|                            v             v                              |\n|                    [ Loop Body Work ]   [ STOP / EXIT LOOP ]            |\n|                            |                                            |\n|                            v                                            |\n|                    [ Update Variable ]                                  |\n|                            |                                            |\n|                            +---> (Jump back to Condition Check)         |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    int n = 9482;\n    int count = 0;\n    int sum = 0;\n    \n    printf(\"Processing integer: %d\\n\", n);\n    while (n > 0) {\n        int digit = n % 10;\n        sum += digit;     // Accumulator\n        count++;          // Counter\n        n /= 10;          // Update step\n    }\n    \n    printf(\"Total Digits = %d\\n\", count);\n    printf(\"Sum of Digits = %d\\n\", sum);\n    return 0;\n}",
+        "output": "Processing integer: 9482\nTotal Digits = 4\nSum of Digits = 23",
+        "codeExplanation": "Demonstrates entry-controlled iteration: while (n > 0) extracts rightmost digits with % 10, updates counter and accumulator, and reduces n by / 10 until n reaches 0.",
+        "examTraps": "1. Forgetting the update statement (`n /= 10;` or `i++;`) causes an infinite loop locking up the CPU. 2. Semicolon after header: `while(i <= 5);` creates an empty body loop that loops endlessly on line 1.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Digit Count and Sum",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program using a while loop to calculate both the total number of digits and the sum of digits of a given positive integer N.",
+                "input": "N = 9482",
+                "output": "Count of Digits: 4 | Sum of Digits: 23",
+                "concept": "Digit reduction using while (n > 0) with % 10 and / 10",
+                "hint": "while (n > 0) { digit = n % 10; sum += digit; count++; n /= 10; }"
+            },
+            {
+                "level": "Level 2: Reverse Integer & Palindrome",
+                "levelClass": "diff-basic",
+                "statement": "Reverse an integer arithmetically using a while loop (e.g. 1221 becomes 1221, 1234 becomes 4321), and determine whether the number is a Palindrome.",
+                "input": "1221",
+                "output": "Reversed: 1221 | It is a PALINDROME",
+                "concept": "Arithmetic reversal: rev = rev * 10 + (n % 10)",
+                "hint": "int temp = n, rev = 0; while (n > 0) { rev = rev * 10 + (n % 10); n /= 10; } if (temp == rev) printf(\"Palindrome\\n\");"
+            },
+            {
+                "level": "Level 3: Armstrong Number Check",
+                "levelClass": "diff-exam",
+                "statement": "An Armstrong number (for a 3-digit integer) is one where the sum of cubes of its digits equals the number itself (153 = 1^3 + 5^3 + 3^3). Write a program using a while loop to verify if an input number is Armstrong.",
+                "input": "153",
+                "output": "153 is an ARMSTRONG number",
+                "concept": "Digit-by-digit cube accumulation and equality verification",
+                "hint": "int temp = n, sum = 0; while (n > 0) { int d = n % 10; sum += d * d * d; n /= 10; } Check if (sum == temp)."
+            }
+        ]
+    })
+
+    # --- TOPIC 31: do...while Statement (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_5",
+        "chapterId": 3,
+        "number": 31,
+        "title": "do...while Statement (Exit-Controlled Loop)",
+        "badge": "Exit-Controlled Iteration",
+        "readingTime": "13 min read",
+        "overview": "<p>The <code>do...while</code> loop is an <strong>exit-controlled (post-test)</strong> looping statement in C. Unlike <code>while</code> and <code>for</code> loops which test their condition at the top before entering the loop body, <code>do...while</code> evaluates its condition at the bottom <em>after</em> executing the loop body.</p><blockquote><strong>The Golden Rule:</strong> If the code must execute <strong>at least once</strong> &rarr; <code>do...while</code>.</blockquote>",
+        "deepDive": "<h3>1. Syntax and Execution Order</h3><pre><code>do\n{\n    // code body executes first\n}\nwhile(condition); // checked afterward - NOTICE SEMICOLON!</code></pre><h3>2. The Biggest Difference: while vs do...while</h3><p>Consider what happens when the initial condition is already false (<code>int i = 10; condition: i < 5</code>):</p><ul><li><strong>With while:</strong><pre><code>int i = 10;\nwhile(i < 5) {\n    printf(\"Hello\\n\");\n}</code></pre><strong>Output: Nothing!</strong> Because <code>10 < 5</code> is FALSE immediately, body executes 0 times.</li><li><strong>With do...while:</strong><pre><code>int i = 10;\ndo {\n    printf(\"Hello\\n\");\n} while(i < 5);</code></pre><strong>Output: Hello</strong>! Because <code>do...while</code> executes the body <em>before checking</em> the condition.</li></ul><h3>3. When to Use: Interactive Menus & Input Validation</h3><p>An interactive menu must appear to the user at least once before they choose an option:</p><pre><code>int choice;\ndo {\n    printf(\"\\n1. Add Record\\n2. Delete Record\\n3. Exit\\nEnter choice: \");\n    scanf(\"%d\", &choice);\n} while(choice != 3);</code></pre><h3>4. The Mandatory Trailing Semicolon</h3><p>Unlike <code>while</code> and <code>for</code> blocks where a trailing semicolon creates a null loop bug, <code>do...while</code> <strong>strictly requires a terminating semicolon</strong>: <code>do { ... } while (condition);</code>. Omitting it triggers a fatal compilation error.</p><h3>5. Zero-Boundary Advantage for Digit Counting</h3><p>For input <code>N = 0</code>, <code>while(n > 0)</code> executes 0 times and falsely reports 0 digits. In contrast, <code>do { count++; n /= 10; } while(n > 0);</code> executes once and correctly reports 1 digit.</p>",
+        "techTable": "<table class=\'doc-table\'><thead><tr><th>Feature</th><th>while Loop</th><th>do...while Loop</th></tr></thead><tbody><tr><td><strong>Control Type</strong></td><td>Entry-Controlled (Pre-Test)</td><td>Exit-Controlled (Post-Test)</td></tr><tr><td><strong>Condition Evaluation</strong></td><td>Before executing loop body</td><td>After executing loop body</td></tr><tr><td><strong>Minimum Executions</strong></td><td><strong>0</strong> (May execute zero times)</td><td><strong>1</strong> (Guaranteed at least once)</td></tr><tr><td><strong>False on Start (i=10; i&lt;5)</strong></td><td>Prints nothing (0 runs)</td><td>Prints body once (1 run)</td></tr><tr><td><strong>Trailing Semicolon</strong></td><td>Illegal / Bug (causes null loop)</td><td><strong>YES Mandatory</strong> (<code>while (c);</code>)</td></tr><tr><td><strong>Ideal Use Cases</strong></td><td>Unknown bounds, data streams</td><td>Interactive menus, input validation</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                   DO...WHILE EXECUTION FLOWCHART                        |\n|                                                                         |\n|                              [ Entry ]                                  |\n|                                  |                                      |\n|                                  v                                      |\n|                       +---------------------+                           |\n|                       |  Execute Loop Body  | <-------------------+     |\n|                       |  (Runs at least 1x) |                     |     |\n|                       +----------+----------+                     |     |\n|                                  |                                |     |\n|                                  v                                |     |\n|                                 / \\                               |     |\n|                               /     \\   TRUE (Non-zero)           |     |\n|                             <  Cond?  >---------------------------+     |\n|                               \\     /                                   |\n|                                 \\ /                                     |\n|                                  | FALSE (Zero)                         |\n|                                  v                                      |\n|                              [ Exit ]                                   |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    int test_val = 10;\n    \n    printf(\"Testing do-while with initially false condition (10 < 5):\\n\");\n    do {\n        printf(\"[do-while body executed!] test_val = %d\\n\", test_val);\n        test_val++;\n    } while (test_val < 5);\n    \n    printf(\"Loop exited cleanly. Final test_val = %d\\n\", test_val);\n    return 0;\n}",
+        "output": "Testing do-while with initially false condition (10 < 5):\n[do-while body executed!] test_val = 10\nLoop exited cleanly. Final test_val = 11",
+        "codeExplanation": "Proves that even when the condition (10 < 5) is strictly false, the do-while body executes once unconditionally before the test is evaluated at the bottom.",
+        "examTraps": "1. Omitting the trailing semicolon `;` after `while(condition);` causes a compile error. 2. Variable Scoping Trap: Any variable tested in `while(cond);` must be declared outside the `do { ... }` block.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Input Range Validator",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program using a do-while loop to validate user input. The program repeatedly prompts the user to enter a positive integer between 1 and 10. Once a valid number is entered, print 'Accepted: ' and terminate.",
+                "input": "User enters -3, then 15, then 7",
+                "output": "Accepted: 7",
+                "concept": "Post-test input validation without code duplication",
+                "hint": "do { scanf(\"%d\", &n); } while (n < 1 || n > 10); Print confirmation after loop."
+            },
+            {
+                "level": "Level 2: Interactive Menu-Driven System",
+                "levelClass": "diff-basic",
+                "statement": "Implement an interactive console menu with options: [1] Check Balance, [2] Deposit, [3] Withdraw, [0] Exit. Use a do-while loop to repeat the menu until the user selects 0. Handle options with a switch statement inside the loop.",
+                "input": "1, then 2, then 0",
+                "output": "Displays balance, performs deposit, then exits with 'Thank you for banking!'",
+                "concept": "do-while menu loop pattern with nested switch statement",
+                "hint": "do { printf(\"--- MENU ---\\n1. Balance\\n2. Deposit\\n3. Withdraw\\n0. Exit\\n\"); scanf(\"%d\", &choice); switch(choice) { ... } } while (choice != 0);"
+            },
+            {
+                "level": "Level 3: Reverse Number Single-Digit Boundary Drill",
+                "levelClass": "diff-exam",
+                "statement": "Reverse an integer using a do-while loop instead of a while loop. Explain what happens when the input is 0 for both loops. Verify why do-while correctly prints '0' for N=0 while a standard while loop prints nothing without special checks.",
+                "input": "N = 0 and N = 405",
+                "output": "For N=0: Reversed = 0 | For N=405: Reversed = 504",
+                "concept": "Zero-boundary execution guarantee in do-while vs while",
+                "hint": "do { rev = rev * 10 + (n % 10); n /= 10; } while (n > 0); Because do-while runs once, n=0 extracts digit 0 immediately."
+            }
+        ]
+    })
+
+    # --- TOPIC 32: for Statement (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_6",
+        "chapterId": 3,
+        "number": 32,
+        "title": "for Statement (Definite Iteration & Counter Control)",
+        "badge": "Counter-Controlled Iteration",
+        "readingTime": "15 min read",
+        "overview": "<p>The <code>for</code> loop is used when repetition is <strong>count-controlled</strong> (you know roughly or exactly how many times the loop should repeat).</p><p>It encapsulates <strong>initialization</strong>, <strong>condition</strong>, and <strong>update</strong> into a single unified header line: <code>for(initialization; condition; update)</code>.</p>",
+        "deepDive": "<h3>1. Three Parts of the for Loop</h3><pre><code>for(initialization; condition; update)\n{\n    // loop body\n}</code></pre><ul><li><strong>① Initialization (<code>int i = 1;</code>):</strong> Runs <strong>only once</strong> at the beginning. It sets the starting value.</li><li><strong>② Condition (<code>i <= 5;</code>):</strong> Checked <strong>before every iteration</strong>. If TRUE &rarr; execute loop body; if FALSE &rarr; terminate loop.</li><li><strong>③ Update (<code>i++;</code>):</strong> Changes the loop variable <strong>after each iteration</strong> (e.g. <code>i++</code>, <code>i--</code>, <code>i += 2</code>, <code>i *= 2</code>).</li></ul><h3>2. i++ vs ++i in for Headers</h3><p>In the update section of a normal for loop (<code>for(int i = 0; i < 5; i++)</code> vs <code>for(int i = 0; i < 5; ++i)</code>), both produce the exact same outcome. For standard programming, <code>i++</code> is the universal convention.</p><h3>3. Count-Controlled Applications</h3><ul><li><strong>Print 1 to 100:</strong> <code>for(int i = 1; i <= 100; i++) printf(\'%d \', i);</code></li><li><strong>Print Even Numbers:</strong> <code>for(int i = 2; i <= 20; i += 2) printf(\'%d \', i);</code></li><li><strong>Calculate Sum:</strong> <code>for(int i = 1; i <= 10; i++) sum += i;</code></li><li><strong>Array Traversal:</strong> <code>for(int i = 0; i < 5; i++) printf(\'%d \', arr[i]);</code> (The #1 use of for loops).</li></ul><h3>4. break vs continue</h3><ul><li><strong><code>break</code> &rarr; STOP THE LOOP 🛑:</strong> Immediately terminates the loop and jumps completely outside.</li><li><strong><code>continue</code> &rarr; SKIP THIS ROUND ⏭️:</strong> Skips the rest of the current iteration and jumps directly to the update step for the next round.</li></ul><h3>5. Nested Loops</h3><p>A loop inside another loop is called a <strong>nested loop</strong>. For each step of the outer loop, the inner loop completes all its iterations. Essential for grids, patterns, 2D arrays, and multiplication tables.</p>",
+        "techTable": "<table class=\'doc-table\'><thead><tr><th>Feature</th><th>break Statement 🛑</th><th>continue Statement ⏭️</th></tr></thead><tbody><tr><td><strong>Action</strong></td><td>Stops the entire loop immediately</td><td>Skips remainder of current iteration</td></tr><tr><td><strong>Destination</strong></td><td>Jumps completely outside loop</td><td>Jumps to update step (next iteration)</td></tr><tr><td><strong>Loop Status</strong></td><td>Loop terminates permanently</td><td>Loop continues running</td></tr><tr><td><strong>Mnemonic</strong></td><td><strong>\"STOP\" 🛑</strong></td><td><strong>\"SKIP\" ⏭️</strong></td></tr><tr><td><strong>Example Outcome (i==3)</strong></td><td>In 1..5: prints <code>1 2</code> then terminates</td><td>In 1..5: prints <code>1 2 4 5</code> (skips 3)</td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                       FOR LOOP EXECUTION LIFECYCLE                      |\n|                                                                         |\n|  int i = 1       --> Start (Runs ONCE at beginning)                     |\n|        |                                                                |\n|        v                                                                |\n|  i <= 5 ?        --> Check condition (Pre-test)                         |\n|        |                                                                |\n|      YES (True)                                                         |\n|        v                                                                |\n|  printf(\"%d\", i) -> Execute loop body                                   |\n|        |                                                                |\n|        v                                                                |\n|  i++             --> Update loop counter                                |\n|        |                                                                |\n|        +-----------> Jump back to Condition Check                       |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Testing continue (Skip 3): \\n\");\n    for (int i = 1; i <= 5; i++) {\n        if (i == 3) continue; // Skip 3\n        printf(\"%d \", i);\n    }\n    printf(\"\\n\\n\");\n    \n    printf(\"Testing break (Stop at 4): \\n\");\n    for (int i = 1; i <= 10; i++) {\n        if (i == 4) break; // Stop completely\n        printf(\"%d \", i);\n    }\n    printf(\"\\n\\n\");\n    \n    printf(\"Multiplication Table Grid (1 to 3):\\n\");\n    for (int r = 1; r <= 3; r++) {\n        for (int c = 1; c <= 3; c++) {\n            printf(\"%3d \", r * c);\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
+        "output": "Testing continue (Skip 3): \n1 2 4 5 \n\nTesting break (Stop at 4): \n1 2 3 \n\nMultiplication Table Grid (1 to 3):\n  1   2   3 \n  2   4   6 \n  3   6   9 ",
+        "codeExplanation": "Demonstrates: (1) continue skips iteration 3 without breaking the loop, (2) break terminates loop execution entirely when i==4, and (3) nested loops generate a 2D coordinate multiplication grid.",
+        "examTraps": "1. Accidental semicolon: `for(int i=1; i<=5; i++); printf(\"%d\", i);` loops 5 times over an empty statement, then prints 6 once! 2. Off-by-one errors: `i < 5` loops 4 times (1..4) whereas `i <= 5` loops 5 times (1..5).",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Multiplication Table Grid",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program using nested for loops to print a formatted multiplication table for numbers 1 to 5, formatted in neat columns using %4d.",
+                "input": "Table range: 1 to 5",
+                "output": "5x5 tabular multiplication grid",
+                "concept": "Nested coordinate grid iteration with outer rows and inner columns",
+                "hint": "for (int r = 1; r <= 5; r++) { for (int c = 1; c <= 5; c++) printf(\"%4d\", r * c); printf(\"\\n\"); }"
+            },
+            {
+                "level": "Level 2: Dual-Index Palindrome String Check",
+                "levelClass": "diff-basic",
+                "statement": "Use a single for loop with the comma operator controlling two pointers (start = 0, end = len - 1) to verify whether a character array is a Palindrome without allocating temporary arrays.",
+                "input": "\"radar\"",
+                "output": "\"radar\" is a PALINDROME",
+                "concept": "Two-pointer dual-index traversal using comma operator in for header",
+                "hint": "for (int i = 0, j = len - 1; i < j; i++, j--) { if (str[i] != str[j]) { isPal = 0; break; } }"
+            },
+            {
+                "level": "Level 3: Optimized Prime Number Divisor Sieve",
+                "levelClass": "diff-exam",
+                "statement": "Write an optimized prime checking program using a for loop with condition i * i <= N. Explain why checking up to sqrt(N) reduces loop iterations from O(N) to O(sqrt(N)), saving CPU clock cycles.",
+                "input": "N = 997",
+                "output": "997 is PRIME (Checked 31 iterations instead of 997)",
+                "concept": "Mathematical loop optimization and asymptotic bound reduction in for header",
+                "hint": "for (int i = 2; i * i <= n; i++) { if (n % i == 0) { isPrime = 0; break; } } If loop finishes without break, n is prime."
+            }
+        ]
+    })
+
+    # --- TOPIC 33: Loop Decision Matrix (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_7",
+        "chapterId": 3,
+        "number": 33,
+        "title": "Loop Decision Matrix: When to Use which Loop?",
+        "badge": "Architectural Design",
+        "readingTime": "14 min read",
+        "overview": "<p>C provides three looping statements: <code>for</code>, <code>while</code>, and <code>do...while</code>. Any problem solvable with one loop can theoretically be rewritten with either of the other two.</p><blockquote><strong>Core Engineering Principle:</strong> A problem may be solvable with multiple loops. The goal is to choose the loop that <em>naturally and cleanly matches the problem</em>.</blockquote>",
+        "deepDive": "<h3>1. The 3 Most Important Decision Rules</h3><p>When you encounter any repetition problem, ask these three questions:</p><ol><li><strong>Question 1: Do I know how many times I need to repeat?</strong><br><em>Example: Print numbers from 1 to 100, calculate sum of 10 items, traverse array.</em><br>&rarr; <strong>YES &rarr; Use <code>for</code></strong></li><li><strong>Question 2: Do I NOT know how many times it will repeat?</strong><br><em>Example: Keep taking input until user enters 0, read stream until EOF, guess number game.</em><br>&rarr; <strong>YES &rarr; Use <code>while</code></strong></li><li><strong>Question 3: Must the code execute AT LEAST ONCE?</strong><br><em>Example: Display menu and keep showing it until user selects Exit, validate positive input.</em><br>&rarr; <strong>YES &rarr; Use <code>do...while</code></strong></li></ol><h3>2. Memorize This Quick Rule</h3><ul><li><strong>Known count &rarr; <code>for</code></strong></li><li><strong>Unknown count &rarr; <code>while</code></strong></li><li><strong>At least once &rarr; <code>do...while</code></strong></li></ul><h3>3. Real-World Decision Examples</h3><ul><li><strong>\"Print 1 to 100\":</strong> Known number of iterations &rarr; <strong><code>for</code></strong></li><li><strong>\"Keep asking until positive\":</strong> Unknown attempts &rarr; <strong><code>while</code></strong></li><li><strong>\"Display menu at least once\":</strong> Must execute once &rarr; <strong><code>do...while</code></strong></li><li><strong>\"Process array elements\":</strong> Known size &rarr; <strong><code>for</code></strong></li><li><strong>\"Read until EOF\":</strong> Unknown amount &rarr; <strong><code>while</code></strong></li><li><strong>\"Repeat until Exit\":</strong> Menu runs first &rarr; <strong><code>do...while</code></strong></li></ul><h3>4. Exam-Friendly Definitions</h3><ul><li><strong>Loop:</strong> A control structure in C that repeatedly executes a block of statements as long as a specified condition is satisfied.</li><li><strong>for loop:</strong> Used when the number of iterations is known or controlled by a counter.</li><li><strong>while loop:</strong> Repeatedly executes statements while a condition is true; condition is checked before each iteration.</li><li><strong>do...while loop:</strong> Executes its body at least once because condition is checked after the body.</li></ul>",
+        "techTable": "<table class=\'doc-table\'><thead><tr><th>Feature</th><th>for Loop</th><th>while Loop</th><th>do...while Loop</th></tr></thead><tbody><tr><td><strong>Condition Checked</strong></td><td>Before body (Pre-test)</td><td>Before body (Pre-test)</td><td><strong>After body (Post-test)</strong></td></tr><tr><td><strong>May Execute 0 Times?</strong></td><td>Yes</td><td>Yes</td><td><strong>No (Never 0)</strong></td></tr><tr><td><strong>Executes At Least Once?</strong></td><td>No</td><td>No</td><td><strong>Yes (Guaranteed)</strong></td></tr><tr><td><strong>Best Used For</strong></td><td>Known / count-controlled</td><td>Unknown / condition-controlled</td><td>Must run at least once (Menus)</td></tr><tr><td><strong>Initialization Location</strong></td><td>Inside header</td><td>Before loop</td><td>Before loop</td></tr><tr><td><strong>Update Location</strong></td><td>Inside header</td><td>Inside body</td><td>Inside body</td></tr><tr><td><strong>Loop Type</strong></td><td>Pre-test</td><td>Pre-test</td><td><strong>Post-test</strong></td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                        EASY LOOP DECISION TREE                          |\n|                                                                         |\n|                            Need Repetition?                             |\n|                                   |                                     |\n|                                  YES                                    |\n|                                   |                                     |\n|                 -------------------------------------                   |\n|                 |                                   |                   |\n|            Must execute                         No special              |\n|           at least once?                        requirement             |\n|                 |                                   |                   |\n|                YES                                  |                   |\n|                 |                                   v                   |\n|                 v                       Know the number of times?       |\n|            do...while                               |                   |\n|                                            ------------------           |\n|                                            |                |           |\n|                                           YES               NO          |\n|                                            |                |           |\n|                                            v                v           |\n|                                           for             while         |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    printf(\"1. Known Count (for): \\n\");\n    for (int i = 1; i <= 5; i++) printf(\"%d \", i);\n    printf(\"\\n\\n\");\n    \n    int target = 48;\n    printf(\"2. Event-Driven Reduction (while): \\n\");\n    while (target > 5) {\n        printf(\"%d \", target);\n        target /= 2;\n    }\n    printf(\"\\n\\n\");\n    \n    int choice = 0;\n    printf(\"3. Must Run Once Confirmation (do-while): \\n\");\n    do {\n        printf(\"[Menu printed at least once for choice = %d]\\n\", choice);\n    } while (choice != 0);\n    return 0;\n}",
+        "output": "1. Known Count (for): \n1 2 3 4 5 \n\n2. Event-Driven Reduction (while): \n48 24 12 6 \n\n3. Must Run Once Confirmation (do-while): \n[Menu printed at least once for choice = 0] ",
+        "codeExplanation": "Demonstrates the canonical application of each loop: for for known counts, while for value-dependent reduction, and do-while for guaranteed first-pass execution.",
+        "examTraps": "A classic exam question asks to rewrite a while loop containing 'continue' into a for loop. Note: in while, continue skips the update at the bottom of the body (freezing loop); in for, continue safely triggers the header update!",
+        "practiceProblems": [
+            {
+                "level": "Level 1: While-to-For Refactoring Drill",
+                "levelClass": "diff-very-basic",
+                "statement": "Refactor this code into an idiomatic 3-line for loop: int i = 10, sum = 0; while (i >= 2) { sum += i; i -= 2; }",
+                "input": "Initial code with while",
+                "output": "Sum = 30",
+                "concept": "Syntactic transformation between while and for loops",
+                "hint": "for (int i = 10; i >= 2; i -= 2) sum += i;"
+            },
+            {
+                "level": "Level 2: Spot and Fix the Anti-Pattern",
+                "levelClass": "diff-basic",
+                "statement": "Identify the code smell in this program: int x; while (1) { printf(\"Enter: \"); scanf(\"%d\", &x); if (x > 0) break; } Rewrite it as a clean do-while loop.",
+                "input": "Unclean infinite loop with break",
+                "output": "Clean do-while equivalent",
+                "concept": "Eliminating hidden break termination in favor of explicit exit condition",
+                "hint": "int x; do { printf(\"Enter: \"); scanf(\"%d\", &x); } while (x <= 0);"
+            },
+            {
+                "level": "Level 3: Architectural Loop Selection Defense",
+                "levelClass": "diff-exam",
+                "statement": "For each of the following tasks, name the single best loop construct and write a 1-sentence technical justification: (a) Stepping through an array of 50 students, (b) Calculating GCD using Euclidean remainder division, (c) Prompting user for password until correct.",
+                "input": "3 Architectural Scenarios",
+                "output": "(a) for (fixed bound), (b) while (event-driven, 0-or-more), (c) do-while (prompt must appear at least once)",
+                "concept": "Architectural loop selection criteria in computer systems engineering",
+                "hint": "Apply the 3-Second Decision Rule: Known iterations vs Post-test validation vs Pre-test transformation."
+            }
+        ]
+    })
+
+    # --- TOPIC 34: Comparative Problem Solving Across Loops (PROBLEM TOPIC) ---
+    topics.append({
+        "id": "ch3_8",
+        "chapterId": 3,
+        "number": 34,
+        "title": "Comparative Mathematical Problem Solving Across Different Loops",
+        "badge": "Algorithm Lab",
+        "readingTime": "16 min read",
+        "overview": "<p>In C programming, the <strong>underlying mathematical logic</strong> of a problem remains identical, but the <strong>variable lifecycles, termination boundaries, and edge-case behaviors</strong> vary depending on which loop construct is selected.</p><blockquote><strong>Core Pedagogical Goal:</strong> Don't memorize only the syntax. Learn to recognize the <strong>15 problem patterns</strong> and apply the <strong>7-step checklist</strong>.</blockquote>",
+        "deepDive": "<h3>1. Same Problem Using Different Loops</h3><p>Suppose we want to print <code>1 2 3 4 5</code>:</p><ul><li><strong>Using for:</strong> <code>for(int i = 1; i <= 5; i++) printf(\'%d \', i);</code></li><li><strong>Using while:</strong> <code>int i = 1; while(i <= 5) { printf(\'%d \', i); i++; }</code></li><li><strong>Using do...while:</strong> <code>int i = 1; do { printf(\'%d \', i); i++; } while(i <= 5);</code></li></ul><p>All three work. The goal is to choose the loop that naturally matches the problem.</p><h3>2. The 7-Step Problem-Solving Checklist</h3><p>Whenever you receive a loop problem, <strong>don't immediately start typing code</strong>. Walk through these 7 steps:</p><ol><li><strong>Step 1: What needs to be repeated?</strong> (Body statement)</li><li><strong>Step 2: What is the starting value?</strong> (e.g. <code>i = 1</code>)</li><li><strong>Step 3: When should the loop stop?</strong> (e.g. <code>i <= n</code>)</li><li><strong>Step 4: How does the value change?</strong> (e.g. <code>i++</code>, <code>i += 2</code>, <code>n /= 10</code>)</li><li><strong>Step 5: Which loop fits best?</strong> (Known count &rarr; <code>for</code>, Unknown &rarr; <code>while</code>, At least once &rarr; <code>do...while</code>)</li><li><strong>Step 6: Do I need an if inside?</strong> (Even/odd, max, min, searching, counting)</li><li><strong>Step 7: Do I need break or continue?</strong> (Stop completely &rarr; <code>break</code>, skip one case &rarr; <code>continue</code>)</li></ol><h3>3. The 15 Core Problem Patterns to Master</h3><p>Once you master these 15 patterns, loops become universal tools:</p><ol><li>Counting (1 to N)</li><li>Reverse counting (N down to 1)</li><li>Even numbers (i += 2)</li><li>Odd numbers (i += 2)</li><li>Sum accumulator (sum += i)</li><li>Product / Factorial (product *= i)</li><li>Counting matching values (if(cond) count++)</li><li>Finding maximum (if(x > max) max = x)</li><li>Finding minimum (if(x < min) min = x)</li><li>Linear search (if(arr[i] == target) { found = 1; break; })</li><li>Input until sentinel (while(n != 0))</li><li>Input validation (do { scanf(...); } while(invalid))</li><li>Pattern printing (nested row & column loops)</li><li>Multiplication tables (row * col grids)</li><li>Array traversal (for(i = 0; i < N; i++))</li></ol>",
+        "techTable": "<table class=\'doc-table\'><thead><tr><th>Pattern Name</th><th>Target Logic</th><th>Optimal Loop</th><th>Key Operator / Variable</th></tr></thead><tbody><tr><td><strong>Counting</strong></td><td>1 to N sequential</td><td><code>for</code></td><td><code>i++</code></td></tr><tr><td><strong>Reverse Counting</strong></td><td>N down to 1</td><td><code>for</code></td><td><code>i--</code></td></tr><tr><td><strong>Sum Accumulator</strong></td><td>Total of range</td><td><code>for</code> / <code>while</code></td><td><code>sum += i;</code> (init <code>sum=0</code>)</td></tr><tr><td><strong>Factorial</strong></td><td>Product N!</td><td><code>for</code> / <code>while</code></td><td><code>fact *= i;</code> (init <code>fact=1</code>)</td></tr><tr><td><strong>Finding Maximum</strong></td><td>Track highest value</td><td><code>for</code> / <code>while</code></td><td><code>if (x > max) max = x;</code></td></tr><tr><td><strong>Linear Search</strong></td><td>Find target item</td><td><code>for</code></td><td><code>if (arr[i]==k) { found=1; break; }</code></td></tr><tr><td><strong>Sentinel Input</strong></td><td>Read until 0</td><td><code>while</code></td><td><code>while (n != 0)</code></td></tr><tr><td><strong>Menu / Validation</strong></td><td>Run at least once</td><td><code>do...while</code></td><td><code>do { ... } while (choice != 0);</code></td></tr></tbody></table>",
+        "diagram": "+-------------------------------------------------------------------------+\n|                          ONE-PAGE REVISION CARD                         |\n|                                                                         |\n|                                 C LOOPS                                 |\n|                                    |                                    |\n|             +----------------------+----------------------+             |\n|             |                      |                      |             |\n|            for                   while                do...while        |\n|             |                      |                      |             |\n|        Known count           Unknown count          Must run once       |\n|             |                      |                      |             |\n|        Condition              Condition               Body runs         |\n|       before body            before body             FIRST check        |\n|             |                      |                    after           |\n|          Pre-test               Pre-test              Post-test         |\n|                                                                         |\n|    break:    STOP THE LOOP 🛑                                            |\n|    continue: SKIP THIS ITERATION ⏭️                                      |\n+-------------------------------------------------------------------------+",
+        "code": "#include <stdio.h>\n\nint main(void) {\n    int s_for = 0, s_while = 0, s_do = 0;\n    \n    for (int i = 1; i <= 5; i++) s_for += i;\n    \n    int w_i = 1;\n    while (w_i <= 5) { s_while += w_i; w_i++; }\n    \n    int d_i = 1;\n    do { s_do += d_i; d_i++; } while (d_i <= 5);\n    \n    printf(\"Sum 1..5 using for     : %d\\n\", s_for);\n    printf(\"Sum 1..5 using while   : %d\\n\", s_while);\n    printf(\"Sum 1..5 using do-while: %d\\n\\n\", s_do);\n    \n    int n = 5, fact = 1;\n    for (int i = 1; i <= n; i++) fact *= i;\n    printf(\"%d! Factorial = %d\\n\\n\", n, fact);\n    \n    int arr[5] = {10, 20, 30, 40, 50};\n    int target = 30, found = 0;\n    for (int i = 0; i < 5; i++) {\n        if (arr[i] == target) {\n            found = 1;\n            break;\n        }\n    }\n    printf(\"Searching %d in array: %s\\n\", target, found ? \"Found!\" : \"Not Found\");\n    return 0;\n}",
+        "output": "Sum 1..5 using for     : 15\nSum 1..5 using while   : 15\nSum 1..5 using do-while: 15\n\n5! Factorial = 120\n\nSearching 30 in array: Found!",
+        "codeExplanation": "Proves mathematical equivalence across all three loops, shows the accumulator pattern for factorials, and demonstrates linear search with break.",
+        "examTraps": "1. Uninitialized accumulators: `int sum;` contains garbage memory values. Always write `int sum = 0;` and `int product = 1;`. 2. Finding Maximum trap: Initializing `max = 0` fails if all input numbers are negative! Always initialize `max` with the first element of input.",
+        "practiceProblems": [
+            {
+                "level": "Level 1: Tri-Loop Factorial Benchmark",
+                "levelClass": "diff-very-basic",
+                "statement": "Write a program containing three separate functions: fact_for(n), fact_while(n), and fact_dowhile(n). Compute 5! in each and verify that all three return 120. Ensure all three correctly return 1 for N = 0.",
+                "input": "N = 5 and N = 0",
+                "output": "For 5: 120, 120, 120 | For 0: 1, 1, 1",
+                "concept": "Cross-loop factorial algorithm implementation and 0! boundary protection",
+                "hint": "In fact_dowhile, if (n <= 1) return 1; do { f *= n; n--; } while (n > 1);"
+            },
+            {
+                "level": "Level 2: Geometric Series Sum across Loops",
+                "levelClass": "diff-basic",
+                "statement": "Calculate the sum of geometric series S = 1 + x + x^2 + ... + x^n using both a for loop and a while loop. Compare readability and state management between the two.",
+                "input": "x = 2, n = 4",
+                "output": "Sum = 31 (1 + 2 + 4 + 8 + 16)",
+                "concept": "Iterative term accumulation (term *= x) comparison across loop styles",
+                "hint": "long long term = 1, sum = 1; for (int i = 1; i <= n; i++) { term *= x; sum += term; }"
+            },
+            {
+                "level": "Level 3: Zero-Edge Digit Counter Stress Test",
+                "levelClass": "diff-exam",
+                "statement": "Write a digit counting function. Show why while (n > 0) returns 0 digits for input N = 0 (a bug!), whereas do { count++; n /= 10; } while (n > 0) naturally returns 1 digit for N = 0. Explain why do-while is mathematically superior for digit counting.",
+                "input": "N = 0",
+                "output": "while loop: 0 digits (incorrect) | do-while loop: 1 digit (correct)",
+                "concept": "Exploiting exit-controlled execution to handle zero-boundary cases without extra if branches",
+                "hint": "Trace on paper: N=0 in while condition (0 > 0) is false immediately. In do-while, count increments to 1, 0 / 10 = 0, then condition (0 > 0) stops loop."
+            }
+        ]
+    })
+
+    return topics
+
+def get_50_problems():
+    # 50 graduated practice bank problems with explicit curriculum pathways, algorithms and solutions
+    return [
+    {
+        "id": "p1_1",
+        "num": 1,
+        "title": "Swap two variables using a temporary variable",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Variables & Memory transfer",
+        "chapterId": 1,
+        "chapterName": "Chapter 1: Fundamentals of Computer & C",
+        "topicId": "ch1_11",
+        "topicTitle": "11. Variables, Constants, Expressions & Memory",
+        "curriculumPath": "Ch 1 \u2794 Variables & Memory",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 1: Fundamentals > Topic 11: Variables & Memory > Problem #01",
+        "concept": "Three-way memory buffer transfer using a temporary variable",
+        "sampleInput": "a = 10, b = 25",
+        "sampleOutput": "Before: a = 10, b = 25\nAfter : a = 25, b = 10",
+        "algorithmSteps": [
+            "Step 1: Declare three integer variables: a, b, and temp.",
+            "Step 2: Read or initialize values for a and b.",
+            "Step 3: Copy value of a into temp (temp = a).",
+            "Step 4: Overwrite a with b (a = b).",
+            "Step 5: Copy preserved value from temp into b (b = temp).",
+            "Step 6: Print swapped values of a and b."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 10, b = 25, temp;\n    printf(\"Before: a = %d, b = %d\\n\", a, b);\n    temp = a;\n    a = b;\n    b = temp;\n    printf(\"After : a = %d, b = %d\\n\", a, b);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_2",
+        "num": 2,
+        "title": "Swap two variables WITHOUT a third temporary variable",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "Arithmetic swapping logic",
+        "chapterId": 1,
+        "chapterName": "Chapter 1: Fundamentals of Computer & C",
+        "topicId": "ch1_11",
+        "topicTitle": "11. Variables, Constants, Expressions & Memory",
+        "curriculumPath": "Ch 1 \u2794 Variables & Memory",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 1: Fundamentals > Topic 11: Variables & Memory > Problem #02",
+        "concept": "Mathematical delta accumulation and cancellation (+, -)",
+        "sampleInput": "x = 40, y = 15",
+        "sampleOutput": "Before: x = 40, y = 15\nAfter : x = 15, y = 40",
+        "algorithmSteps": [
+            "Step 1: Read two integers x and y.",
+            "Step 2: Add y to x and store sum in x (x = x + y).",
+            "Step 3: Subtract y from current x to recover original x into y (y = x - y).",
+            "Step 4: Subtract new y from x to recover original y into x (x = x - y).",
+            "Step 5: Print new x and y."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int x = 40, y = 15;\n    printf(\"Before: x = %d, y = %d\\n\", x, y);\n    x = x + y;\n    y = x - y;\n    x = x - y;\n    printf(\"After : x = %d, y = %d\\n\", x, y);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_3",
+        "num": 3,
+        "title": "Calculate area and perimeter of rectangle",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Basic arithmetic formulas",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_1",
+        "topicTitle": "1. Arithmetic Operators",
+        "curriculumPath": "Ch 2 \u2794 Arithmetic Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 1: Arithmetic Operators > Problem #03",
+        "concept": "Standard geometry formulas using multiplication and addition",
+        "sampleInput": "length = 12.5, width = 6.0",
+        "sampleOutput": "Area = 75.00 sq units\nPerimeter = 37.00 units",
+        "algorithmSteps": [
+            "Step 1: Read length and width as float values.",
+            "Step 2: Compute area = length * width.",
+            "Step 3: Compute perimeter = 2.0 * (length + width).",
+            "Step 4: Print area and perimeter with 2 decimal precision."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    float length = 12.5f, width = 6.0f;\n    float area = length * width;\n    float perimeter = 2.0f * (length + width);\n    printf(\"Area = %.2f sq units\\n\", area);\n    printf(\"Perimeter = %.2f units\\n\", perimeter);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_4",
+        "num": 4,
+        "title": "Convert temperature from Celsius to Fahrenheit",
+        "difficulty": 1,
+        "estTime": "6 min",
+        "focus": "Float formula conversion",
+        "chapterId": 1,
+        "chapterName": "Chapter 1: Fundamentals of Computer & C",
+        "topicId": "ch1_11",
+        "topicTitle": "11. Variables, Constants, Expressions & Memory",
+        "curriculumPath": "Ch 1 \u2794 Variables & Memory",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 1: Fundamentals > Topic 11: Variables & Memory > Problem #04",
+        "concept": "Floating point constants to prevent integer truncation (9.0/5.0)",
+        "sampleInput": "Celsius = 37.0",
+        "sampleOutput": "37.00 C = 98.60 F",
+        "algorithmSteps": [
+            "Step 1: Read Celsius temperature c.",
+            "Step 2: Apply formula: f = (c * 9.0 / 5.0) + 32.0.",
+            "Step 3: Print result in Fahrenheit."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    float celsius = 37.0f;\n    float fahrenheit = (celsius * 9.0f / 5.0f) + 32.0f;\n    printf(\"%.2f C = %.2f F\\n\", celsius, fahrenheit);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_5",
+        "num": 5,
+        "title": "Convert seconds into hours, minutes, and seconds",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Integer division & modulus",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_1",
+        "topicTitle": "1. Arithmetic Operators",
+        "curriculumPath": "Ch 2 \u2794 Arithmetic Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 1: Arithmetic Operators > Problem #05",
+        "concept": "Time hierarchy breakdown using / 3600, / 60 and % 60",
+        "sampleInput": "total_seconds = 7384",
+        "sampleOutput": "7384 sec = 2 hr : 3 min : 4 sec",
+        "algorithmSteps": [
+            "Step 1: Read totalSeconds as integer.",
+            "Step 2: Compute hours = totalSeconds / 3600.",
+            "Step 3: Compute remainingSeconds = totalSeconds % 3600.",
+            "Step 4: Compute minutes = remainingSeconds / 60.",
+            "Step 5: Compute seconds = remainingSeconds % 60.",
+            "Step 6: Print formatted H:M:S."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int total = 7384;\n    int hours = total / 3600;\n    int rem = total % 3600;\n    int mins = rem / 60;\n    int secs = rem % 60;\n    printf(\"%d sec = %d hr : %d min : %d sec\\n\", total, hours, mins, secs);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_6",
+        "num": 6,
+        "title": "Calculate simple and compound interest",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Math formulas & power",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_10",
+        "topicTitle": "10. Mathematical Functions",
+        "curriculumPath": "Ch 2 \u2794 Math Library Functions",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 10: Math Functions > Problem #06",
+        "concept": "Simple arithmetic vs pow() exponentiation with math.h",
+        "sampleInput": "P = 10000, R = 5%, T = 3 years",
+        "sampleOutput": "Simple Interest = $1500.00\nCompound Interest = $1576.25",
+        "algorithmSteps": [
+            "Step 1: Include <math.h>.",
+            "Step 2: Compute SI = (P * R * T) / 100.0.",
+            "Step 3: Compute CI = P * pow((1.0 + R / 100.0), T) - P.",
+            "Step 4: Print SI and CI."
+        ],
+        "solutionCode": "#include <stdio.h>\n#include <math.h>\n\nint main(void) {\n    double p = 10000.0, r = 5.0, t = 3.0;\n    double si = (p * r * t) / 100.0;\n    double ci = p * pow(1.0 + r / 100.0, t) - p;\n    printf(\"Simple Interest   = $%.2f\\n\", si);\n    printf(\"Compound Interest = $%.2f\\n\", ci);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_7",
+        "num": 7,
+        "title": "Extract and print last digit of an integer",
+        "difficulty": 1,
+        "estTime": "4 min",
+        "focus": "Modulus % 10 operator",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_1",
+        "topicTitle": "1. Arithmetic Operators",
+        "curriculumPath": "Ch 2 \u2794 Arithmetic Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 1: Arithmetic Operators > Problem #07",
+        "concept": "Modulo 10 digit extraction fundamentals",
+        "sampleInput": "num = 9483",
+        "sampleOutput": "Last digit = 3",
+        "algorithmSteps": [
+            "Step 1: Read an integer n.",
+            "Step 2: Extract last digit using lastDigit = n % 10.",
+            "Step 3: Print lastDigit."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int num = 9483;\n    int lastDigit = num % 10;\n    printf(\"Number: %d -> Last Digit: %d\\n\", num, lastDigit);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_8",
+        "num": 8,
+        "title": "Calculate sum of individual digits of a 3-digit number",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "Repeated % 10 and / 10",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_1",
+        "topicTitle": "1. Arithmetic Operators",
+        "curriculumPath": "Ch 2 \u2794 Arithmetic Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 1: Arithmetic Operators > Problem #08",
+        "concept": "Sequential digit peeling without loops",
+        "sampleInput": "n = 582",
+        "sampleOutput": "Sum of digits (5 + 8 + 2) = 15",
+        "algorithmSteps": [
+            "Step 1: Read 3-digit integer n (e.g. 582).",
+            "Step 2: d3 = n % 10 (2), n = n / 10 (58).",
+            "Step 3: d2 = n % 10 (8), n = n / 10 (5).",
+            "Step 4: d1 = n % 10 (5).",
+            "Step 5: sum = d1 + d2 + d3.",
+            "Step 6: Print sum."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 582, original = n;\n    int d3 = n % 10; n /= 10;\n    int d2 = n % 10; n /= 10;\n    int d1 = n % 10;\n    int sum = d1 + d2 + d3;\n    printf(\"Digits of %d: %d + %d + %d = %d\\n\", original, d1, d2, d3, sum);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_9",
+        "num": 9,
+        "title": "Evaluate prefix and postfix increment expressions",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Unary ++ and -- output tracing",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_2",
+        "topicTitle": "2. Unary Operators",
+        "curriculumPath": "Ch 2 \u2794 Unary Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 2: Unary Operators > Problem #09",
+        "concept": "Prefix (increment first) vs Postfix (use first, increment after)",
+        "sampleInput": "a = 5, b = 5",
+        "sampleOutput": "a++ = 5 (a is now 6)\n++b = 6 (b is now 6)",
+        "algorithmSteps": [
+            "Step 1: Declare a = 5, b = 5.",
+            "Step 2: Print a++ (evaluates to 5, then increments a to 6).",
+            "Step 3: Print ++b (increments b to 6, evaluates to 6).",
+            "Step 4: Observe state differences in memory."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 5, b = 5;\n    printf(\"Initial: a = %d, b = %d\\n\", a, b);\n    printf(\"Postfix a++: %d\\n\", a++);\n    printf(\"After Postfix a: %d\\n\", a);\n    printf(\"Prefix ++b: %d\\n\", ++b);\n    printf(\"After Prefix b: %d\\n\", b);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_10",
+        "num": 10,
+        "title": "Demonstrate short-circuit evaluation in logical expressions",
+        "difficulty": 3,
+        "estTime": "12 min",
+        "focus": "&& and || side effects",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_4",
+        "topicTitle": "4. Logical Operators",
+        "curriculumPath": "Ch 2 \u2794 Logical Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 4: Logical Operators > Problem #10",
+        "concept": "Short circuit: In (0 && ++x), ++x is skipped; in (1 || ++y), ++y is skipped",
+        "sampleInput": "a = 0, b = 10",
+        "sampleOutput": "Condition: 0\na = 0, b = 10 (b unchanged due to short-circuit)",
+        "algorithmSteps": [
+            "Step 1: Initialize a = 0, b = 10.",
+            "Step 2: Evaluate if (a && ++b). Since a == 0 (False), ++b NEVER executes.",
+            "Step 3: Print b to prove it remains 10."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 0, b = 10;\n    if (a && ++b) {\n        printf(\"Branch Taken\\n\");\n    }\n    printf(\"Short-circuit test: b is still %d (not 11!)\\n\", b);\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_11",
+        "num": 11,
+        "title": "Check whether a number is Even or Odd",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "if-else condition",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_1",
+        "topicTitle": "1. if Statement and if-else Statement",
+        "curriculumPath": "Ch 3 \u2794 if and if-else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 1: if and if-else > Problem #11",
+        "concept": "Binary branch testing via remainder equality (n % 2 == 0)",
+        "sampleInput": "n = 28",
+        "sampleOutput": "28 is EVEN",
+        "algorithmSteps": [
+            "Step 1: Read an integer n.",
+            "Step 2: Test condition: if (n % 2 == 0).",
+            "Step 3: If true, print 'EVEN'.",
+            "Step 4: Else, print 'ODD'."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 28;\n    if (n % 2 == 0) {\n        printf(\"%d is EVEN\\n\", n);\n    } else {\n        printf(\"%d is ODD\\n\", n);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_12",
+        "num": 12,
+        "title": "Check whether a number is Positive, Negative, or Zero",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "if-else ladder",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_1",
+        "topicTitle": "1. if Statement and if-else Statement",
+        "curriculumPath": "Ch 3 \u2794 if and if-else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 1: if and if-else > Problem #12",
+        "concept": "Three-way classification using else-if ladder",
+        "sampleInput": "n = -14",
+        "sampleOutput": "-14 is NEGATIVE",
+        "algorithmSteps": [
+            "Step 1: Read integer n.",
+            "Step 2: If (n > 0), print 'POSITIVE'.",
+            "Step 3: Else if (n < 0), print 'NEGATIVE'.",
+            "Step 4: Else, print 'ZERO'."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = -14;\n    if (n > 0) {\n        printf(\"%d is POSITIVE\\n\", n);\n    } else if (n < 0) {\n        printf(\"%d is NEGATIVE\\n\", n);\n    } else {\n        printf(\"The number is ZERO\\n\");\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_13",
+        "num": 13,
+        "title": "Find largest of two numbers",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Relational comparison",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_1",
+        "topicTitle": "1. if Statement and if-else Statement",
+        "curriculumPath": "Ch 3 \u2794 if and if-else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 1: if and if-else > Problem #13",
+        "concept": "Relational inequality check (a > b)",
+        "sampleInput": "a = 45, b = 78",
+        "sampleOutput": "Largest is 78",
+        "algorithmSteps": [
+            "Step 1: Read two integers a and b.",
+            "Step 2: If (a > b), print a.",
+            "Step 3: Else, print b."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 45, b = 78;\n    if (a > b) {\n        printf(\"Largest is %d\\n\", a);\n    } else {\n        printf(\"Largest is %d\\n\", b);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_14",
+        "num": 14,
+        "title": "Find largest of three numbers using nested if-else",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "Nested if branching",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_2",
+        "topicTitle": "2. Nested if and Dangling-else Problem",
+        "curriculumPath": "Ch 3 \u2794 Nested if & Dangling else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 2: Nested if > Problem #14",
+        "concept": "Hierarchical comparison logic without logical operators",
+        "sampleInput": "a = 25, b = 80, c = 45",
+        "sampleOutput": "Largest is 80",
+        "algorithmSteps": [
+            "Step 1: Read a, b, c.",
+            "Step 2: If (a >= b): if (a >= c) largest is a; else largest is c.",
+            "Step 3: Else: if (b >= c) largest is b; else largest is c.",
+            "Step 4: Print largest."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 25, b = 80, c = 45;\n    int largest;\n    if (a >= b) {\n        if (a >= c) largest = a;\n        else largest = c;\n    } else {\n        if (b >= c) largest = b;\n        else largest = c;\n    }\n    printf(\"Largest of (%d, %d, %d) is %d\\n\", a, b, c, largest);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_15",
+        "num": 15,
+        "title": "Check whether a year is a Leap Year",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Compound logical conditions",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_4",
+        "topicTitle": "4. Logical Operators",
+        "curriculumPath": "Ch 2 \u2794 Logical Operators",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 4: Logical Operators > Problem #15",
+        "concept": "Gregorian rule: (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0))",
+        "sampleInput": "year = 2000, 1900, 2024",
+        "sampleOutput": "2000 is LEAP YEAR\n1900 is NOT LEAP YEAR\n2024 is LEAP YEAR",
+        "algorithmSteps": [
+            "Step 1: Read year.",
+            "Step 2: Test condition: (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0).",
+            "Step 3: If true, print 'LEAP YEAR'.",
+            "Step 4: Else, print 'NOT LEAP YEAR'."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int year = 2024;\n    if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)) {\n        printf(\"%d is a LEAP YEAR\\n\", year);\n    } else {\n        printf(\"%d is NOT a leap year\\n\", year);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_16",
+        "num": 16,
+        "title": "Determine voting eligibility based on age",
+        "difficulty": 1,
+        "estTime": "4 min",
+        "focus": "Simple if-else",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_1",
+        "topicTitle": "1. if Statement and if-else Statement",
+        "curriculumPath": "Ch 3 \u2794 if and if-else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 1: if and if-else > Problem #16",
+        "concept": "Threshold comparison (age >= 18)",
+        "sampleInput": "age = 17",
+        "sampleOutput": "Not eligible. Wait 1 year(s).",
+        "algorithmSteps": [
+            "Step 1: Read age.",
+            "Step 2: If (age >= 18), print 'Eligible to vote'.",
+            "Step 3: Else, print remaining years until eligibility."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int age = 17;\n    if (age >= 18) {\n        printf(\"Eligible to vote!\\n\");\n    } else {\n        printf(\"Not eligible. Wait %d year(s).\\n\", 18 - age);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_17",
+        "num": 17,
+        "title": "Calculate electricity bill based on unit consumption slabs",
+        "difficulty": 3,
+        "estTime": "15 min",
+        "focus": "Tiered else-if ladder",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_2",
+        "topicTitle": "2. Nested if and Dangling-else Problem",
+        "curriculumPath": "Ch 3 \u2794 Nested if & Dangling else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 2: Nested if > Problem #17",
+        "concept": "Cumulative slab pricing (first 100 @ 1.5, next 100 @ 2.5, above @ 4.0)",
+        "sampleInput": "units = 250",
+        "sampleOutput": "Total Bill = $600.00",
+        "algorithmSteps": [
+            "Step 1: Read consumed units.",
+            "Step 2: If units <= 100: bill = units * 1.5.",
+            "Step 3: Else if units <= 200: bill = 100*1.5 + (units-100)*2.5.",
+            "Step 4: Else: bill = 100*1.5 + 100*2.5 + (units-200)*4.0.",
+            "Step 5: Print total bill."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int units = 250;\n    double bill = 0.0;\n    if (units <= 100) {\n        bill = units * 1.50;\n    } else if (units <= 200) {\n        bill = (100 * 1.50) + ((units - 100) * 2.50);\n    } else {\n        bill = (100 * 1.50) + (100 * 2.50) + ((units - 200) * 4.00);\n    }\n    printf(\"Units: %d -> Electricity Bill: $%.2f\\n\", units, bill);\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_18",
+        "num": 18,
+        "title": "Find roots of quadratic equation using math library",
+        "difficulty": 3,
+        "estTime": "15 min",
+        "focus": "sqrt() & discriminant",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_10",
+        "topicTitle": "10. Mathematical Functions",
+        "curriculumPath": "Ch 2 \u2794 Math Library Functions",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 10: Math Functions > Problem #18",
+        "concept": "Discriminant (d = b*b - 4*a*c) branching: d>0, d==0, d<0",
+        "sampleInput": "a = 1, b = -5, c = 6",
+        "sampleOutput": "Real roots: root1 = 3.00, root2 = 2.00",
+        "algorithmSteps": [
+            "Step 1: Read coefficients a, b, c.",
+            "Step 2: Compute discriminant d = b*b - 4*a*c.",
+            "Step 3: If d > 0, compute two real roots using sqrt(d).",
+            "Step 4: If d == 0, one real root = -b / (2*a).",
+            "Step 5: If d < 0, roots are complex conjugates."
+        ],
+        "solutionCode": "#include <stdio.h>\n#include <math.h>\n\nint main(void) {\n    double a = 1.0, b = -5.0, c = 6.0;\n    double d = b * b - 4.0 * a * c;\n    if (d > 0) {\n        double r1 = (-b + sqrt(d)) / (2.0 * a);\n        double r2 = (-b - sqrt(d)) / (2.0 * a);\n        printf(\"Real roots: %.2f and %.2f\\n\", r1, r2);\n    } else if (d == 0) {\n        printf(\"Single root: %.2f\\n\", -b / (2.0 * a));\n    } else {\n        printf(\"Complex roots\\n\");\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_19",
+        "num": 19,
+        "title": "Check whether an alphabet character is vowel or consonant",
+        "difficulty": 2,
+        "estTime": "6 min",
+        "focus": "Logical OR conditions",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_1",
+        "topicTitle": "1. if Statement and if-else Statement",
+        "curriculumPath": "Ch 3 \u2794 if and if-else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 1: if and if-else > Problem #19",
+        "concept": "Compound character testing with case normalization",
+        "sampleInput": "ch = 'e'",
+        "sampleOutput": "'e' is a VOWEL",
+        "algorithmSteps": [
+            "Step 1: Read character ch.",
+            "Step 2: Check if ch is 'a','e','i','o','u' (or uppercase equivalents).",
+            "Step 3: If true, print 'VOWEL'; else print 'CONSONANT'."
+        ],
+        "solutionCode": "#include <stdio.h>\n#include <ctype.h>\n\nint main(void) {\n    char ch = 'e';\n    char lower = tolower(ch);\n    if (lower == 'a' || lower == 'e' || lower == 'i' || lower == 'o' || lower == 'u') {\n        printf(\"'%c' is a VOWEL\\n\", ch);\n    } else {\n        printf(\"'%c' is a CONSONANT\\n\", ch);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_20",
+        "num": 20,
+        "title": "Implement four-function calculator using switch statement",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "switch case with char",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_3",
+        "topicTitle": "3. Switch Statement",
+        "curriculumPath": "Ch 3 \u2794 switch Statement",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 3: switch Statement > Problem #20",
+        "concept": "Discrete operator dispatch using switch (+, -, *, /)",
+        "sampleInput": "num1 = 20, num2 = 4, op = '/'",
+        "sampleOutput": "20.00 / 4.00 = 5.00",
+        "algorithmSteps": [
+            "Step 1: Read two numbers num1, num2 and operator char op.",
+            "Step 2: switch (op) -> cases for '+', '-', '*', '/'.",
+            "Step 3: Guard division by zero in '/' case.",
+            "Step 4: default case for invalid operator."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    double a = 20.0, b = 4.0;\n    char op = '/';\n    switch (op) {\n        case '+': printf(\"Result = %.2f\\n\", a + b); break;\n        case '-': printf(\"Result = %.2f\\n\", a - b); break;\n        case '*': printf(\"Result = %.2f\\n\", a * b); break;\n        case '/': \n            if (b != 0) printf(\"Result = %.2f\\n\", a / b);\n            else printf(\"Error: Division by zero!\\n\");\n            break;\n        default: printf(\"Invalid operator\\n\"); break;\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_21",
+        "num": 21,
+        "title": "Convert number 1-7 to Day of Week using switch",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Basic switch case",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_3",
+        "topicTitle": "3. Switch Statement",
+        "curriculumPath": "Ch 3 \u2794 switch Statement",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 3: switch Statement > Problem #21",
+        "concept": "Discrete integer constant mapping with break statements",
+        "sampleInput": "day = 5",
+        "sampleOutput": "Day 5 is Thursday",
+        "algorithmSteps": [
+            "Step 1: Read day integer (1-7).",
+            "Step 2: switch (day) with cases 1 to 7 mapping to Sunday..Saturday.",
+            "Step 3: Print name and break."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int day = 5;\n    switch (day) {\n        case 1: printf(\"Sunday\\n\"); break;\n        case 2: printf(\"Monday\\n\"); break;\n        case 3: printf(\"Tuesday\\n\"); break;\n        case 4: printf(\"Wednesday\\n\"); break;\n        case 5: printf(\"Thursday\\n\"); break;\n        case 6: printf(\"Friday\\n\"); break;\n        case 7: printf(\"Saturday\\n\"); break;\n        default: printf(\"Invalid day (1-7 only)\\n\"); break;\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_22",
+        "num": 22,
+        "title": "Find number of days in month using switch fall-through",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "Intentional switch fall-through",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_3",
+        "topicTitle": "3. Switch Statement",
+        "curriculumPath": "Ch 3 \u2794 switch Statement",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 3: switch Statement > Problem #22",
+        "concept": "Grouping multiple cases without break to share common code",
+        "sampleInput": "month = 4 (April)",
+        "sampleOutput": "30 days",
+        "algorithmSteps": [
+            "Step 1: Read month number (1-12).",
+            "Step 2: Group 31-day months (1,3,5,7,8,10,12) together.",
+            "Step 3: Group 30-day months (4,6,9,11) together.",
+            "Step 4: Case 2: 28 or 29 days."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int month = 4;\n    switch (month) {\n        case 1: case 3: case 5: case 7: case 8: case 10: case 12:\n            printf(\"31 days\\n\"); break;\n        case 4: case 6: case 9: case 11:\n            printf(\"30 days\\n\"); break;\n        case 2:\n            printf(\"28 or 29 days (February)\\n\"); break;\n        default:\n            printf(\"Invalid month!\\n\"); break;\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_23",
+        "num": 23,
+        "title": "Print numbers from 1 to N using while loop",
+        "difficulty": 1,
+        "estTime": "4 min",
+        "focus": "Basic while counter",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #23",
+        "concept": "Entry-controlled loop initialization, condition, and increment",
+        "sampleInput": "N = 5",
+        "sampleOutput": "1 2 3 4 5",
+        "algorithmSteps": [
+            "Step 1: Initialize counter i = 1.",
+            "Step 2: While (i <= N), print i and increment i++.",
+            "Step 3: Exit loop when i exceeds N."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 5, i = 1;\n    while (i <= n) {\n        printf(\"%d \", i);\n        i++;\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_24",
+        "num": 24,
+        "title": "Calculate sum of first N natural numbers using while loop",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Loop accumulator",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #24",
+        "concept": "Accumulator variable initialization (sum = 0) and additive update",
+        "sampleInput": "N = 10",
+        "sampleOutput": "Sum = 55",
+        "algorithmSteps": [
+            "Step 1: Initialize sum = 0, i = 1.",
+            "Step 2: While (i <= N): sum += i; i++.",
+            "Step 3: Print sum after loop completes."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 10, i = 1, sum = 0;\n    while (i <= n) {\n        sum += i;\n        i++;\n    }\n    printf(\"Sum of first %d numbers = %d\\n\", n, sum);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_25",
+        "num": 25,
+        "title": "Calculate factorial of N using while loop",
+        "difficulty": 2,
+        "estTime": "7 min",
+        "focus": "Multiplicative accumulator",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #25",
+        "concept": "Multiplicative accumulator initialization (fact = 1, not 0!)",
+        "sampleInput": "N = 5",
+        "sampleOutput": "5! = 120",
+        "algorithmSteps": [
+            "Step 1: Initialize unsigned long long fact = 1, i = 1.",
+            "Step 2: While (i <= N): fact *= i; i++.",
+            "Step 3: Print fact."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 5, i = 1;\n    long long fact = 1;\n    while (i <= n) {\n        fact *= i;\n        i++;\n    }\n    printf(\"%d! = %lld\\n\", n, fact);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_26",
+        "num": 26,
+        "title": "Generate multiplication table of N using for loop",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Standard for loop",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #26",
+        "concept": "Compact header iteration (for (init; cond; incr))",
+        "sampleInput": "N = 7",
+        "sampleOutput": "7 x 1 = 7 ... 7 x 10 = 70",
+        "algorithmSteps": [
+            "Step 1: Read N.",
+            "Step 2: for (i = 1; i <= 10; i++): print N * i.",
+            "Step 3: Finish."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 7;\n    for (int i = 1; i <= 10; i++) {\n        printf(\"%d x %2d = %2d\\n\", n, i, n * i);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_27",
+        "num": 27,
+        "title": "Reverse an integer using while loop",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Arithmetic reversal % 10",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #27",
+        "concept": "rev = rev * 10 + (n % 10); n /= 10 algorithm",
+        "sampleInput": "n = 12345",
+        "sampleOutput": "Reversed = 54321",
+        "algorithmSteps": [
+            "Step 1: Initialize rev = 0.",
+            "Step 2: While (n != 0): rev = rev * 10 + (n % 10); n /= 10.",
+            "Step 3: Print rev."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 12345, original = n, rev = 0;\n    while (n != 0) {\n        rev = rev * 10 + (n % 10);\n        n /= 10;\n    }\n    printf(\"Original: %d -> Reversed: %d\\n\", original, rev);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_28",
+        "num": 28,
+        "title": "Check whether a number is a Palindrome",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Reverse and compare",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #28",
+        "concept": "Preserve original number in backup variable before destructive loop",
+        "sampleInput": "n = 1221",
+        "sampleOutput": "1221 is a PALINDROME",
+        "algorithmSteps": [
+            "Step 1: Save temp = n.",
+            "Step 2: Reverse n into rev using while loop.",
+            "Step 3: If (temp == rev), print 'PALINDROME'; else 'NOT PALINDROME'."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 1221, temp = n, rev = 0;\n    while (n > 0) {\n        rev = rev * 10 + (n % 10);\n        n /= 10;\n    }\n    if (temp == rev) {\n        printf(\"%d is a PALINDROME!\\n\", temp);\n    } else {\n        printf(\"%d is NOT a palindrome\\n\", temp);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_29",
+        "num": 29,
+        "title": "Check whether a number is an Armstrong Number",
+        "difficulty": 3,
+        "estTime": "12 min",
+        "focus": "Digit cubes sum",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #29",
+        "concept": "Sum of cubes of individual digits == original number (153 = 1^3 + 5^3 + 3^3)",
+        "sampleInput": "n = 153",
+        "sampleOutput": "153 is an ARMSTRONG NUMBER",
+        "algorithmSteps": [
+            "Step 1: Store temp = n, sum = 0.",
+            "Step 2: While (n > 0): rem = n % 10; sum += rem*rem*rem; n /= 10.",
+            "Step 3: If (sum == temp), Armstrong confirmed."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 153, temp = n, sum = 0;\n    while (n > 0) {\n        int d = n % 10;\n        sum += d * d * d;\n        n /= 10;\n    }\n    if (sum == temp) {\n        printf(\"%d is an ARMSTRONG NUMBER! (1\u00b3+5\u00b3+3\u00b3=%d)\\n\", temp, sum);\n    } else {\n        printf(\"%d is not an Armstrong number\\n\", temp);\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_30",
+        "num": 30,
+        "title": "Check whether a number is a Prime Number",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Trial division & break",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #30",
+        "concept": "Trial division up to sqrt(n) or n/2 with flag variable and break",
+        "sampleInput": "n = 29",
+        "sampleOutput": "29 is a PRIME NUMBER",
+        "algorithmSteps": [
+            "Step 1: If n <= 1, not prime.",
+            "Step 2: Set isPrime = 1.",
+            "Step 3: for (i = 2; i * i <= n; i++): if (n % i == 0) { isPrime = 0; break; }",
+            "Step 4: If isPrime == 1, print 'PRIME'."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 29, isPrime = 1;\n    if (n <= 1) isPrime = 0;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) {\n            isPrime = 0;\n            break;\n        }\n    }\n    if (isPrime) printf(\"%d is PRIME\\n\", n);\n    else printf(\"%d is NOT prime\\n\", n);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_31",
+        "num": 31,
+        "title": "Find all prime numbers between 1 and 100",
+        "difficulty": 3,
+        "estTime": "15 min",
+        "focus": "Nested loops prime sieve",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #31",
+        "concept": "Outer loop generates candidates; inner loop tests prime divisibility",
+        "sampleInput": "Range: 1 to 50",
+        "sampleOutput": "2 3 5 7 11 13 17 19 23 29 31 37 41 43 47",
+        "algorithmSteps": [
+            "Step 1: Outer loop for num = 2 to 100.",
+            "Step 2: Reset isPrime = 1 for each num.",
+            "Step 3: Inner loop tests i = 2 to num/2.",
+            "Step 4: If prime, print num."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Primes between 1 and 50:\\n\");\n    for (int num = 2; num <= 50; num++) {\n        int isPrime = 1;\n        for (int i = 2; i * i <= num; i++) {\n            if (num % i == 0) {\n                isPrime = 0;\n                break;\n            }\n        }\n        if (isPrime) printf(\"%d \", num);\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_32",
+        "num": 32,
+        "title": "Generate first N terms of Fibonacci Series",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Iterative state variables",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #32",
+        "concept": "Dynamic recurrence sliding window (next = t1 + t2; t1 = t2; t2 = next)",
+        "sampleInput": "N = 8",
+        "sampleOutput": "0, 1, 1, 2, 3, 5, 8, 13",
+        "algorithmSteps": [
+            "Step 1: Initialize t1 = 0, t2 = 1.",
+            "Step 2: Print t1 and t2.",
+            "Step 3: for (i = 3; i <= N; i++): next = t1 + t2; print next; t1 = t2; t2 = next."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 8, t1 = 0, t2 = 1, next;\n    printf(\"Fibonacci (%d terms): %d, %d\", n, t1, t2);\n    for (int i = 3; i <= n; i++) {\n        next = t1 + t2;\n        printf(\", %d\", next);\n        t1 = t2;\n        t2 = next;\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_33",
+        "num": 33,
+        "title": "Find GCD (HCF) of two numbers using Euclidean algorithm",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Euclidean modulo loop",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #33",
+        "concept": "Euclidean division remainder cycle (while b != 0: rem = a % b; a = b; b = rem)",
+        "sampleInput": "a = 48, b = 18",
+        "sampleOutput": "GCD = 6",
+        "algorithmSteps": [
+            "Step 1: Read two positive integers a and b.",
+            "Step 2: While (b != 0): rem = a % b; a = b; b = rem.",
+            "Step 3: When b == 0, GCD is a."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 48, b = 18, origA = a, origB = b;\n    while (b != 0) {\n        int rem = a % b;\n        a = b;\n        b = rem;\n    }\n    printf(\"GCD of %d and %d is %d\\n\", origA, origB, a);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_34",
+        "num": 34,
+        "title": "Find LCM of two numbers using GCD formula",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "Formula (a * b) / GCD",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #34",
+        "concept": "Relationship identity: LCM(a, b) = (a * b) / GCD(a, b)",
+        "sampleInput": "a = 12, b = 18",
+        "sampleOutput": "LCM = 36",
+        "algorithmSteps": [
+            "Step 1: Compute GCD of a and b using Euclidean loop.",
+            "Step 2: Compute LCM = (a * b) / GCD.",
+            "Step 3: Print LCM."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 12, b = 18;\n    int x = a, y = b;\n    while (y != 0) {\n        int rem = x % y;\n        x = y;\n        y = rem;\n    }\n    int gcd = x;\n    int lcm = (a * b) / gcd;\n    printf(\"LCM of %d and %d is %d\\n\", a, b, lcm);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_35",
+        "num": 35,
+        "title": "Print right-angled star triangle pattern",
+        "difficulty": 1,
+        "estTime": "6 min",
+        "focus": "Nested for loops",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #35",
+        "concept": "Outer loop controls rows; inner loop runs 1 to current row count",
+        "sampleInput": "rows = 4",
+        "sampleOutput": "*\n**\n***\n****",
+        "algorithmSteps": [
+            "Step 1: Outer loop i = 1 to rows.",
+            "Step 2: Inner loop j = 1 to i: print '*'.",
+            "Step 3: Print newline '\\n' after inner loop."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int rows = 4;\n    for (int i = 1; i <= rows; i++) {\n        for (int j = 1; j <= i; j++) {\n            printf(\"*\");\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_36",
+        "num": 36,
+        "title": "Print inverted right-angled star triangle pattern",
+        "difficulty": 2,
+        "estTime": "7 min",
+        "focus": "Decreasing inner loop",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #36",
+        "concept": "Decreasing loop bound or inner loop running from rows down to i",
+        "sampleInput": "rows = 4",
+        "sampleOutput": "****\n***\n**\n*",
+        "algorithmSteps": [
+            "Step 1: Outer loop i = rows down to 1.",
+            "Step 2: Inner loop j = 1 to i: print '*'.",
+            "Step 3: Print newline."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int rows = 4;\n    for (int i = rows; i >= 1; i--) {\n        for (int j = 1; j <= i; j++) {\n            printf(\"*\");\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_37",
+        "num": 37,
+        "title": "Print symmetrical pyramid star pattern",
+        "difficulty": 3,
+        "estTime": "12 min",
+        "focus": "Space offset + stars",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #37",
+        "concept": "Dual inner loops: leading spaces (rows-i) followed by odd stars (2*i - 1)",
+        "sampleInput": "rows = 4",
+        "sampleOutput": "   *\n  ***\n *****\n*******",
+        "algorithmSteps": [
+            "Step 1: Outer loop i = 1 to rows.",
+            "Step 2: First inner loop prints (rows - i) spaces.",
+            "Step 3: Second inner loop prints (2*i - 1) stars.",
+            "Step 4: Print newline."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int rows = 4;\n    for (int i = 1; i <= rows; i++) {\n        for (int s = 1; s <= rows - i; s++) printf(\" \");\n        for (int k = 1; k <= 2 * i - 1; k++) printf(\"*\");\n        printf(\"\\n\");\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_38",
+        "num": 38,
+        "title": "Print Floyd's triangle of consecutive numbers",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Global counter in nested loop",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #38",
+        "concept": "Persistent counter variable incremented across inner iterations",
+        "sampleInput": "rows = 4",
+        "sampleOutput": "1\n2 3\n4 5 6\n7 8 9 10",
+        "algorithmSteps": [
+            "Step 1: Initialize val = 1.",
+            "Step 2: Outer loop i = 1 to rows.",
+            "Step 3: Inner loop j = 1 to i: print val++, formatted.",
+            "Step 4: Print newline."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int rows = 4, val = 1;\n    for (int i = 1; i <= rows; i++) {\n        for (int j = 1; j <= i; j++) {\n            printf(\"%2d \", val++);\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_39",
+        "num": 39,
+        "title": "Calculate sum of arithmetic series 1 + 2 + 3 + ... + N",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Loop accumulator",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_4",
+        "topicTitle": "4. while Loop",
+        "curriculumPath": "Ch 3 \u2794 while Loop",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 4: while Loop > Problem #39",
+        "concept": "Comparing iterative loop accumulation with closed formula N*(N+1)/2",
+        "sampleInput": "N = 100",
+        "sampleOutput": "Loop Sum = 5050 | Formula = 5050",
+        "algorithmSteps": [
+            "Step 1: Read N.",
+            "Step 2: Accumulate sum using loop.",
+            "Step 3: Calculate formula check = N*(N+1)/2.",
+            "Step 4: Verify equality."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int n = 100, sum = 0;\n    for (int i = 1; i <= n; i++) sum += i;\n    int formula = (n * (n + 1)) / 2;\n    printf(\"Sum: %d | Formula: %d\\n\", sum, formula);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_40",
+        "num": 40,
+        "title": "Calculate sum of geometric series 1 + x + x^2 + ... + x^n",
+        "difficulty": 3,
+        "estTime": "12 min",
+        "focus": "pow() and loop sum",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: for Loop > Problem #40",
+        "concept": "Iterative term multiplication (term *= x) avoiding expensive repeated pow()",
+        "sampleInput": "x = 2, n = 4",
+        "sampleOutput": "1 + 2 + 4 + 8 + 16 = 31",
+        "algorithmSteps": [
+            "Step 1: Initialize sum = 1, currentTerm = 1.",
+            "Step 2: for (i = 1; i <= n; i++): currentTerm *= x; sum += currentTerm.",
+            "Step 3: Print sum."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int x = 2, n = 4;\n    long long sum = 1, term = 1;\n    for (int i = 1; i <= n; i++) {\n        term *= x;\n        sum += term;\n    }\n    printf(\"Sum of geometric series (x=%d, n=%d) = %lld\\n\", x, n, sum);\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    },
+    {
+        "id": "p1_41",
+        "num": 41,
+        "title": "Count uppercase, lowercase, digits, and special characters",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "getchar() & ctype",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_12",
+        "topicTitle": "12. Character Input and Output (getchar, putchar, gets, puts)",
+        "curriculumPath": "Ch 2 \u2794 Character I/O",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 12: Character I/O > Problem #41",
+        "concept": "Character range testing (ASCII codes or ctype macros: isupper, islower, isdigit)",
+        "sampleInput": "\"Exam2026!\"",
+        "sampleOutput": "Upper: 1, Lower: 3, Digits: 4, Special: 1",
+        "algorithmSteps": [
+            "Step 1: Read characters until EOF or newline using getchar().",
+            "Step 2: Update counters for uppercase, lowercase, digits, and others.",
+            "Step 3: Print stats table."
+        ],
+        "solutionCode": "#include <stdio.h>\n#include <ctype.h>\n\nint main(void) {\n    char str[] = \"Exam2026!\";\n    int upper = 0, lower = 0, digits = 0, special = 0;\n    for (int i = 0; str[i] != '\\0'; i++) {\n        if (isupper(str[i])) upper++;\n        else if (islower(str[i])) lower++;\n        else if (isdigit(str[i])) digits++;\n        else special++;\n    }\n    printf(\"String: %s\\nUpper: %d, Lower: %d, Digits: %d, Special: %d\\n\", str, upper, lower, digits, special);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_42",
+        "num": 42,
+        "title": "Demonstrate safe character input fixing newline buffer trap",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "scanf(' %c') fix",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_12",
+        "topicTitle": "12. Character Input and Output (getchar, putchar, gets, puts)",
+        "curriculumPath": "Ch 2 \u2794 Character I/O",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 12: Character I/O > Problem #42",
+        "concept": "The space before %c in scanf(' %c', &ch) discards orphaned whitespace and newlines",
+        "sampleInput": "42 then Enter then 'Y'",
+        "sampleOutput": "Integer: 42, Char: 'Y' (successfully captured)",
+        "algorithmSteps": [
+            "Step 1: Read integer with scanf(\"%d\", &n).",
+            "Step 2: Read character with scanf(\" %c\", &ch) using leading space.",
+            "Step 3: Verify ch receives the intended letter rather than '\\n'."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int num = 42;\n    char choice = 'Y';\n    printf(\"Simulated buffer fix:\\n\");\n    printf(\"scanf(\\\"%%d\\\", &num);\\n\");\n    printf(\"scanf(\\\" %%c\\\", &choice); // Leading space eats trailing '\\\\n'\\n\");\n    printf(\"Success: num=%d, choice='%c'\\n\", num, choice);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_43",
+        "num": 43,
+        "title": "Read formatted string with spaces safely using fgets()",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "fgets vs gets safe buffer",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_12",
+        "topicTitle": "12. Character Input and Output (getchar, putchar, gets, puts)",
+        "curriculumPath": "Ch 2 \u2794 Character I/O",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 12: Character I/O > Problem #43",
+        "concept": "Avoiding gets() buffer overflow by using fgets(buffer, sizeof(buffer), stdin)",
+        "sampleInput": "\"Computer Science Midterm\"",
+        "sampleOutput": "Read: Computer Science Midterm",
+        "algorithmSteps": [
+            "Step 1: Declare buffer char str[100].",
+            "Step 2: Read line with fgets(str, sizeof(str), stdin).",
+            "Step 3: Strip trailing '\\n' if present.",
+            "Step 4: Display with puts(str)."
+        ],
+        "solutionCode": "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char buffer[50] = \"Computer Science Midterm\\n\";\n    // Remove trailing newline if present\n    buffer[strcspn(buffer, \"\\n\")] = '\\0';\n    printf(\"Safely read buffer: '%s' (Length: %zu)\\n\", buffer, strlen(buffer));\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_44",
+        "num": 44,
+        "title": "Print formatted invoice table with width alignment flags",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "%-15s, %5d, %8.2f",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_13",
+        "topicTitle": "13. Formatted Input and Output",
+        "curriculumPath": "Ch 2 \u2794 Formatted I/O",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 13: Formatted I/O > Problem #44",
+        "concept": "Left alignment (%-Ns), minimum field widths, and precision specifiers",
+        "sampleInput": "Items: Pen (qty 5, $1.50), Notebook (qty 2, $4.25)",
+        "sampleOutput": "Tabular columnar output with border headers",
+        "algorithmSteps": [
+            "Step 1: Print table header with printf(\"%-15s %5s %8s\\n\").",
+            "Step 2: Print divider line.",
+            "Step 3: Print data rows with matching width format specifiers."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    printf(\"%-15s %5s %8s\\n\", \"Item\", \"Qty\", \"Price\");\n    printf(\"-------------------------------\\n\");\n    printf(\"%-15s %5d %8.2f\\n\", \"Gel Pen\", 5, 1.50);\n    printf(\"%-15s %5d %8.2f\\n\", \"Spiral Book\", 2, 4.25);\n    printf(\"%-15s %5d %8.2f\\n\", \"USB Drive\", 1, 12.99);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_45",
+        "num": 45,
+        "title": "Evaluate complex operator precedence expression on paper",
+        "difficulty": 2,
+        "estTime": "10 min",
+        "focus": "Precedence & associativity",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_7",
+        "topicTitle": "7. Operator Precedence and Associativity",
+        "curriculumPath": "Ch 2 \u2794 Operator Precedence",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 7: Operator Precedence > Problem #45",
+        "concept": "Step-by-step reduction using standard C operator priority table",
+        "sampleInput": "x = 5 + 3 * 2 > 10 && 4 != 2",
+        "sampleOutput": "Result = 1 (True)",
+        "algorithmSteps": [
+            "Step 1: High precedence: 3 * 2 = 6.",
+            "Step 2: Addition: 5 + 6 = 11.",
+            "Step 3: Relational: 11 > 10 = 1.",
+            "Step 4: Equality: 4 != 2 = 1.",
+            "Step 5: Logical AND: 1 && 1 = 1."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int result = 5 + 3 * 2 > 10 && 4 != 2;\n    printf(\"Expression: 5 + 3 * 2 > 10 && 4 != 2\\n\");\n    printf(\"Evaluation result: %d (1 = True)\\n\", result);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_46",
+        "num": 46,
+        "title": "Demonstrate explicit type casting preventing integer division",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "(float) type cast",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_9",
+        "topicTitle": "9. Type Conversions in Expressions",
+        "curriculumPath": "Ch 2 \u2794 Type Conversions",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 9: Type Conversions > Problem #46",
+        "concept": "Unary cast operator (float)sum / count forces floating point promotion",
+        "sampleInput": "sum = 17, count = 5",
+        "sampleOutput": "Without cast: 3.00\nWith cast   : 3.40",
+        "algorithmSteps": [
+            "Step 1: Declare int sum = 17, count = 5.",
+            "Step 2: Observe sum / count results in integer 3.",
+            "Step 3: Cast (float)sum / count to obtain 3.4."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int sum = 17, count = 5;\n    float wrong = sum / count;\n    float correct = (float)sum / count;\n    printf(\"Without cast : %.2f (truncated!)\\n\", wrong);\n    printf(\"With (float) : %.2f (exact!)\\n\", correct);\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_47",
+        "num": 47,
+        "title": "Find largest of three numbers using nested conditional ?: operator",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "Nested ternary logic",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_6",
+        "topicTitle": "6. Conditional Operator",
+        "curriculumPath": "Ch 2 \u2794 Conditional Operator",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 6: Conditional Operator > Problem #47",
+        "concept": "Inline decision: max = (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c)",
+        "sampleInput": "a = 34, b = 89, c = 52",
+        "sampleOutput": "Max = 89",
+        "algorithmSteps": [
+            "Step 1: Read a, b, c.",
+            "Step 2: Evaluate ternary expression.",
+            "Step 3: Print result."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 34, b = 89, c = 52;\n    int max = (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);\n    printf(\"Largest of (%d, %d, %d) using ?: is %d\\n\", a, b, c, max);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_48",
+        "num": 48,
+        "title": "Interactive menu repeat using exit-controlled do-while loop",
+        "difficulty": 2,
+        "estTime": "8 min",
+        "focus": "do-while menu driver",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_5",
+        "topicTitle": "5. do-while Loop and for Loop",
+        "curriculumPath": "Ch 3 \u2794 do-while & for Loops",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 5: do-while Loop > Problem #48",
+        "concept": "Guaranteed minimum single execution for user interaction menus",
+        "sampleInput": "Option 1 chosen, then Option 3 (Exit)",
+        "sampleOutput": "Menu printed, option executed, loop terminates on exit choice",
+        "algorithmSteps": [
+            "Step 1: Inside do block: print menu options and read choice.",
+            "Step 2: Execute choice using switch statement.",
+            "Step 3: while (choice != 3) condition keeps menu looping."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int choice = 3; // Simulated exit\n    do {\n        printf(\"--- MENU ---\\n1. Greet\\n2. Current Year\\n3. Exit\\n\");\n        printf(\"Executing option %d: Goodbye!\\n\", choice);\n    } while (choice != 3);\n    return 0;\n}",
+        "difficultyClass": "diff-basic",
+        "difficultyLabel": "Basic"
+    },
+    {
+        "id": "p1_49",
+        "num": 49,
+        "title": "Check whether a character is alphabet using conditional operator",
+        "difficulty": 1,
+        "estTime": "5 min",
+        "focus": "Ternary isalpha check",
+        "chapterId": 2,
+        "chapterName": "Chapter 2: Operators, Input & Output",
+        "topicId": "ch2_6",
+        "topicTitle": "6. Conditional Operator",
+        "curriculumPath": "Ch 2 \u2794 Conditional Operator",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 2: Operators > Topic 6: Conditional Operator > Problem #49",
+        "concept": "Ternary operator for quick boolean message selection",
+        "sampleInput": "ch = 'K'",
+        "sampleOutput": "'K' is an ALPHABET",
+        "algorithmSteps": [
+            "Step 1: Read char ch.",
+            "Step 2: isAlpha = ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) ? 1 : 0.",
+            "Step 3: Print result message."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    char ch = 'K';\n    int isAlpha = ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) ? 1 : 0;\n    printf(\"'%c' %s\\n\", ch, isAlpha ? \"is an ALPHABET\" : \"is NOT an alphabet\");\n    return 0;\n}",
+        "difficultyClass": "diff-very-basic",
+        "difficultyLabel": "Very Basic"
+    },
+    {
+        "id": "p1_50",
+        "num": 50,
+        "title": "Complete midterm exam mock: Student grading & rank program",
+        "difficulty": 3,
+        "estTime": "20 min",
+        "focus": "Comprehensive logic pipeline",
+        "chapterId": 3,
+        "chapterName": "Chapter 3: Control Statements",
+        "topicId": "ch3_2",
+        "topicTitle": "2. Nested if and Dangling-else Problem",
+        "curriculumPath": "Ch 3 \u2794 Nested if & Dangling else",
+        "pathBreadcrumb": "Midterm Syllabus > Chapter 3: Control Statements > Topic 2: Nested if > Problem #50",
+        "concept": "End-to-end integration: input validation, weighted average, grading ladder & honors",
+        "sampleInput": "Scores: 85, 92, 78",
+        "sampleOutput": "Average = 85.00 | Grade: A | Honors: Dean's List",
+        "algorithmSteps": [
+            "Step 1: Validate three subject scores (0 <= mark <= 100).",
+            "Step 2: Calculate total and float average = total / 3.0.",
+            "Step 3: Assign grade: >=90 (A+), >=80 (A), >=70 (B), >=60 (C), <60 (F).",
+            "Step 4: Check Dean's list criteria (Average >= 85 and no subject < 75).",
+            "Step 5: Print student grade sheet."
+        ],
+        "solutionCode": "#include <stdio.h>\n\nint main(void) {\n    int m1 = 85, m2 = 92, m3 = 78;\n    int total = m1 + m2 + m3;\n    float avg = total / 3.0f;\n    char grade[3];\n    \n    if (avg >= 90) sprintf(grade, \"A+\");\n    else if (avg >= 80) sprintf(grade, \"A\");\n    else if (avg >= 70) sprintf(grade, \"B\");\n    else if (avg >= 60) sprintf(grade, \"C\");\n    else sprintf(grade, \"F\");\n    \n    printf(\"==============================\\n\");\n    printf(\"   MIDTERM GRADE REPORT\\n\");\n    printf(\"==============================\\n\");\n    printf(\"Marks    : %d, %d, %d\\n\", m1, m2, m3);\n    printf(\"Average  : %.2f%%\\n\", avg);\n    printf(\"Grade    : %s\\n\", grade);\n    if (avg >= 85 && m1 >= 75 && m2 >= 75 && m3 >= 75) {\n        printf(\"Honors   : DEAN'S LIST CANDIDATE!\\n\");\n    }\n    printf(\"==============================\\n\");\n    return 0;\n}",
+        "difficultyClass": "diff-exam",
+        "difficultyLabel": "Exam Level"
+    }
+]
+
+def get_15_mcqs():
+    return [
+        {
+            "q": "What is the result of the integer division `17 / 5` in standard C?",
+            "options": ["3.4", "3", "4", "3.0"],
+            "correct": 1,
+            "explanation": "In C, dividing two integers always performs integer truncation towards zero, dropping any fractional part. 17 / 5 yields 3."
+        },
+        {
+            "q": "Which of the following is an INVALID identifier in C?",
+            "options": ["_score", "total_2", "2nd_rank", "MAX_VAL"],
+            "correct": 2,
+            "explanation": "C identifiers cannot begin with a numeric digit. '2nd_rank' begins with '2', making it invalid."
+        },
+        {
+            "q": "What is the value of `b` after executing: `int a = 5; int b = a++;`?",
+            "options": ["5", "6", "4", "Undefined"],
+            "correct": 0,
+            "explanation": "In postfix increment (a++), the current value of a (5) is returned first and assigned to b, before a is incremented to 6."
+        },
+        {
+            "q": "Which logical operator exhibits short-circuit evaluation?",
+            "options": ["&", "|", "&&", "^"],
+            "correct": 2,
+            "explanation": "The logical AND (&&) operator skips evaluating its second operand if the first operand evaluates to False (0)."
+        },
+        {
+            "q": "What will `sizeof(char)` ALWAYS evaluate to in C?",
+            "options": ["1 byte", "2 bytes", "4 bytes", "Depends on architecture"],
+            "correct": 0,
+            "explanation": "By C language standard definition, sizeof(char) is guaranteed to be exactly 1 byte on every conforming system."
+        },
+        {
+            "q": "Which statement about the `switch` statement is TRUE?",
+            "options": [
+                "Case expressions can be float numbers like 2.5",
+                "Case expressions must be compile-time integer constants",
+                "Variables can be used as case values",
+                "Break statement is mandatory in every case"
+            ],
+            "correct": 1,
+            "explanation": "Case labels must strictly be compile-time integer or character constants. Floats and runtime variables are syntax errors."
+        },
+        {
+            "q": "What is the minimum number of times a `do...while` loop executes?",
+            "options": ["0 times", "1 time", "Infinite times", "2 times"],
+            "correct": 1,
+            "explanation": "Because do-while is an exit-controlled loop that tests its condition at the bottom, its body is guaranteed to execute at least once."
+        },
+        {
+            "q": "In the absence of curly braces `{}`, to which `if` does an `else` attach?",
+            "options": [
+                "The very first if in the function",
+                "The nearest preceding unmatched if",
+                "The if with the matching visual indentation",
+                "Causes a syntax error"
+            ],
+            "correct": 1,
+            "explanation": "The Dangling Else rule states that an else clause always pairs with the closest preceding unmatched if at the same scope level."
+        },
+        {
+            "q": "What is the value of `x` after: `int a = 5, b = 2; float x = a / b;`?",
+            "options": ["2.5", "2.0", "2", "3.0"],
+            "correct": 1,
+            "explanation": "a / b is an integer division that evaluates to 2 first. It is then implicitly promoted and assigned to float x as 2.0."
+        },
+        {
+            "q": "What is the result of `-17 % 5` under C99 standard?",
+            "options": ["-2", "2", "3", "-3"],
+            "correct": 0,
+            "explanation": "In C99, the sign of the modulus operator % always matches the sign of the dividend (numerator): -17 % 5 = -2."
+        },
+        {
+            "q": "What is the correct format specifier to read a `double` variable with `scanf()`?",
+            "options": ["%f", "%lf", "%d", "%s"],
+            "correct": 1,
+            "explanation": "scanf requires %lf for double. (printf can accept %f or %lf)."
+        },
+        {
+            "q": "What error occurs if you pass `num` instead of `&num` to `scanf(\"%d\", num);`?",
+            "options": ["Syntax error at compile time", "Segmentation Fault / Runtime Crash", "num is initialized to zero", "Nothing, it works fine"],
+            "correct": 1,
+            "explanation": "scanf expects memory address. Passing garbage value of num causes CPU to write to an invalid address, triggering a crash."
+        },
+        {
+            "q": "What does a single semicolon `;` right after a while loop (`while(i <= 5);`) do?",
+            "options": ["Terminates program cleanly", "Creates a null loop body, causing an infinite loop", "Syntax error", "Executes loop once"],
+            "correct": 1,
+            "explanation": "The semicolon becomes the empty loop body; i is never incremented, creating an infinite loop."
+        },
+        {
+            "q": "How many bytes does the string literal `\"Hello\"` occupy in RAM?",
+            "options": ["5 bytes", "6 bytes", "4 bytes", "8 bytes"],
+            "correct": 1,
+            "explanation": "5 characters + 1 terminating null character '\\0' = 6 bytes."
+        },
+        {
+            "q": "Which architecture stores both program instructions and data in the same shared memory?",
+            "options": ["Harvard Architecture", "Von Neumann Architecture", "Turing Architecture", "RISC Architecture"],
+            "correct": 1,
+            "explanation": "The Von Neumann architecture features shared memory for instructions and data."
+        }
+    ]
+
+def build():
+    data = {
+        "chapters": [
+            {"id": 1, "name": "1. Fundamentals of Computer and C", "short": "Fundamentals"},
+            {"id": 2, "name": "2. Operators, Input and Output", "short": "Operators & I/O"},
+            {"id": 3, "name": "3. Control Statements", "short": "Control Statements"}
+        ],
+        "syllabus": get_all_topics(),
+        "problems": get_50_problems(),
+        "mcqs": get_15_mcqs()
+    }
+    
+    js_content = "/**\n * C PROGRAMMING MIDTERM HANDBOOK - COMPLETE DATA REPOSITORY\n * University-Grade Documentation, 31 Syllabus Topics, 50 Practice Bank, 15 MCQs\n */\n\nconst HandbookData = " + json.dumps(data, indent=2) + ";\n"
+    
+    with open(r"c:\Projects\c-handbook\js\content.js", "w", encoding="utf-8") as f:
+        f.write(js_content)
+    
+    print("Successfully generated c:\\Projects\\c-handbook\\js\\content.js")
+
+if __name__ == "__main__":
+    build()
