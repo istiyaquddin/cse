@@ -182,6 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
       renderQuizView();
     } else if (currentView === 'mistakes') {
       renderMistakesView();
+    } else if (currentView === 'prediction') {
+      renderOutputPredictionView();
+    } else if (currentView === 'debuglab') {
+      renderDebuggingLabView();
     }
   }
 
@@ -1493,11 +1497,14 @@ document.addEventListener('DOMContentLoaded', () => {
       'problems': 'track-sheet',
       'bank': 'track-sheet',
       'traps': 'mistakes',
-      'exam-traps': 'mistakes'
+      'exam-traps': 'mistakes',
+      'output-prediction': 'prediction',
+      'debugging': 'debuglab',
+      'bug-lab': 'debuglab'
     };
 
     const targetView = aliasMap[rawHash] || rawHash;
-    if (['syllabus', 'theory', 'track-sheet', 'roadmap', 'quiz', 'mistakes'].includes(targetView)) {
+    if (['syllabus', 'theory', 'track-sheet', 'roadmap', 'quiz', 'mistakes', 'prediction', 'debuglab'].includes(targetView)) {
       currentView = targetView;
       setActiveNavTab(targetView);
       renderCurrentView();
@@ -1571,6 +1578,132 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.style.transition = 'all 0.3s ease';
       setTimeout(() => toast.remove(), 300);
     }, 2500);
+  }
+
+  // =========================================================================
+  // VIEW: OUTPUT PREDICTION LAB
+  // =========================================================================
+  function renderOutputPredictionView() {
+    const labs = HandbookData.outputPredictionLab || [];
+    const levelColors = { 1: 'var(--accent-emerald)', 2: 'var(--accent-cyan)', 3: 'var(--accent-amber)', 4: 'var(--accent-rose)' };
+    const levelNames = { 1: '🟢 Basic', 2: '🔵 Intermediate', 3: '🔥 Exam', 4: '⚡ Tricky' };
+
+    mainCanvasEl.innerHTML = `
+      <div class="doc-article">
+        <div class="content-badge-row" style="margin-bottom: 1.5rem;">
+          <span class="content-badge" style="background: rgba(0,210,255,0.12); color: var(--accent-cyan);">🔮 Output Prediction Lab</span>
+          <span class="content-badge">${labs.length} Questions</span>
+        </div>
+        <h1 class="content-title">C Output Prediction Master Lab</h1>
+        <p class="content-lead">Trace each program mentally and predict the output <strong>before</strong> revealing the answer. This is the most effective exam preparation technique.</p>
+
+        <div class="callout callout-tip" style="margin-bottom: 2rem;">
+          <div class="callout-body">💡 <strong>How to use:</strong> Read the code, write your prediction on paper, then click "Reveal Answer" to check. Focus on understanding <em>why</em> the output is what it is.</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          ${labs.map((q, i) => `
+            <div class="study-card" id="pred-${q.id}" style="border-left: 3px solid ${levelColors[q.level] || 'var(--accent-cyan)'}; padding: 1.5rem;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <div>
+                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Question ${i + 1}</span>
+                  <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0.25rem 0 0;">${q.title}</h3>
+                </div>
+                <span class="content-badge" style="background: rgba(0,0,0,0.2); font-size: 0.72rem; white-space: nowrap;">${levelNames[q.level] || q.difficulty}</span>
+              </div>
+
+              <div class="code-block" style="margin-bottom: 1rem;">
+                <div class="code-header"><span class="code-lang">C</span><span class="code-filename">predict.c</span></div>
+                <div class="code-body"><pre class="code-pre"><code>${escapeHtml(q.code)}</code></pre></div>
+              </div>
+
+              <p style="font-size: 0.92rem; color: var(--text-secondary); font-style: italic; margin-bottom: 1rem;">❓ ${q.question}</p>
+
+              <details style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem 1rem;">
+                <summary style="cursor: pointer; font-weight: 700; color: var(--accent-cyan); font-size: 0.9rem; user-select: none;">🔑 Reveal Answer</summary>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
+                  <div style="margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Output:</span>
+                    <pre style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-emerald); margin: 0.35rem 0 0;">${escapeHtml(q.answer)}</pre>
+                  </div>
+                  <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.6rem;">
+                    <strong style="color: var(--text-primary);">Why:</strong> ${q.explanation}
+                  </div>
+                  <div class="callout callout-warn" style="padding: 0.65rem 0.9rem; margin-top: 0.5rem;">
+                    <div class="callout-body" style="font-size: 0.85rem;">⚠️ <strong>Trap:</strong> ${q.trap}</div>
+                  </div>
+                </div>
+              </details>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // =========================================================================
+  // VIEW: DEBUGGING LAB
+  // =========================================================================
+  function renderDebuggingLabView() {
+    const bugs = HandbookData.debuggingLab || [];
+    const catColors = {
+      'Operators': 'var(--accent-amber)',
+      'Input/Output': 'var(--accent-cyan)',
+      'Preprocessor': 'var(--accent-indigo)',
+      'Control Statements': 'var(--accent-rose)',
+      'Loops': 'var(--accent-rose)',
+      'Scoping': 'var(--text-muted)'
+    };
+
+    mainCanvasEl.innerHTML = `
+      <div class="doc-article">
+        <div class="content-badge-row" style="margin-bottom: 1.5rem;">
+          <span class="content-badge" style="background: rgba(248,113,113,0.12); color: var(--accent-rose);">🐛 Debugging Lab</span>
+          <span class="content-badge">${bugs.length} Bugs to Fix</span>
+        </div>
+        <h1 class="content-title">Find the Bug — C Debugging Lab</h1>
+        <p class="content-lead">Each exercise shows a buggy program. Identify what is wrong and how to fix it. This is exactly what appears in university midterm exams.</p>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
+          ${bugs.map((bug, i) => `
+            <div class="study-card" style="border-left: 3px solid ${catColors[bug.category] || 'var(--border-subtle)'}; padding: 1.5rem;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <div>
+                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Bug ${i + 1}</span>
+                  <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--accent-rose); margin: 0.25rem 0 0;">${bug.title}</h3>
+                </div>
+                <span class="content-badge" style="background: rgba(248,113,113,0.1); color: var(--accent-rose); font-size: 0.72rem;">${bug.category}</span>
+              </div>
+
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">❌ <strong>Broken Code:</strong></p>
+              <div class="code-block" style="margin-bottom: 1.25rem;">
+                <div class="code-body" style="border: 1px solid rgba(248,113,113,0.25);"><pre class="code-pre" style="color: #fca5a5;"><code>${escapeHtml(bug.brokenCode)}</code></pre></div>
+              </div>
+
+              <details style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem 1rem;">
+                <summary style="cursor: pointer; font-weight: 700; color: var(--accent-rose); font-size: 0.9rem; user-select: none;">🔍 Reveal: What is Wrong & Fix</summary>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 0.9rem;">
+                  <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65;">
+                    <strong style="color: var(--accent-amber);">What is wrong:</strong> ${bug.whatIsWrong}
+                  </div>
+                  <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65;">
+                    <strong style="color: var(--text-primary);">Why:</strong> ${bug.whyItIsWrong}
+                  </div>
+                  <div>
+                    <p style="font-size: 0.88rem; color: var(--accent-emerald); margin-bottom: 0.4rem;">✅ <strong>Correct Code:</strong></p>
+                    <div class="code-block"><div class="code-body" style="border: 1px solid rgba(16,185,129,0.25);"><pre class="code-pre" style="color: var(--accent-emerald);"><code>${escapeHtml(bug.correctCode)}</code></pre></div></div>
+                  </div>
+                  <div class="callout callout-tip" style="padding: 0.65rem 0.9rem;">
+                    <div class="callout-body" style="font-size: 0.85rem;">💡 <strong>Lesson:</strong> ${bug.lessonLearned}</div>
+                  </div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 0.6rem;">⚠️ <strong>Trap:</strong> ${bug.trap}</div>
+                </div>
+              </details>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
   }
 
   function escapeHtml(str) {

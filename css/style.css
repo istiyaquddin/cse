@@ -796,17 +796,18 @@ body {
   flex: 1;
   min-height: calc(100vh - var(--header-height));
   position: relative;
+  gap: 0;
 }
 
 /* LEFT SIDEBAR: TOPICS & CHAPTERS */
 .left-sidebar {
   width: var(--sidebar-width);
-  background: var(--bg-secondary);
+  background: rgba(12, 18, 34, 0.96);
   border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 1.15rem;
-  gap: 1.5rem;
+  padding: 1.25rem 1rem;
+  gap: 1.25rem;
   overflow-y: auto;
   height: calc(100vh - var(--header-height));
   position: sticky;
@@ -3019,22 +3020,53 @@ p code, li code, span code {
 
   /* Main canvas: full width */
   .main-canvas {
-    padding: 1.25rem 1rem;
+    padding: 1rem 0.8rem 1.5rem;
     max-width: 100%;
     overflow-x: hidden;
   }
 
   /* Doc article */
   .doc-article {
-    padding: 1.25rem 1.15rem;
+    padding: 1.15rem 1rem;
     border-radius: var(--radius-md);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
   }
 
   /* Study cards */
   .study-card {
-    padding: 1.1rem 1.15rem;
-    margin-bottom: 1rem;
+    padding: 1rem 1rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .chapter-btn {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .topic-item {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.78rem;
+  }
+
+  .readiness-info {
+    display: none;
+  }
+
+  .nav-readiness-badge {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .quick-sheet-text {
+    display: none;
+  }
+
+  .quick-sheet-btn {
+    padding: 0 0.55rem;
   }
 
   /* Syllabus: 2-col → 1-col */
@@ -3141,12 +3173,22 @@ p code, li code, span code {
 
 /* ─── SMALL MOBILE (≤ 480px) ─── */
 @media (max-width: 480px) {
-  .main-canvas  { padding: 1rem 0.75rem; }
-  .doc-article  { padding: 1rem 0.9rem; border-radius: var(--radius-sm); }
-  .study-card   { padding: 0.9rem 0.95rem; }
+  .main-canvas  { padding: 0.9rem 0.7rem 1.25rem; }
+  .doc-article  { padding: 0.95rem 0.8rem; border-radius: var(--radius-sm); }
+  .study-card   { padding: 0.85rem 0.9rem; }
 
   .study-hero-title { font-size: 1.35rem; }
   .content-title    { font-size: 1.45rem; }
+
+  .header-right {
+    gap: 6px;
+  }
+
+  .icon-btn,
+  .quick-sheet-btn,
+  .nav-readiness-badge {
+    border-radius: 9px;
+  }
 
   .content-badge-row { gap: 0.4rem; }
   .content-badge     { font-size: 0.7rem; padding: 0.25rem 0.6rem; }

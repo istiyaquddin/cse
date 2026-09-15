@@ -31,6 +31,26 @@ const HandbookData = {
       "badge": "Hardware & Architecture",
       "readingTime": "10 min read",
       "overview": "<p>A <strong>computer</strong> is an electronic, programmable data-processing machine that accepts raw data as <strong>Input</strong>, processes it under stored program instructions in the <strong>Central Processing Unit (CPU)</strong>, stores intermediate and final results in <strong>Memory</strong>, and generates meaningful information as <strong>Output</strong>.</p><p>In modern computer science, this foundational model is known as the <strong>Von Neumann Architecture</strong> (proposed by John von Neumann in 1945). It is characterized by a shared physical memory space that stores both program instructions (code) and operational data.</p><p>When you write and run a C program, you are directly manipulating physical hardware: transistors switch states, bits move across copper bus lines, CPU registers hold temporary operands, and volatile RAM holds your variables.</p>",
+      "objective": "Explain the basic structure of a computer and how the C program uses CPU, memory, and input/output to solve a problem.",
+      "whatIsIt": "A computer is a machine that receives input, processes data using the CPU, stores values in memory, and produces output. In C, every variable and instruction eventually runs through this same hardware model.",
+      "keyConcept": [
+        "Input, processing, and output are the three basic stages of computer work.",
+        "The CPU executes instructions while RAM stores active data and program values.",
+        "A computer cannot run a program directly from disk; it first loads it into RAM."
+      ],
+      "ruleFormula": "Input -> CPU (ALU + Control Unit) -> Memory -> Output",
+      "exampleCode": "#include <stdio.h>\n\nint main(void) {\n    int a = 15;\n    int b = 25;\n    int sum = a + b;\n    printf(\"Sum = %d\\n\", sum);\n    printf(\"RAM address of sum: %p\\n\", (void*)&sum);\n    return 0;\n}",
+      "exampleOutput": "Sum = 40\nRAM address of sum: 0x7ffd9a5b3fec",
+      "commonMistake": {
+        "trap": "Students often confuse CPU registers with RAM memory. Registers are inside the CPU and are used for very fast temporary work, while RAM stores the actual program data and variables.",
+        "why": "The CPU cannot work directly on the SSD or hard disk. It must first bring the data and instructions into RAM.",
+        "fix": "Remember: disk stores files, RAM stores active program data, and CPU registers hold the current working values."
+      },
+      "memoryTrick": "I/O in, CPU thinks, RAM stores, output out — that is the whole computer story.",
+      "practiceQuestion": {
+        "q": "Explain the path of a number entered from the keyboard until it is displayed on the screen in a simple C program.",
+        "hint": "Start with the input device, then CPU processing, then RAM storing the values, then output to console. Mention the role of the control unit and ALU."
+      },
       "deepDive": "<p>The computer consists of five essential functional subsystems connected by the <strong>System Bus</strong>:</p><ul><li><strong>1. Input Unit:</strong> Converts human-understandable information into binary electrical signals (<code>0</code>s and <code>1</code>s) using transducers. (Keyboard, Mouse, Scanner).</li><li><strong>2. Arithmetic Logic Unit (ALU):</strong> The computational engine of the CPU. It executes mathematical operations (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>) and relational/logical comparisons (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&amp;&amp;</code>, <code>||</code>).</li><li><strong>3. Control Unit (CU):</strong> The supervisor or conductor of the computer. It fetches instructions sequentially from memory, decodes what operation must occur, and issues micro-timed electrical signals to the ALU, RAM, and I/O devices.</li><li><strong>4. CPU Registers:</strong> High-speed internal memory cells located directly on the CPU silicon chip operating at CPU clock frequency (sub-nanosecond access). Examples: <em>Program Counter (PC)</em> holding the address of the next instruction, <em>Instruction Register (IR)</em> holding the current instruction, and the <em>Accumulator (ACC)</em>.</li><li><strong>5. Memory Unit (Primary vs Secondary):</strong><ul><li><strong>Primary Memory (RAM):</strong> High-speed volatile semiconductor memory directly accessible by the CPU via address and data buses. Loses all data on power interruption.</li><li><strong>Secondary Storage (SSD/HDD):</strong> High-capacity non-volatile magnetic or flash storage. CPU cannot execute code directly from storage; the OS must first load it into RAM.</li></ul></li></ul>",
       "techTable": "<table class='doc-table'><thead><tr><th>Parameter</th><th>Primary Memory (RAM)</th><th>Secondary Storage (SSD/HDD)</th></tr></thead><tbody><tr><td><strong>Speed</strong></td><td>Extremely fast (10-50 nanoseconds)</td><td>Slow to moderate (microseconds to milliseconds)</td></tr><tr><td><strong>Volatility</strong></td><td>Volatile (Erased upon power off)</td><td>Non-volatile (Persists permanently)</td></tr><tr><td><strong>Direct CPU Access</strong></td><td>Yes, directly via system bus</td><td>No, must be loaded into RAM by OS first</td></tr><tr><td><strong>Capacity & Cost</strong></td><td>Moderate (8 GB - 64 GB), High cost/GB</td><td>Massive (512 GB - 4 TB), Low cost/GB</td></tr><tr><td><strong>Typical Content</strong></td><td>Running OS kernel, active C program stack/heap</td><td>Saved source files (.c), compiled binaries (.exe)</td></tr></tbody></table>",
       "diagram": "+-------------------------------------------------------------------------+\n|                         VON NEUMANN ARCHITECTURE                        |\n|                                                                         |\n|  +--------------------+        CONTROL BUS         +-----------------+  |\n|  |                    |===========================>|                 |  |\n|  |                    |        ADDRESS BUS         |                 |  |\n|  |                    |===========================>|                 |  |\n|  |                    |         DATA BUS           |                 |  |\n|  |                    |<==========================>|                 |  |\n|  |     INPUT UNIT     |                            |   OUTPUT UNIT   |  |\n|  |  (Keyboard, Mouse) |    CENTRAL PROCESSING UNIT | (Monitor, Print)|  |\n|  |         |          |             (CPU)          |        ^        |  |\n|  |         +--------->|  +-----------------------+ |--------+        |  |\n|  |                    |  | Control Unit (CU)     | |                 |  |\n|  |                    |  +-----------------------+ |                 |  |\n|  |                    |  | Arithmetic Logic Unit | |                 |  |\n|  |                    |  | (ALU)                 | |                 |  |\n|  |                    |  +-----------------------+ |                 |  |\n|  |                    |  | Registers (PC, IR, ACC| |                 |  |\n|  |                    |  +-----------------------+ |                 |  |\n|  +--------------------+              ^             +-----------------+  |\n|                                      |                                  |\n|                                      v                                  |\n|                        +---------------------------+                    |\n|                        |   PRIMARY MEMORY (RAM)    |                    |\n|                        |  [Instructions & Data]    |                    |\n|                        +---------------------------+                    |\n|                                      ^                                  |\n|                                      | (Load / Store)                   |\n|                                      v                                  |\n|                        +---------------------------+                    |\n|                        |     SECONDARY STORAGE     |                    |\n|                        |     (SSD / HDD / NVMe)    |                    |\n|                        +---------------------------+                    |\n+-------------------------------------------------------------------------+",
@@ -68,6 +88,26 @@ const HandbookData = {
       "badge": "Software Foundations",
       "readingTime": "8 min read",
       "overview": "<p><strong>Software</strong> is a comprehensive collection of computer programs, procedures, rules, and associated documentation that instructs computer hardware what operations to perform, how to perform them, and in what exact sequence.</p><p>While computer <strong>Hardware</strong> consists of tangible physical electronic circuits, silicon microprocessors, and mechanical drives, <strong>Software</strong> represents the intangible logical intelligence. Hardware without software is inert silicon and plastic; software without hardware is abstract mathematics with no execution medium.</p>",
+      "objective": "Understand the difference between hardware and software and why software is necessary to make hardware useful.",
+      "whatIsIt": "Software is the set of coded instructions that tells the computer what to do. Hardware provides the machine, while software provides the logic and commands.",
+      "keyConcept": [
+        "Hardware is physical; software is logical instructions.",
+        "Software contains both code and data used during program execution.",
+        "Without software, a computer is just electronic hardware with no working behavior."
+      ],
+      "ruleFormula": "Hardware + Software = Functional Computer",
+      "exampleCode": "#include <stdio.h>\n\nint main(void) {\n    const char *message = \"Software brings hardware to life!\";\n    printf(\"%s\\n\", message);\n    return 0;\n}",
+      "exampleOutput": "Software brings hardware to life!",
+      "commonMistake": {
+        "trap": "Some students think firmware is hardware. Firmware is actually software stored permanently in hardware devices.",
+        "why": "Firmware is programmed and stored in ROM or flash memory, but it is still a software layer controlling the device.",
+        "fix": "Classify firmware as software, not pure hardware, because it is instructions stored on a device."
+      },
+      "memoryTrick": "Hardware is the body; software is the brain and instructions.",
+      "practiceQuestion": {
+        "q": "Give two differences between hardware and software, and explain why a computer without software is not useful.",
+        "hint": "Think about physical vs logical, repair process, and how software tells the CPU what operations to perform."
+      },
       "deepDive": "<p>A software program fundamentally consists of two components:</p><ol><li><strong>Instructions (Code):</strong> Ordered imperative commands (opcodes) that tell the CPU which mathematical and control flow operations to carry out.</li><li><strong>Data:</strong> The operands, constants, text characters, and numbers that the instructions read, manipulate, transform, and write.</li></ol><p>Software does not wear out mechanically like physical machines. Instead, software undergoes logical degradation known as <em>software rot</em> (bugs, security vulnerabilities, or obsolescence against changing hardware interfaces).</p>",
       "techTable": "<table class='doc-table'><thead><tr><th>Characteristic</th><th>Hardware</th><th>Software</th></tr></thead><tbody><tr><td><strong>Nature</strong></td><td>Physical, tangible (can be touched)</td><td>Logical, intangible (encoded in bits)</td></tr><tr><td><strong>Creation Process</strong></td><td>Manufactured in silicon foundries/factories</td><td>Engineered and programmed by human developers</td></tr><tr><td><strong>Wear and Tear</strong></td><td>Wears out mechanically and thermally over time</td><td>Does not wear out; deteriorates due to unmaintained bugs</td></tr><tr><td><strong>Fault Repair</strong></td><td>Requires physical component replacement</td><td>Requires debugging, patching, and recompilation</td></tr><tr><td><strong>Replication Cost</strong></td><td>Expensive (materials, assembly, shipping)</td><td>Near zero cost (instant digital copy)</td></tr></tbody></table>",
       "diagram": "+-------------------------------------------------------------------------+\n|                  THE COMPLETE COMPUTATIONAL ECOSYSTEM                   |\n|                                                                         |\n|    +---------------------------------------------------------------+    |\n|    |                             USER                              |    |\n|    +-------------------------------+-------------------------------+    |\n|                                    | (Interacts via UI)                 |\n|                                    v                                    |\n|    +---------------------------------------------------------------+    |\n|    |                      APPLICATION SOFTWARE                     |    |\n|    |           (Chrome, VS Code, Video Games, C Programs)          |    |\n|    +-------------------------------+-------------------------------+    |\n|                                    | (System Calls)                     |\n|                                    v                                    |\n|    +---------------------------------------------------------------+    |\n|    |                        SYSTEM SOFTWARE                        |    |\n|    |         (Operating System Kernel, Device Drivers, GCC)        |    |\n|    +-------------------------------+-------------------------------+    |\n|                                    | (Machine Instructions)             |\n|                                    v                                    |\n|    +---------------------------------------------------------------+    |\n|    |                       PHYSICAL HARDWARE                       |    |\n|    |            (CPU Transistors, RAM, SSD, GPU, Network)          |    |\n|    +-------------------------------+-------------------------------+    |\n+-------------------------------------------------------------------------+",
@@ -105,6 +145,26 @@ const HandbookData = {
       "badge": "Systems & Applications",
       "readingTime": "9 min read",
       "overview": "<p>Computer software is broadly divided into two primary classifications: <strong>System Software</strong> and <strong>Application Software</strong>, with specialized subcategories including <strong>Utility Programs</strong> and <strong>Device Drivers</strong>.</p><p>Understanding this distinction is vital for C programmers because C was specifically designed as a systems programming language to construct operating systems, compilers, and hardware drivers.</p>",
+      "objective": "Classify software correctly and explain why system software is different from application software.",
+      "whatIsIt": "Software is grouped by purpose: some programs manage hardware and the computer itself, while others help the user complete tasks such as writing, browsing, or computing.",
+      "keyConcept": [
+        "System software controls the machine; application software serves the user.",
+        "Compilers, operating systems, and drivers are system software.",
+        "Word processors, browsers, and games are application software."
+      ],
+      "ruleFormula": "System software manages hardware -> application software serves users",
+      "exampleCode": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Application -> System Software -> Hardware display!\\n\");\n    return 0;\n}",
+      "exampleOutput": "Application -> System Software -> Hardware display!",
+      "commonMistake": {
+        "trap": "Students often call GCC an application program instead of system software.",
+        "why": "GCC is a language translator that supports the system and prepares machine code, so it belongs to system software.",
+        "fix": "Ask: Is it directly helping the computer run or helping the user do a task? If it manages the system, it is system software."
+      },
+      "memoryTrick": "System software runs the machine; application software runs the task.",
+      "practiceQuestion": {
+        "q": "Classify each of these as system or application software: GCC, Windows, Microsoft Word, antivirus, and printer driver.",
+        "hint": "Think about whether the program manages the computer itself or helps a user directly perform a task."
+      },
       "deepDive": "<h3>1. System Software</h3><p>System Software manages, monitors, and controls the internal operations of computer hardware and provides a stable execution environment for application software. It is hardware-dependent and operates with high privileges.</p><ul><li><strong>Operating Systems (OS):</strong> Windows, Linux, macOS, UNIX. Coordinates CPU scheduling, RAM allocation, file systems, and hardware security.</li><li><strong>Language Translators:</strong> Compilers (GCC, Clang), Interpreters (Python), Assemblers.</li><li><strong>Device Drivers:</strong> Bridges communication between OS and physical hardware peripherals (GPU, printer).</li><li><strong>Utilities:</strong> Disk defragmenters, disk cleanup, antivirus.</li></ul><h3>2. Application Software</h3><p>Application Software is written to perform specific productivity, business, scientific, or entertainment tasks directly for the end user.</p>",
       "techTable": "<table class='doc-table'><thead><tr><th>Parameter</th><th>System Software</th><th>Application Software</th></tr></thead><tbody><tr><td><strong>Purpose</strong></td><td>Controls hardware & provides execution platform</td><td>Solves specific user tasks and business problems</td></tr><tr><td><strong>Proximity to Hardware</strong></td><td>Very close; interacts directly with CPU/RAM registers</td><td>Far; insulated from hardware by OS system calls</td></tr><tr><td><strong>Programming Language</strong></td><td>Built with low-level/middle-level languages (C, C++, Assembly)</td><td>Built with high-level languages (Java, Python, C#, JS)</td></tr><tr><td><strong>User Interaction</strong></td><td>Background operation; rarely interacts directly with user</td><td>Foreground operation; direct graphical or console UI</td></tr><tr><td><strong>Dependency</strong></td><td>Can run independently of application software</td><td>Cannot run without underlying system software (OS)</td></tr></tbody></table>",
       "diagram": "                      CLASSIFICATION OF SOFTWARE\n                                  |\n        +-------------------------+-------------------------+\n        |                                                   |\n  SYSTEM SOFTWARE                                   APPLICATION SOFTWARE\n        |                                                   |\n  +-----+-----+-----+                                 +-----+-----+\n  |     |     |     |                                 |           |\n  OS   COMP  UTIL  DRIVERS                         GENERAL    CUSTOMIZED\n(Linux)(GCC) (Defrag)(GPU)                        (Browser)   (Banking)",
@@ -3314,6 +3374,650 @@ const HandbookData = {
       ],
       "correct": 1,
       "explanation": "The Von Neumann architecture features shared memory for instructions and data."
+    }
+  ],
+
+  // =========================================================================
+  // OUTPUT PREDICTION LAB — 10 Classic Exam Questions with Answer Key
+  // Source: Master Notes PART 4 — C OUTPUT PREDICTION MASTER LAB
+  // =========================================================================
+  "outputPredictionLab": [
+    {
+      "id": "op1",
+      "title": "Integer Division Truncation",
+      "difficulty": "Basic",
+      "code": "#include <stdio.h>\nint main(void) {\n    int a = 5, b = 2;\n    float c = a / b;\n    printf(\"%.2f\\n\", c);\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "2.00",
+      "explanation": "a / b is integer division (5 / 2 = 2). The result 2 is then assigned to float c as 2.0. printf displays 2.00 — NOT 2.50 because division was integer, not float.",
+      "trap": "= vs division type: float c = a / b performs integer division FIRST, then promotes to float.",
+      "level": 1
+    },
+    {
+      "id": "op2",
+      "title": "Prefix vs Postfix Precedence",
+      "difficulty": "Intermediate",
+      "code": "#include <stdio.h>\nint main(void) {\n    int x = 10, y;\n    y = ++x + x++;\n    printf(\"x = %d, y = %d\\n\", x, y);\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "x = 12, y = 22",
+      "explanation": "++x pre-increments x to 11. Then x++ uses current value 11 and increments x to 12. y = 11 + 11 = 22. (Note: formally undefined behavior, but GCC typically gives this result.)",
+      "trap": "Modifying a variable multiple times without a sequence point is undefined behavior in strict C.",
+      "level": 2
+    },
+    {
+      "id": "op3",
+      "title": "Logical Short-Circuit Evaluation",
+      "difficulty": "Intermediate",
+      "code": "#include <stdio.h>\nint main(void) {\n    int a = 0, b = 5;\n    if (a++ && ++b) {\n        printf(\"Branch 1: a=%d, b=%d\\n\", a, b);\n    } else {\n        printf(\"Branch 2: a=%d, b=%d\\n\", a, b);\n    }\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "Branch 2: a=1, b=5",
+      "explanation": "a++ evaluates using original value 0 (False). Due to short-circuit, ++b is NEVER evaluated. b remains 5. a increments to 1 after the test.",
+      "trap": "Short-circuit: in &&, if the left side is False, the right side is skipped entirely — side effects do not happen.",
+      "level": 2
+    },
+    {
+      "id": "op4",
+      "title": "Assignment in Conditional Expression",
+      "difficulty": "Exam",
+      "code": "#include <stdio.h>\nint main(void) {\n    int x = 0;\n    if (x = 5) {\n        printf(\"Condition True: x = %d\\n\", x);\n    } else {\n        printf(\"Condition False: x = %d\\n\", x);\n    }\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "Condition True: x = 5",
+      "explanation": "x = 5 is assignment, NOT comparison. It assigns 5 to x and evaluates to 5. Since 5 is non-zero (truthy), the if-branch executes.",
+      "trap": "Classic = vs == trap. The condition is not checking if x equals 5 — it is setting x to 5!",
+      "level": 3
+    },
+    {
+      "id": "op5",
+      "title": "Dangling Else Resolution",
+      "difficulty": "Exam",
+      "code": "#include <stdio.h>\nint main(void) {\n    int a = 1, b = 0;\n    if (a > 0)\n        if (b > 0)\n            printf(\"Apple\\n\");\n    else\n        printf(\"Banana\\n\");\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "Banana",
+      "explanation": "The else binds to the nearest unmatched if — which is if (b > 0). Since a > 0 is true and b > 0 is false, the else branch prints Banana.",
+      "trap": "Dangling else: indentation is MISLEADING. In C, else always binds to the closest unmatched if.",
+      "level": 3
+    },
+    {
+      "id": "op6",
+      "title": "Switch Fall-Through Trap",
+      "difficulty": "Exam",
+      "code": "#include <stdio.h>\nint main(void) {\n    int code = 2;\n    switch (code) {\n        case 1: printf(\"One \");\n        case 2: printf(\"Two \");\n        case 3: printf(\"Three \");\n        default: printf(\"Default\");\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "Two Three Default",
+      "explanation": "code == 2 matches case 2 and execution starts there. Because there are no break statements, it falls through and executes every subsequent case and default.",
+      "trap": "Switch fall-through: without break, execution continues into the next cases like dominoes falling.",
+      "level": 3
+    },
+    {
+      "id": "op7",
+      "title": "Loop Trailing Semicolon",
+      "difficulty": "Tricky",
+      "code": "#include <stdio.h>\nint main(void) {\n    int i;\n    for(i = 1; i <= 5; i++);\n    {\n        printf(\"%d \", i);\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "6",
+      "explanation": "The semicolon after for(...) is the null loop body. It loops 5 times doing nothing until i reaches 6. Then the block { printf(\"%d\", i); } runs once, printing 6.",
+      "trap": "Semicolon after for creates an empty body. The { } block is not part of the loop.",
+      "level": 4
+    },
+    {
+      "id": "op8",
+      "title": "do-while Zero Execution Boundary",
+      "difficulty": "Basic",
+      "code": "#include <stdio.h>\nint main(void) {\n    int i = 10;\n    do {\n        printf(\"%d \", i);\n        i++;\n    } while (i < 5);\n    printf(\"Final: %d\\n\", i);\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "10 Final: 11",
+      "explanation": "do-while always runs the body at least once. i = 10 is printed. i becomes 11. Condition: 11 < 5 is False, so the loop exits. Final: 11 is printed.",
+      "trap": "do-while always executes once regardless of the condition — even if the condition is False from the start.",
+      "level": 1
+    },
+    {
+      "id": "op9",
+      "title": "printf Return Value",
+      "difficulty": "Tricky",
+      "code": "#include <stdio.h>\nint main(void) {\n    int x = printf(\"Hello\");\n    printf(\"%d\\n\", x);\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "Hello5",
+      "explanation": "printf returns the number of characters successfully written. 'Hello' has 5 characters, so printf returns 5. x = 5. The second printf prints 5.",
+      "trap": "printf returns an int — the number of characters printed. This is rarely used but appears in tricky exam questions.",
+      "level": 4
+    },
+    {
+      "id": "op10",
+      "title": "Nested Loop Multi-Index",
+      "difficulty": "Intermediate",
+      "code": "#include <stdio.h>\nint main(void) {\n    for (int i = 0, j = 3; i < j; i++, j--) {\n        printf(\"%d-%d \", i, j);\n    }\n    printf(\"\\n\");\n    return 0;\n}",
+      "question": "Predict the output.",
+      "answer": "0-3 1-2",
+      "explanation": "Pass 1: i=0, j=3 → print 0-3; update: i=1, j=2. Pass 2: i=1, j=2 → print 1-2; update: i=2, j=1. Condition: 2 < 1 → False, loop ends.",
+      "trap": "Both variables converge toward each other. The loop stops when i >= j (they cross).",
+      "level": 2
+    }
+  ],
+
+  // =========================================================================
+  // DEBUGGING LAB — 7 Classic Bug Scenarios with Explanations
+  // Source: Master Notes PART 5 — FIND THE BUG — C DEBUGGING LAB
+  // =========================================================================
+  "debuggingLab": [
+    {
+      "id": "bug1",
+      "title": "Assignment Instead of Comparison",
+      "category": "Operators",
+      "brokenCode": "int score = 85;\nif (score = 100) {\n    printf(\"Perfect score!\\n\");\n}",
+      "whatIsWrong": "Uses = (assignment) instead of == (comparison).",
+      "whyItIsWrong": "score = 100 assigns 100 to score and evaluates to 100 (non-zero = True). The if-block always executes regardless of the original score.",
+      "correctCode": "int score = 85;\nif (score == 100) {\n    printf(\"Perfect score!\\n\");\n}",
+      "lessonLearned": "Put the constant first: if (100 == score) causes a compile error if you accidentally type =, acting as a safety net.",
+      "trap": "= vs == is the most common beginner trap in C."
+    },
+    {
+      "id": "bug2",
+      "title": "Missing & in scanf",
+      "category": "Input/Output",
+      "brokenCode": "int age;\nscanf(\"%d\", age);",
+      "whatIsWrong": "Passed age by value instead of &age (address).",
+      "whyItIsWrong": "scanf() needs the memory address where to write the input bytes. Passing the value of age (which is garbage/random) causes a Segmentation Fault crash.",
+      "correctCode": "int age;\nscanf(\"%d\", &age);",
+      "lessonLearned": "All primitive variables in scanf() require the & address-of operator. Only arrays/strings are exceptions.",
+      "trap": "The compiler may not warn about this! It causes a runtime crash, not a compile error."
+    },
+    {
+      "id": "bug3",
+      "title": "Semicolon After #define Macro",
+      "category": "Preprocessor",
+      "brokenCode": "#define PI 3.14159;\ndouble area = PI * r * r;",
+      "whatIsWrong": "Semicolon at end of #define line.",
+      "whyItIsWrong": "Preprocessor replaces PI verbatim: double area = 3.14159; * r * r; — the semicolon terminates the statement early, causing a syntax error.",
+      "correctCode": "#define PI 3.14159\ndouble area = PI * r * r;",
+      "lessonLearned": "#define is a preprocessor directive, NOT a C statement. Never end it with ;",
+      "trap": "Common muscle-memory trap — semicolons end C statements but must NOT end #define lines."
+    },
+    {
+      "id": "bug4",
+      "title": "Missing break in switch",
+      "category": "Control Statements",
+      "brokenCode": "switch (day) {\n    case 1: printf(\"Monday\\n\");\n    case 2: printf(\"Tuesday\\n\");\n}",
+      "whatIsWrong": "Missing break; statements after each case.",
+      "whyItIsWrong": "When day == 1, execution enters case 1 and falls through into case 2 without stopping, printing both Monday and Tuesday.",
+      "correctCode": "switch (day) {\n    case 1: printf(\"Monday\\n\"); break;\n    case 2: printf(\"Tuesday\\n\"); break;\n}",
+      "lessonLearned": "Every switch case needs a break; unless fall-through is intentional and documented.",
+      "trap": "Fall-through is silent — no compiler warning by default. Always add break;"
+    },
+    {
+      "id": "bug5",
+      "title": "Missing Loop Update Variable",
+      "category": "Loops",
+      "brokenCode": "int i = 1;\nwhile (i <= 10) {\n    printf(\"%d \", i);\n}",
+      "whatIsWrong": "Missing i++; inside the loop body.",
+      "whyItIsWrong": "i stays 1 forever. The condition 1 <= 10 is always True, creating an infinite loop that freezes the program.",
+      "correctCode": "int i = 1;\nwhile (i <= 10) {\n    printf(\"%d \", i);\n    i++;\n}",
+      "lessonLearned": "Every while/do-while loop MUST have a statement that eventually makes the condition False.",
+      "trap": "Infinite loops can freeze your PC. Always check that the loop variable is updated inside the body."
+    },
+    {
+      "id": "bug6",
+      "title": "Modulus Operator with Float",
+      "category": "Operators",
+      "brokenCode": "float rem = 7.5 % 2.0;",
+      "whatIsWrong": "Using % (modulus) with float operands.",
+      "whyItIsWrong": "The % operator is strictly defined for integer types only in C. Using it with float causes a compile error.",
+      "correctCode": "#include <math.h>\ndouble rem = fmod(7.5, 2.0);",
+      "lessonLearned": "For floating-point modulus, use fmod() from <math.h>.",
+      "trap": "Python uses % for floats. C does NOT. This trips up students coming from Python."
+    },
+    {
+      "id": "bug7",
+      "title": "Variable Declared Inside do-while Used in Condition",
+      "category": "Scoping",
+      "brokenCode": "do {\n    int x = 1;\n    x++;\n} while (x < 5);",
+      "whatIsWrong": "x is declared inside the do block but used in the while condition outside the block.",
+      "whyItIsWrong": "x goes out of scope at the closing }, so while (x < 5) triggers an undeclared identifier compile error.",
+      "correctCode": "int x = 1;\ndo {\n    x++;\n} while (x < 5);",
+      "lessonLearned": "Loop control variables must be declared OUTSIDE the loop body if they are used in the condition.",
+      "trap": "Scope rules: variables declared inside {} only exist within that {} block."
+    }
+  ],
+
+  // =========================================================================
+  // QUICK REVISION SYSTEM — 4 levels from master notes PART 11
+  // =========================================================================
+  "quickRevision": {
+    "oneDayChecklist": [
+      "Review all 32 ANSI C keywords.",
+      "Re-read Operator Precedence Table (Ranks 1–15): remember unary & assignment associate Right-to-Left.",
+      "Practice 3 classic algorithms on paper: Prime check, Palindrome check, Factorial.",
+      "Re-check: mandatory semicolon after do { ... } while(cond);",
+      "Review format specifiers: %d (int), %f (float), %lf (double), %c (char), %s (string).",
+      "Trace at least 2 output prediction questions manually."
+    ],
+    "threeHourChecklist": [
+      "Trace a++ vs ++a in small expressions.",
+      "Review integer division truncation: 5 / 2 = 2, not 2.5.",
+      "Review short-circuit evaluation in && and ||.",
+      "Review Dangling Else rule: else binds to nearest unmatched if.",
+      "Review break vs continue: break exits loop, continue skips iteration.",
+      "Trace switch fall-through with and without break statements."
+    ],
+    "oneHourChecklist": [
+      "Scan the Top 20 Common Midterm Traps.",
+      "Re-verify the 5 standard flowchart symbols: Oval, Parallelogram, Rectangle, Diamond, Arrow.",
+      "Mentally walk through the 3-Second Loop Decision Rule.",
+      "Review scanf & rule and double format specifier (%lf)."
+    ],
+    "fifteenMinCard": {
+      "title": "15-Minute Final Memory Card",
+      "items": [
+        "Precedence Top 4: () → ++x/--x/sizeof → * / % → + -",
+        "Truth Rule: 0 = FALSE | Non-Zero = TRUE",
+        "Integer Division: int / int = int (TRUNCATED — never rounds)",
+        "Modulus Rule: Integers only! Sign follows dividend (C99).",
+        "scanf Rule: Always pass & for primitive variables!",
+        "do-while Rule: Must end with semicolon: do { ... } while(cond);",
+        "Loop Decision: Known count → for | Unknown → while | At least once → do-while",
+        "break: STOP THE LOOP immediately",
+        "continue: SKIP current iteration, check condition again",
+        "switch: needs break; after each case or falls through!"
+      ]
+    }
+  },
+
+  // =========================================================================
+  // EXAM TRAPS — Top 20 Midterm Traps from master notes PART 12
+  // =========================================================================
+  "examTraps": [
+    {
+      "id": 1,
+      "title": "Accidental Semicolon After Control Headers",
+      "code": "if (x > 0); // null body!\nwhile (i <= 5); // infinite loop!",
+      "explanation": "A semicolon right after if, while, or for creates a null (empty) statement as the body. The intended block { } is no longer controlled by the construct.",
+      "fix": "Never place ; directly after if(), while(), or for() headers.",
+      "category": "Control Flow"
+    },
+    {
+      "id": 2,
+      "title": "Integer Division Truncation",
+      "code": "float c = 5 / 2; // c = 2.00, NOT 2.50",
+      "explanation": "5 and 2 are integer literals. Division is performed as integer division (truncates), then the result is assigned to float.",
+      "fix": "Use float literals: 5.0f / 2.0f or cast: (float)5 / 2",
+      "category": "Operators"
+    },
+    {
+      "id": 3,
+      "title": "Modulus with Float Types",
+      "code": "float rem = 7.5 % 2.0; // COMPILE ERROR",
+      "explanation": "The % operator is only defined for integer types in C.",
+      "fix": "Use fmod(7.5, 2.0) from <math.h> for floating-point modulus.",
+      "category": "Operators"
+    },
+    {
+      "id": 4,
+      "title": "Leading Zero Octal Trap",
+      "code": "int x = 015; // This is OCTAL 13, not decimal 15!",
+      "explanation": "A numeric literal starting with 0 is interpreted as octal (base-8) in C. 015 in octal = 1×8 + 5 = 13 in decimal.",
+      "fix": "Never prefix decimal literals with 0. Use 0x for hexadecimal.",
+      "category": "Constants"
+    },
+    {
+      "id": 5,
+      "title": "Uninitialized Variables Contain Garbage",
+      "code": "int sum;\nsum = sum + 10; // sum contains garbage!",
+      "explanation": "Local variables in C are NOT automatically set to 0. They contain whatever bytes happened to be in that RAM location previously.",
+      "fix": "Always initialize: int sum = 0;",
+      "category": "Variables"
+    },
+    {
+      "id": 6,
+      "title": "Character vs String Literal",
+      "code": "char a = 'A'; // 1 byte, char constant\nchar *b = \"A\"; // 2 bytes, string: {'A', '\\0'}",
+      "explanation": "Single quotes denote a character constant (1 byte). Double quotes denote a string literal (null-terminated).",
+      "fix": "Use 'A' for single characters and \"A\" for strings.",
+      "category": "Constants"
+    },
+    {
+      "id": 7,
+      "title": "Dangling Else",
+      "code": "if (a > 0)\n    if (b > 0)\n        printf(\"A\");\nelse\n    printf(\"B\"); // binds to inner if, not outer!",
+      "explanation": "An else always binds to the nearest preceding unmatched if, regardless of indentation.",
+      "fix": "Use explicit braces: if (a > 0) { if (b > 0) { ... } } else { ... }",
+      "category": "Control Flow"
+    },
+    {
+      "id": 8,
+      "title": "Missing break in switch (Fall-Through)",
+      "code": "case 1: printf(\"One\");\ncase 2: printf(\"Two\"); // both print if case 1 matches!",
+      "explanation": "Without break, execution falls through into the next case. This is usually a bug.",
+      "fix": "Add break; at the end of every case unless fall-through is intentional.",
+      "category": "Control Flow"
+    },
+    {
+      "id": 9,
+      "title": "Float Values in switch",
+      "code": "float temp = 36.5;\nswitch (temp) { ... } // COMPILE ERROR",
+      "explanation": "switch requires an integer expression. Floating-point and string types are not allowed.",
+      "fix": "Use if-else chains for float comparisons.",
+      "category": "Control Flow"
+    },
+    {
+      "id": 10,
+      "title": "Leftover \\n Buffer Trap after scanf",
+      "code": "int n;\nscanf(\"%d\", &n);\nchar ch;\nch = getchar(); // reads '\\n' left in buffer!",
+      "explanation": "After scanf reads an integer, the newline '\\n' from pressing Enter stays in the input buffer. The next getchar() or scanf(\"%c\") reads this leftover '\\n' instead of the intended character.",
+      "fix": "Add getchar(); after scanf to consume the leftover newline, or use scanf(\" %c\", &ch) with a leading space.",
+      "category": "Input/Output"
+    },
+    {
+      "id": 11,
+      "title": "Missing & in scanf",
+      "code": "int num;\nscanf(\"%d\", num); // CRASH: Segmentation Fault",
+      "explanation": "scanf writes to memory. Without &, it receives the value of num (garbage) as an address and writes there — causing a crash.",
+      "fix": "Always use &: scanf(\"%d\", &num);",
+      "category": "Input/Output"
+    },
+    {
+      "id": 12,
+      "title": "scanf %lf vs printf %f for double",
+      "code": "double d;\nscanf(\"%f\", &d); // WRONG: must use %lf for scanf",
+      "explanation": "In scanf, %f reads into float (4 bytes) and %lf into double (8 bytes). Using %f for a double corrupts memory. printf accepts both %f and %lf for double.",
+      "fix": "Use %lf in scanf for double. Use %f or %lf in printf.",
+      "category": "Input/Output"
+    },
+    {
+      "id": 13,
+      "title": "Chained Comparison Trap",
+      "code": "if (18 <= age <= 60) // WRONG: always True!",
+      "explanation": "(18 <= age) evaluates to 0 or 1. Then (0 or 1) <= 60 is always True!",
+      "fix": "if (age >= 18 && age <= 60)",
+      "category": "Operators"
+    },
+    {
+      "id": 14,
+      "title": "Assignment in Condition (= vs ==)",
+      "code": "if (x = 5) { ... } // assigns 5, does NOT compare!",
+      "explanation": "x = 5 assigns 5 to x. Since 5 is non-zero, the condition is always True.",
+      "fix": "Use ==: if (x == 5). Or write: if (5 == x) to get a compile error if mistyped.",
+      "category": "Operators"
+    },
+    {
+      "id": 15,
+      "title": "Short-Circuit Side Effects",
+      "code": "int a = 0, b = 5;\nif (a && ++b) { ... }\n// b is STILL 5! ++b never evaluated",
+      "explanation": "In &&, if the left side is False, the right side is never evaluated. Side effects (like ++b) do not happen.",
+      "fix": "Do not rely on side effects in short-circuit expressions.",
+      "category": "Operators"
+    },
+    {
+      "id": 16,
+      "title": "sizeof Does Not Evaluate Side Effects",
+      "code": "int i = 5;\nint s = sizeof(i++); // i is STILL 5!",
+      "explanation": "sizeof is evaluated at compile time. Its operand is NOT executed — no side effects occur.",
+      "fix": "Do not use side effects inside sizeof().",
+      "category": "Operators"
+    },
+    {
+      "id": 17,
+      "title": "C99 Modulus Sign Follows Dividend",
+      "code": "int r = -14 % 4; // r = -2, NOT 2",
+      "explanation": "In C99, the sign of the result of % matches the sign of the dividend (numerator). -14 % 4 = -2.",
+      "fix": "Remember: sign follows dividend. -14 / 4 = -3, and -3 * 4 = -12, so -14 - (-12) = -2.",
+      "category": "Operators"
+    },
+    {
+      "id": 18,
+      "title": "Compound Assignment Precedence",
+      "code": "x *= a + b; // means: x = x * (a + b)",
+      "explanation": "Compound assignment operators (+=, *=, etc.) have very low precedence. The right-hand side expression is fully evaluated first.",
+      "fix": "If needed: x = (x * a) + b — use explicit parentheses.",
+      "category": "Operators"
+    },
+    {
+      "id": 19,
+      "title": "Macro Without Parentheses",
+      "code": "#define SQR(x) x * x\nint r = SQR(2 + 3); // expands to 2+3*2+3 = 11, NOT 25!",
+      "explanation": "Macros perform text substitution. Without parentheses, SQR(2+3) expands to 2+3*2+3 due to operator precedence.",
+      "fix": "#define SQR(x) ((x) * (x)) — wrap both macro and arguments in parentheses.",
+      "category": "Preprocessor"
+    },
+    {
+      "id": 20,
+      "title": "Modifying Variable Twice in Expression (Undefined Behavior)",
+      "code": "int x = 5;\nx = x++ + ++x; // UNDEFINED BEHAVIOR",
+      "explanation": "Modifying x more than once between sequence points is undefined behavior. Different compilers can produce different results.",
+      "fix": "Separate into multiple statements: x++; ++x; x = ... — never modify a variable twice in one expression.",
+      "category": "Undefined Behavior"
+    }
+  ],
+
+  // =========================================================================
+  // ALGORITHM PATTERNS — 26 Core Patterns from master notes PART 7
+  // =========================================================================
+  "algorithmPatterns": [
+    { "id": 1, "name": "Input → Process → Output", "template": "Read input → apply formula → print formatted output.", "example": "Read radius → area = PI * r * r → print area" },
+    { "id": 2, "name": "Swap with Temp", "template": "int temp = a; a = b; b = temp;", "example": "Swap two variables using a third temporary variable" },
+    { "id": 3, "name": "Swap Without Temp", "template": "a = a + b; b = a - b; a = a - b;", "example": "XOR trick or arithmetic swap without extra storage" },
+    { "id": 4, "name": "Running Average", "template": "sum += val; count++; avg = (double)sum / count;", "example": "Average of N student marks entered one by one" },
+    { "id": 5, "name": "Unit Conversion", "template": "result = (input + offset) * ratio;", "example": "celsius = (fahrenheit - 32) * 5.0 / 9.0;" },
+    { "id": 6, "name": "Two-Way Decision", "template": "if (cond) { ... } else { ... }", "example": "Even or Odd, Pass or Fail" },
+    { "id": 7, "name": "Multi-Way Decision (Ladder)", "template": "if ... else if ... else if ... else", "example": "Grade: A/B/C/D/F based on marks ranges" },
+    { "id": 8, "name": "Maximum of 3", "template": "int max = a; if (b > max) max = b; if (c > max) max = c;", "example": "Largest of three input numbers" },
+    { "id": 9, "name": "Minimum of 3", "template": "int min = a; if (b < min) min = b; if (c < min) min = c;", "example": "Smallest of three input numbers" },
+    { "id": 10, "name": "Counter Pattern", "template": "int count = 0; ... if (match) count++;", "example": "Count even numbers in a sequence" },
+    { "id": 11, "name": "Sum Accumulator", "template": "int sum = 0; while (...) { sum += term; }", "example": "Sum from 1 to N: sum = 1+2+3+...+N" },
+    { "id": 12, "name": "Product / Factorial Accumulator", "template": "long long prod = 1; for (i=1; i<=n; i++) prod *= i;", "example": "N! = 1 × 2 × 3 × ... × N" },
+    { "id": 13, "name": "Even / Odd Filter", "template": "if (n % 2 == 0) { /* even */ } else { /* odd */ }", "example": "Print only even numbers from 1 to 100" },
+    { "id": 14, "name": "Digit Extraction Loop", "template": "while (n > 0) { int d = n % 10; /* use d */ n /= 10; }", "example": "Sum of digits, reverse a number, palindrome check" },
+    { "id": 15, "name": "Number Reversal", "template": "rev = 0; while(n>0) { rev = rev*10 + n%10; n/=10; }", "example": "Reverse 1234 → 4321" },
+    { "id": 16, "name": "Palindrome Verification", "template": "if (original == reversed) palindrome = true;", "example": "121 reversed = 121 → Palindrome. 123 reversed = 321 → Not Palindrome." },
+    { "id": 17, "name": "Prime Number Check", "template": "for(int i=2; i*i<=n; i++) if(n%i==0) { isPrime=0; break; }", "example": "Is 17 prime? Check divisors up to √17 ≈ 4" },
+    { "id": 18, "name": "Armstrong Number Check", "template": "sum of (each digit)^3 == original number", "example": "153: 1³+5³+3³ = 1+125+27 = 153 → Armstrong!" },
+    { "id": 19, "name": "Fibonacci Series", "template": "next = t1 + t2; t1 = t2; t2 = next;", "example": "0 1 1 2 3 5 8 13 21 ..." },
+    { "id": 20, "name": "Multiplication Table", "template": "for(r=1;r<=R;r++) for(c=1;c<=C;c++) printf(\"%d \", r*c);", "example": "Print 10×10 multiplication table" },
+    { "id": 21, "name": "Linear Search with Flag", "template": "int found=0; for(i=0;i<n;i++) if(arr[i]==target){found=1;break;}", "example": "Find if value X exists in a list" },
+    { "id": 22, "name": "Input Validation Loop", "template": "do { scanf(...); } while (input is invalid);", "example": "Keep asking for age until value is between 1 and 120" },
+    { "id": 23, "name": "Sentinel-Controlled Loop", "template": "while (n != 0) { /* process */ scanf(\"%d\", &n); }", "example": "Keep reading numbers until 0 is entered" },
+    { "id": 24, "name": "Interactive Menu System", "template": "do { print_menu(); scanf(\"%d\",&choice); switch(choice){...} } while(choice!=0);", "example": "ATM machine: [1]Balance [2]Deposit [3]Withdraw [0]Exit" },
+    { "id": 25, "name": "2D Grid Traversal", "template": "for(i=0;i<rows;i++) for(j=0;j<cols;j++) process(i,j);", "example": "Print a 2D matrix row by row" },
+    { "id": 26, "name": "Pattern Printing (Pyramid)", "template": "Outer: row loop. Inner 1: spaces (rows-r). Inner 2: stars (2*r-1).", "example": "Print a centered star pyramid of height H" }
+  ],
+
+  // =========================================================================
+  // FLOWCHART BANK — 15 Core Algorithm Flowcharts (text descriptions)
+  // Source: Master Notes PART 6
+  // =========================================================================
+  "flowchartBank": {
+    "symbols": [
+      { "shape": "Oval / Rounded Rectangle", "name": "Terminal", "purpose": "Start / Stop of program execution", "cEquivalent": "main() { ... return 0; }" },
+      { "shape": "Parallelogram", "name": "Input / Output", "purpose": "Read keyboard input or print to screen", "cEquivalent": "scanf(), printf()" },
+      { "shape": "Rectangle", "name": "Process", "purpose": "Arithmetic calculations & variable assignments", "cEquivalent": "x = a + b; i++;" },
+      { "shape": "Diamond (Rhombus)", "name": "Decision", "purpose": "Conditional branching — two exits: YES and NO", "cEquivalent": "if (x > 0), while (i <= 10)" },
+      { "shape": "Arrow / Flowline", "name": "Flow Direction", "purpose": "Shows the direction of program execution", "cEquivalent": "Next instruction" },
+      { "shape": "Circle", "name": "Connector", "purpose": "On-page connector to avoid crossing flowlines", "cEquivalent": "goto (avoid in practice)" }
+    ],
+    "algorithms": [
+      { "id": 1, "title": "Add Two Numbers", "flow": "START → Read A, B → Sum = A + B → Print Sum → STOP" },
+      { "id": 2, "title": "Average of 3 Numbers", "flow": "START → Read A, B, C → Avg = (A+B+C)/3.0 → Print Avg → STOP" },
+      { "id": 3, "title": "Even or Odd", "flow": "START → Read N → [N%2==0?] YES→Print 'Even' | NO→Print 'Odd' → STOP" },
+      { "id": 4, "title": "Positive, Negative, or Zero", "flow": "START → Read N → [N>0?] YES→'Positive' | NO→[N<0?] YES→'Negative' | NO→'Zero' → STOP" },
+      { "id": 5, "title": "Largest of Two Numbers", "flow": "START → Read A, B → [A>B?] YES→Max=A | NO→Max=B → Print Max → STOP" },
+      { "id": 6, "title": "Largest of Three Numbers", "flow": "START → Read A,B,C → [A>B && A>C?] YES→Max=A | NO→[B>C?] YES→Max=B | NO→Max=C → Print Max → STOP" },
+      { "id": 7, "title": "Student Grade", "flow": "START → Read Marks → [>=80?]→A+ | [>=70?]→A | [>=60?]→B | [>=50?]→C | else→Fail → Print Grade → STOP" },
+      { "id": 8, "title": "Leap Year Check", "flow": "START → Read Y → [(Y%400==0) || (Y%4==0 && Y%100!=0)?] YES→'Leap Year' | NO→'Not Leap Year' → STOP" },
+      { "id": 9, "title": "Simple Calculator", "flow": "START → Read A, B, Op → [Op=='+']→A+B | [Op=='-']→A-B | [Op=='*']→A*B | [Op=='/']→A/B → Print → STOP" },
+      { "id": 10, "title": "Sum from 1 to N", "flow": "START → Read N → Init i=1,sum=0 → [i<=N?] YES→sum+=i,i++ loop | NO→Print sum → STOP" },
+      { "id": 11, "title": "Factorial of N", "flow": "START → Read N → Init i=1,fact=1 → [i<=N?] YES→fact*=i,i++ loop | NO→Print fact → STOP" },
+      { "id": 12, "title": "Reverse an Integer", "flow": "START → Read N → Init rev=0 → [N>0?] YES→digit=N%10,rev=rev*10+digit,N/=10 loop | NO→Print rev → STOP" },
+      { "id": 13, "title": "Palindrome Check", "flow": "START → Read N → Copy temp=N → Reverse loop → [temp==rev?] YES→'Palindrome' | NO→'Not Palindrome' → STOP" },
+      { "id": 14, "title": "Prime Number Check", "flow": "START → Read N → Init i=2,isPrime=1 → [i*i<=N?] YES→[N%i==0?] YES→isPrime=0,break | NO→i++ → NO→[isPrime==1?]→'Prime'/'Not Prime' → STOP" },
+      { "id": 15, "title": "Armstrong Number Check", "flow": "START → Read N → Copy temp=N → Extract digits,sum cubes → [sum==temp?] YES→'Armstrong' | NO→'Not Armstrong' → STOP" }
+    ]
+  },
+
+  // =========================================================================
+  // THEORY QUESTIONS — Short & Long Answer Bank from master notes PART 10
+  // =========================================================================
+  "theoryQuestions": {
+    "shortQuestions": [
+      {
+        "id": "sq1",
+        "question": "What is a variable?",
+        "answer": "A variable is a named storage location in computer memory (RAM) with an associated data type that holds a data value which can change during program execution.",
+        "keywords": ["named", "memory", "data type", "change"]
+      },
+      {
+        "id": "sq2",
+        "question": "What is an identifier?",
+        "answer": "An identifier is a user-defined name given to program entities such as variables, functions, and arrays. It is composed of letters, digits, and underscores, and must NOT start with a digit.",
+        "keywords": ["user-defined", "letters", "digits", "underscore", "not digit"]
+      },
+      {
+        "id": "sq3",
+        "question": "What is a symbolic constant?",
+        "answer": "A symbolic constant is a name substituted for a fixed constant value throughout a program, defined either via #define NAME value (preprocessor) or const type NAME = value; (C constant qualifier).",
+        "keywords": ["#define", "const", "fixed value", "preprocessor"]
+      },
+      {
+        "id": "sq4",
+        "question": "Differentiate between while and do...while loops.",
+        "answer": "while is an entry-controlled (pre-test) loop — it checks the condition BEFORE executing the body, so it may execute zero times. do...while is an exit-controlled (post-test) loop — it checks the condition AFTER the body, guaranteeing at least one execution.",
+        "keywords": ["pre-test", "post-test", "zero times", "at least once", "entry-controlled", "exit-controlled"]
+      },
+      {
+        "id": "sq5",
+        "question": "What is short-circuit evaluation?",
+        "answer": "Short-circuit evaluation is a compiler optimization where a logical expression (&&  or ||) stops evaluating as soon as the final truth value is determined. In &&, if the left side is False, the right is skipped. In ||, if the left side is True, the right is skipped.",
+        "keywords": ["&&", "||", "stops early", "left side", "right skipped"]
+      },
+      {
+        "id": "sq6",
+        "question": "What is the difference between = and ==?",
+        "answer": "= is the assignment operator — it copies an R-value into an L-value variable and returns the assigned value. == is a relational operator that compares two values for equality and returns 1 (True) or 0 (False). Confusing them is one of the most common C programming errors.",
+        "keywords": ["assignment", "equality", "R-value", "L-value", "1 or 0"]
+      }
+    ],
+    "longQuestions": [
+      {
+        "id": "lq1",
+        "question": "Explain the Von Neumann Architecture of a digital computer with a block diagram.",
+        "answerStructure": [
+          "Define Von Neumann Architecture (1945, shared memory for data and instructions).",
+          "Draw ASCII block diagram: CPU (ALU + CU + Registers) ↔ System Bus ↔ Primary Memory ↔ I/O Units.",
+          "Explain each unit: Input Unit (converts signals), ALU (arithmetic/logic), Control Unit (conductor), Registers (sub-nanosecond storage), RAM (volatile program storage), Secondary Storage (non-volatile), Output Unit.",
+          "Describe the Fetch → Decode → Execute → Store instruction cycle.",
+          "Explain how a C program uses this: variables → RAM, CPU executes instructions, I/O functions → keyboard/monitor."
+        ]
+      },
+      {
+        "id": "lq2",
+        "question": "Discuss the C Compilation Pipeline explaining all four stages.",
+        "answerStructure": [
+          "Stage 1: Preprocessing (.c → .i): Expands #include, #define macros, strips comments.",
+          "Stage 2: Compilation (.i → .s): Converts preprocessed C to Assembly language, checks syntax.",
+          "Stage 3: Assembly (.s → .o): Converts Assembly mnemonics to binary machine code object file.",
+          "Stage 4: Linking (.o + libraries → .exe): Combines object files with standard library functions (like printf from libc) into final executable."
+        ]
+      },
+      {
+        "id": "lq3",
+        "question": "Compare for, while, and do...while loops with syntax and use cases.",
+        "answerStructure": [
+          "for: Best when number of iterations is KNOWN. Syntax: for (init; condition; update) { body }",
+          "while: Best when number of iterations is UNKNOWN. Checks condition first. May execute 0 times.",
+          "do...while: Best when loop must execute AT LEAST ONCE. Checks condition after body. Syntax: do { body } while(condition);",
+          "Decision rule: Known count → for | Unknown until condition → while | Must execute once → do-while",
+          "All three are functionally equivalent but differ in semantic clarity and guaranteed minimum execution."
+        ]
+      }
+    ]
+  },
+
+  // =========================================================================
+  // MUST-SOLVE PRACTICE TRACKS — A through J from master notes PART 8
+  // =========================================================================
+  "mustSolveTracks": [
+    {
+      "track": "A",
+      "title": "Fundamentals & Memory Models",
+      "problems": [
+        { "id": "A1", "problem": "Write a program to print the memory byte size of char, int, float, and double using sizeof operator.", "level": "Basic" },
+        { "id": "A2", "problem": "Demonstrate variable declaration vs initialization and print uninitialized local garbage values to observe random memory content.", "level": "Basic" },
+        { "id": "A3", "problem": "Define a symbolic constant for TAX_RATE (0.15) using #define and compute total bill for an input price.", "level": "Basic" }
+      ]
+    },
+    {
+      "track": "B",
+      "title": "Operators & Expressions",
+      "problems": [
+        { "id": "B1", "problem": "Swap two variables using a third temp variable. Then swap WITHOUT using any third variable.", "level": "Basic" },
+        { "id": "B2", "problem": "Compute both roots of a quadratic equation ax² + bx + c = 0 using sqrt() from <math.h>. Handle zero discriminant.", "level": "Intermediate" },
+        { "id": "B3", "problem": "Find the maximum of two numbers in a single expression using the ternary (conditional) operator.", "level": "Basic" }
+      ]
+    },
+    {
+      "track": "C",
+      "title": "Input / Output Mechanics",
+      "problems": [
+        { "id": "C1", "problem": "Read student name, ID, and GPA using scanf and display in neat tabular columns using %10s, %-15d, %5.2f format specifiers.", "level": "Intermediate" },
+        { "id": "C2", "problem": "Read a character using getchar(), convert lowercase to uppercase using toupper(), and print with putchar().", "level": "Basic" }
+      ]
+    },
+    {
+      "track": "D",
+      "title": "Branching & Conditions",
+      "problems": [
+        { "id": "D1", "problem": "Determine whether an input year is a Leap Year using logical operators && and ||. Handle century years (divisible by 100 but not 400).", "level": "Intermediate" },
+        { "id": "D2", "problem": "Electricity Bill Calculator with tiered rates: First 100 units @ $1.50, Next 200 units @ $2.50, Above 300 units @ $3.50.", "level": "Exam" },
+        { "id": "D3", "problem": "Find the largest number among three integers using nested if...else (without ternary or max()).", "level": "Basic" }
+      ]
+    },
+    {
+      "track": "E",
+      "title": "Switch Statements",
+      "problems": [
+        { "id": "E1", "problem": "Create a 4-function console calculator (+, -, *, /) using switch(op). Handle division by zero.", "level": "Intermediate" },
+        { "id": "E2", "problem": "Convert grade character ('A', 'B', 'C', 'D', 'F') to remarks using switch with deliberate fall-through for uppercase and lowercase.", "level": "Exam" }
+      ]
+    },
+    {
+      "track": "F",
+      "title": "While Loops",
+      "problems": [
+        { "id": "F1", "problem": "Calculate the sum and count of digits of an input integer N using a while loop.", "level": "Intermediate" },
+        { "id": "F2", "problem": "Reverse an integer using a while loop and then check whether it is a Palindrome.", "level": "Exam" },
+        { "id": "F3", "problem": "Verify whether an integer is an Armstrong number (e.g., 153 = 1³+5³+3³).", "level": "Exam" }
+      ]
+    },
+    {
+      "track": "G",
+      "title": "Do-While Loops",
+      "problems": [
+        { "id": "G1", "problem": "Write an input range validator using do-while that keeps prompting the user until they enter a number between 1 and 100.", "level": "Intermediate" },
+        { "id": "G2", "problem": "Interactive banking menu using do-while: [1] Show Balance, [2] Deposit, [3] Withdraw, [0] Exit.", "level": "Exam" }
+      ]
+    },
+    {
+      "track": "H",
+      "title": "For Loops & Nested Loops",
+      "problems": [
+        { "id": "H1", "problem": "Check whether an input integer N is Prime using the optimized O(√N) loop (for i=2; i*i<=n; i++).", "level": "Exam" },
+        { "id": "H2", "problem": "Print the first N terms of the Fibonacci sequence using a for loop.", "level": "Intermediate" },
+        { "id": "H3", "problem": "Print a centered star pyramid of height H using nested loops.", "level": "Exam" },
+        { "id": "H4", "problem": "Print a formatted 5×5 multiplication table with aligned columns using nested for loops and printf width formatting.", "level": "Intermediate" }
+      ]
+    },
+    {
+      "track": "I",
+      "title": "Output Prediction Drills",
+      "problems": [
+        { "id": "I1", "problem": "Trace: int x = 5; printf(\"%d %d %d\", x, x++, ++x); — predict the exact output.", "level": "Tricky" },
+        { "id": "I2", "problem": "Trace short-circuit: int a = 0, b = 2; if(a && ++b) printf(\"Y\"); else printf(\"N\"); What prints? What is b?", "level": "Tricky" }
+      ]
+    },
+    {
+      "track": "J",
+      "title": "Debugging Drills",
+      "problems": [
+        { "id": "J1", "problem": "Debug a while loop that runs infinitely: find and fix the missing loop variable update.", "level": "Basic" },
+        { "id": "J2", "problem": "Fix: missing semicolon in do-while, missing break in switch, and = instead of == in if condition.", "level": "Intermediate" }
+      ]
     }
   ]
 };
