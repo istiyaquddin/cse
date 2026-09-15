@@ -169,17 +169,9 @@ const Tracker = (function() {
     }
     const problemPercent = Math.min(100, Math.round((solvedProblemsCount / totalProblems) * 100));
 
-    // Quiz (Dynamic from HandbookData)
-    const totalQuiz = (typeof HandbookData !== 'undefined' && HandbookData.mcqs) ? HandbookData.mcqs.length : 30;
-    let quizCorrectCount = 0;
-    for (let key in state.quizAnswers) {
-      if (state.quizAnswers[key] && state.quizAnswers[key].isCorrect) quizCorrectCount++;
-    }
-    const quizPercent = totalQuiz > 0 ? Math.min(100, Math.round((quizCorrectCount / totalQuiz) * 100)) : 0;
-
-    // Weighted Overall Readiness: 40% Syllabus Coverage + 40% Problem Solving + 20% Quiz
+    // Overall Readiness: 50% Syllabus Coverage + 50% Problem Solving
     const overallReadiness = Math.round(
-      (syllabusPercent * 0.40) + (problemPercent * 0.40) + (quizPercent * 0.20)
+      (syllabusPercent * 0.50) + (problemPercent * 0.50)
     );
 
     let grade = 'Beginner';

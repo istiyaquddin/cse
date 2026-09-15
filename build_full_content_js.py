@@ -2579,15 +2579,7 @@ def build():
         ],
         "syllabus": topics,
         "problems": get_50_problems(),
-        "mcqs": gec.get_expanded_mcqs(),
-        "outputPredictionLab": gec.get_output_prediction_lab(),
-        "debuggingLab": gec.get_debugging_lab(),
-        "flowchartBank": gec.get_flowchart_bank(),
-        "algorithmPatterns": gec.get_algorithm_patterns(),
-        "theoryQuestions": gec.get_theory_questions(),
-        "quickRevision": gec.get_quick_revision(),
-        "examTraps": gec.get_exam_traps(),
-        "mustSolveTracks": gec.get_must_solve_tracks()
+        "quickRevision": gec.get_quick_revision()
     }
     
     js_content = "/**\n * C PROGRAMMING MIDTERM HANDBOOK - COMPLETE DATA REPOSITORY\n * University-Grade Documentation, 34 Syllabus Topics, 50 Practice Bank, 30 MCQs\n * Output Prediction Lab, Debugging Lab, Flowchart Bank, Algorithm Patterns, Theory Q&A, and Quick Revision\n */\n\nconst HandbookData = " + json.dumps(data, indent=2) + ";\n\nif (typeof window !== 'undefined') {\n  window.HandbookData = HandbookData;\n}\n"
