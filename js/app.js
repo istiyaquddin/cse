@@ -1019,6 +1019,9 @@ document.addEventListener('DOMContentLoaded', () => {
         quickSheetModalOverlay.classList.remove('active');
         quickSheetModalOverlay.setAttribute('aria-hidden', 'true');
       }
+      if (browseAllOverlay && browseAllOverlay.classList.contains('active')) {
+        closeBrowseAllFn();
+      }
     }
   });
 
@@ -1234,6 +1237,225 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // --- BROWSE ALL: 34 TOPICS + 50 PROBLEMS INDEX MODAL ---
+  const browseAllBtn = document.getElementById('browseAllBtn');
+  const browseAllOverlay = document.getElementById('browseAllOverlay');
+  const closeBrowseAll = document.getElementById('closeBrowseAll');
+  const browseAllBody = document.getElementById('browseAllBody');
+  const browseSearchInput = document.getElementById('browseSearchInput');
+  const browseResultCount = document.getElementById('browseResultCount');
+  let browseFilter = 'all';
+  let browseQuery = '';
+
+  function openBrowseAll() {
+    if (!browseAllOverlay) return;
+    browseQuery = '';
+    browseFilter = 'all';
+    if (browseSearchInput) browseSearchInput.value = '';
+    document.querySelectorAll('[data-browse-filter]').forEach(b => {
+      b.classList.toggle('active', b.dataset.browseFilter === 'all');
+    });
+    renderBrowseAll();
+    browseAllOverlay.classList.add('active');
+    browseAllOverlay.setAttribute('aria-hidden', 'false');
+    if (browseSearchInput) setTimeout(() => browseSearchInput.focus(), 150);
+  }
+
+  function closeBrowseAllFn() {
+    if (!browseAllOverlay) return;
+    browseAllOverlay.classList.remove('active');
+    browseAllOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  function renderBrowseAll() {
+    if (!browseAllBody) return;
+    const q = browseQuery.toLowerCase().trim();
+    const chapters = HandbookData.chapters;
+    const topics = HandbookData.syllabus;
+    const problems = HandbookData.problems || [];
+
+    let sections = [];
+
+    // --- Build TOPICS sections ---
+    if (browseFilter === 'all' || browseFilter === 'topics' ||
+        browseFilter === 'ch1' || browseFilter === 'ch2' || browseFilter === 'ch3') {
+
+      const chFilterId = browseFilter === 'ch1' ? 1 : browseFilter === 'ch2' ? 2 : browseFilter === 'ch3' ? 3 : null;
+
+      chapters.forEach(ch => {
+        if (chFilterId && ch.id !== chFilterId) return;
+        const chTopics = topics.filter(t => t.chapterId === ch.id);
+        const filtered = q ? chTopics.filter(t =>
+          t.title.toLowerCase().includes(q) ||
+          (t.badge || '').toLowerCase().includes(q) ||
+          `ch${ch.id}`.includes(q)
+        ) : chTopics;
+
+        if (filtered.length === 0) return;
+
+        const chColors = ['var(--accent-cyan)', 'var(--accent-indigo)', 'var(--accent-emerald)'];
+        const color = chColors[ch.id - 1] || 'var(--accent-cyan)';
+
+        const rows = filtered.map(t => {
+          const isDone = Tracker.isSyllabusTopicCompleted(t.id);
+          const path = `#theory/${t.id}`;
+          return `
+            <a href="${path}" class="browse-item-link" data-browse-nav="theory" data-topic-id="${t.id}">
+              <span class="browse-item-num">${t.number}</span>
+              <span class="browse-item-main">
+                <span class="browse-item-title">${t.title}</span>
+                ${t.badge ? `<span class="browse-item-badge">${t.badge}</span>` : ''}
+              </span>
+              <span class="browse-item-path">${path}</span>
+              ${isDone ? '<span class="browse-item-done">✓</span>' : ''}
+            </a>
+          `;
+        }).join('');
+
+        sections.push(`
+          <div class="browse-section">
+            <div class="browse-section-header" style="border-color:${color}; color:${color};">
+              <span class="browse-section-icon">📘</span>
+              <span>${ch.name}</span>
+              <span class="browse-section-count">${filtered.length} topics</span>
+            </div>
+            <div class="browse-items-list">${rows}</div>
+          </div>
+        `);
+      });
+    }
+
+    // --- Build PROBLEMS section ---
+    if (browseFilter === 'all' || browseFilter === 'problems') {
+      let filteredProbs = problems;
+      if (q) {
+        filteredProbs = problems.filter(p =>
+          p.title.toLowerCase().includes(q) ||
+          (p.focus || '').toLowerCase().includes(q) ||
+          (p.curriculumPath || '').toLowerCase().includes(q) ||
+          (p.id || '').toLowerCase().includes(q) ||
+          (p.num || '').toString().includes(q)
+        );
+      }
+
+      if (filteredProbs.length > 0) {
+        const diffColors = { 1: 'var(--accent-emerald)', 2: 'var(--accent-amber)', 3: 'var(--accent-rose)' };
+        const diffLabels = { 1: '🟢 Very Basic', 2: '🟡 Basic', 3: '🔴 Exam Level' };
+
+        const rows = filteredProbs.map(p => {
+          const status = Tracker.getProblemStatus(p.id);
+          const numStr = p.num ? p.num.toString().padStart(2, '0') : p.id;
+          const path = `#problem/${p.id}`;
+          const diff = p.difficulty || p.level || 1;
+          const dColor = diffColors[diff] || 'var(--text-muted)';
+          const dLabel = diffLabels[diff] || '';
+          const isSolved = status === 'solved';
+          return `
+            <a href="${path}" class="browse-item-link browse-problem-link" data-browse-nav="problem" data-problem-id="${p.id}">
+              <span class="browse-item-num" style="color:var(--text-muted);">#${numStr}</span>
+              <span class="browse-item-main">
+                <span class="browse-item-title">${p.title}</span>
+                <span class="browse-item-badge" style="color:${dColor}; border-color:${dColor}33; background:${dColor}10;">${dLabel}</span>
+              </span>
+              <span class="browse-item-path">${p.curriculumPath || ''}</span>
+              ${isSolved ? '<span class="browse-item-done">✓ Solved</span>' : ''}
+            </a>
+          `;
+        }).join('');
+
+        sections.push(`
+          <div class="browse-section">
+            <div class="browse-section-header" style="border-color:var(--accent-rose); color:var(--accent-rose);">
+              <span class="browse-section-icon">⚡</span>
+              <span>50-Problem Practice Bank</span>
+              <span class="browse-section-count">${filteredProbs.length} problems</span>
+            </div>
+            <div class="browse-items-list">${rows}</div>
+          </div>
+        `);
+      }
+    }
+
+    // Render
+    const totalShown = sections.reduce((acc, s) => {
+      const countMatch = s.match(/(\d+) (topics|problems)/);
+      return acc + (countMatch ? parseInt(countMatch[1]) : 0);
+    }, 0);
+
+    if (browseResultCount) {
+      browseResultCount.textContent = q
+        ? `${totalShown} result${totalShown !== 1 ? 's' : ''} for "${browseQuery}"`
+        : `Showing all ${totalShown} items`;
+    }
+
+    browseAllBody.innerHTML = sections.length > 0
+      ? sections.join('')
+      : `<div style="text-align:center; padding:3rem 1rem; color:var(--text-muted);">
+          <div style="font-size:2.5rem; margin-bottom:0.75rem;">🔍</div>
+          <div style="font-size:1rem; font-weight:600;">No results for "${browseQuery}"</div>
+          <div style="font-size:0.85rem; margin-top:0.35rem;">Try a topic name, badge, or problem number</div>
+        </div>`;
+
+    // Bind nav links
+    browseAllBody.querySelectorAll('.browse-item-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const nav = link.dataset.browseNav;
+        if (nav === 'theory') {
+          const tid = link.dataset.topicId;
+          const topic = HandbookData.syllabus.find(t => t.id === tid);
+          if (topic) {
+            activeChapterId = topic.chapterId;
+            Tracker.setActiveChapter(topic.chapterId);
+            currentTopicId = topic.id;
+            currentView = 'theory';
+            setActiveNavTab('theory');
+            renderChapterSelector();
+            renderSidebar();
+            renderTheoryView();
+            window.location.hash = `theory/${topic.id}`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        } else if (nav === 'problem') {
+          const pid = link.dataset.problemId;
+          if (currentView !== 'track-sheet') {
+            currentView = 'track-sheet';
+            setActiveNavTab('track-sheet');
+            renderTrackSheetView();
+          }
+          openProblemPathModal(pid);
+          window.location.hash = `problem/${pid}`;
+        }
+        closeBrowseAllFn();
+      });
+    });
+  }
+
+  // Browse All event bindings
+  if (browseAllBtn) browseAllBtn.addEventListener('click', openBrowseAll);
+  if (closeBrowseAll) closeBrowseAll.addEventListener('click', closeBrowseAllFn);
+  if (browseAllOverlay) {
+    browseAllOverlay.addEventListener('click', (e) => {
+      if (e.target === browseAllOverlay) closeBrowseAllFn();
+    });
+  }
+
+  if (browseSearchInput) {
+    browseSearchInput.addEventListener('input', () => {
+      browseQuery = browseSearchInput.value;
+      renderBrowseAll();
+    });
+  }
+
+  document.querySelectorAll('[data-browse-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-browse-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      browseFilter = btn.dataset.browseFilter;
+      renderBrowseAll();
+    });
+  });
 
   // --- TOAST NOTIFICATION ---
   function showToast(msg) {

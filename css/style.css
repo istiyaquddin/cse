@@ -3639,3 +3639,212 @@ p code, li code, span code {
     color: black;
   }
 }
+
+/* ==========================================================================
+   BROWSE ALL CONTENT INDEX MODAL
+   ========================================================================== */
+
+.browse-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.browse-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom: 1px solid var(--border-subtle);
+  border-left: 3px solid currentColor;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.browse-section-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.browse-section-count {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  border: 1px solid currentColor;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.browse-items-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.browse-item-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border-divider);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: background 0.15s ease, transform 0.12s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.browse-item-link:last-child {
+  border-bottom: none;
+}
+
+.browse-item-link:hover {
+  background: rgba(0, 210, 255, 0.06);
+  transform: translateX(2px);
+}
+
+.browse-item-link:active {
+  background: rgba(0, 210, 255, 0.12);
+}
+
+.browse-item-num {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  min-width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.browse-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.browse-item-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browse-item-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--accent-sky);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  width: fit-content;
+  letter-spacing: 0.03em;
+}
+
+.browse-item-path {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  color: var(--text-muted);
+  margin-left: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.browse-item-done {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--accent-emerald);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Browse search input focus */
+#browseSearchInput:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.15);
+}
+
+[data-theme="light"] .browse-section {
+  border-color: rgba(203, 213, 225, 0.65);
+}
+
+[data-theme="light"] .browse-section-header {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .browse-item-link:hover {
+  background: rgba(2, 132, 199, 0.05);
+}
+
+[data-theme="light"] #browseSearchInput {
+  background: #f8fafc;
+  border-color: rgba(203, 213, 225, 0.8);
+  color: #0f172a;
+}
+
+/* Mobile overrides for Browse All */
+@media (max-width: 768px) {
+  .browse-item-path {
+    display: none;
+  }
+
+  .browse-item-link {
+    padding: 0.65rem 0.8rem;
+    gap: 0.6rem;
+  }
+
+  .browse-item-title {
+    font-size: 0.84rem;
+    white-space: normal;
+  }
+
+  .browse-section-header {
+    padding: 0.6rem 0.8rem;
+  }
+
+  #browseAllCard {
+    height: 100% !important;
+    max-height: 100dvh !important;
+    border-radius: var(--radius-md) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .browse-item-badge {
+    font-size: 0.62rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .browse-item-done {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .browse-item-num {
+    min-width: 22px;
+    font-size: 0.72rem;
+  }
+}
+
