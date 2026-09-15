@@ -1633,6 +1633,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (quickSheetModalOverlay) {
         quickSheetModalOverlay.classList.add('active');
         quickSheetModalOverlay.setAttribute('aria-hidden', 'false');
+        renderQuickSheetContent('15min');
       }
     });
   }
@@ -1674,7 +1675,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // VIEW: OUTPUT PREDICTION LAB
   // =========================================================================
   function renderOutputPredictionView() {
-    const labs = HandbookData.outputPredictionLab || [];
+    const allLabs = HandbookData.outputPredictionLab || [];
+    const filteredLabs = allLabs.filter(q => {
+      if (activePredictionFilter === 'level1') return q.level === 1;
+      if (activePredictionFilter === 'level2') return q.level === 2;
+      if (activePredictionFilter === 'level3') return q.level === 3;
+      if (activePredictionFilter === 'level4') return q.level === 4;
+      return true;
+    });
+
     const levelColors = { 1: 'var(--accent-emerald)', 2: 'var(--accent-cyan)', 3: 'var(--accent-amber)', 4: 'var(--accent-rose)' };
     const levelNames = { 1: '🟢 Basic', 2: '🔵 Intermediate', 3: '🔥 Exam', 4: '⚡ Tricky' };
 
@@ -1682,45 +1691,54 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="doc-article">
         <div class="content-badge-row" style="margin-bottom: 1.5rem;">
           <span class="content-badge" style="background: rgba(0,210,255,0.12); color: var(--accent-cyan);">🔮 Output Prediction Lab</span>
-          <span class="content-badge">${labs.length} Questions</span>
+          <span class="content-badge">${allLabs.length} Total Exercises</span>
         </div>
         <h1 class="content-title">C Output Prediction Master Lab</h1>
-        <p class="content-lead">Trace each program mentally and predict the output <strong>before</strong> revealing the answer. This is the most effective exam preparation technique.</p>
+        <p class="content-lead">Trace each program mentally and predict the output <strong>before</strong> revealing the answer. Tracing on paper is the single most heavily tested skill in university midterms.</p>
+
+        <!-- Level Filter Pills -->
+        <div class="filter-pills-row">
+          <button class="filter-pill ${activePredictionFilter === 'all' ? 'active' : ''}" data-pred-filter="all">All (${allLabs.length})</button>
+          <button class="filter-pill ${activePredictionFilter === 'level1' ? 'active' : ''}" data-pred-filter="level1">🟢 Level 1: Basic (${allLabs.filter(q => q.level === 1).length})</button>
+          <button class="filter-pill ${activePredictionFilter === 'level2' ? 'active' : ''}" data-pred-filter="level2">🔵 Level 2: Intermediate (${allLabs.filter(q => q.level === 2).length})</button>
+          <button class="filter-pill ${activePredictionFilter === 'level3' ? 'active' : ''}" data-pred-filter="level3">🔥 Level 3: Exam Standard (${allLabs.filter(q => q.level === 3).length})</button>
+          <button class="filter-pill ${activePredictionFilter === 'level4' ? 'active' : ''}" data-pred-filter="level4">⚡ Level 4: Tricky Traps (${allLabs.filter(q => q.level === 4).length})</button>
+        </div>
 
         <div class="callout callout-tip" style="margin-bottom: 2rem;">
-          <div class="callout-body">💡 <strong>How to use:</strong> Read the code, write your prediction on paper, then click "Reveal Answer" to check. Focus on understanding <em>why</em> the output is what it is.</div>
+          <div class="callout-body">💡 <strong>How to use:</strong> Read the code, maintain a trace table of variables on paper, then click "Reveal Answer & Trace" to verify. Pay special attention to side-effects and operator precedence.</div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 2rem;">
-          ${labs.map((q, i) => `
+          ${filteredLabs.map((q, i) => `
             <div class="study-card" id="pred-${q.id}" style="border-left: 3px solid ${levelColors[q.level] || 'var(--accent-cyan)'}; padding: 1.5rem;">
               <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
                 <div>
-                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Question ${i + 1}</span>
+                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Exercise #${q.id || (i + 1)}</span>
                   <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0.25rem 0 0;">${q.title}</h3>
                 </div>
                 <span class="content-badge" style="background: rgba(0,0,0,0.2); font-size: 0.72rem; white-space: nowrap;">${levelNames[q.level] || q.difficulty}</span>
               </div>
 
               <div class="code-block" style="margin-bottom: 1rem;">
-                <div class="code-header"><span class="code-lang">C</span><span class="code-filename">predict.c</span></div>
+                <div class="code-header"><span class="code-lang">C</span><span class="code-filename">predict_${q.id}.c</span></div>
                 <div class="code-body"><pre class="code-pre"><code>${escapeHtml(q.code)}</code></pre></div>
               </div>
 
-              <p style="font-size: 0.92rem; color: var(--text-secondary); font-style: italic; margin-bottom: 1rem;">❓ ${q.question}</p>
+              <p style="font-size: 0.92rem; color: var(--text-secondary); font-style: italic; margin-bottom: 1rem;">❓ <strong>Question:</strong> ${q.question}</p>
 
               <details style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem 1rem;">
-                <summary style="cursor: pointer; font-weight: 700; color: var(--accent-cyan); font-size: 0.9rem; user-select: none;">🔑 Reveal Answer</summary>
+                <summary style="cursor: pointer; font-weight: 700; color: var(--accent-cyan); font-size: 0.9rem; user-select: none;">🔑 Reveal Answer & Step-by-Step Trace</summary>
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
                   <div style="margin-bottom: 0.75rem;">
-                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Output:</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Exact Terminal Output:</span>
                     <pre style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent-emerald); margin: 0.35rem 0 0; overflow-x: auto; max-width: 100%; white-space: pre-wrap; word-break: break-all;">${escapeHtml(q.answer)}</pre>
                   </div>
                   <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.6rem;">
-                    <strong style="color: var(--text-primary);">Why:</strong> ${q.explanation}
+                    <strong style="color: var(--text-primary);">Why (Mental Trace):</strong> ${q.explanation}
                   </div>
                   <div class="callout callout-warn" style="padding: 0.65rem 0.9rem; margin-top: 0.5rem;">
-                    <div class="callout-body" style="font-size: 0.85rem;">⚠️ <strong>Trap:</strong> ${q.trap}</div>
+                    <div class="callout-body" style="font-size: 0.85rem;">⚠️ <strong>Exam Trap:</strong> ${q.trap}</div>
                   </div>
                 </div>
               </details>
@@ -1729,19 +1747,31 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
+
+    mainCanvasEl.querySelectorAll('[data-pred-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activePredictionFilter = btn.dataset.predFilter;
+        renderOutputPredictionView();
+      });
+    });
   }
 
   // =========================================================================
   // VIEW: DEBUGGING LAB
   // =========================================================================
   function renderDebuggingLabView() {
-    const bugs = HandbookData.debuggingLab || [];
+    const allBugs = HandbookData.debuggingLab || [];
+    const filteredBugs = allBugs.filter(b => {
+      if (activeDebugFilter === 'all') return true;
+      return b.category.toLowerCase().replace(/[^a-z]/g, '') === activeDebugFilter.toLowerCase().replace(/[^a-z]/g, '');
+    });
+
     const catColors = {
       'Operators': 'var(--accent-amber)',
       'Input/Output': 'var(--accent-cyan)',
       'Preprocessor': 'var(--accent-indigo)',
-      'Control Statements': 'var(--accent-rose)',
-      'Loops': 'var(--accent-rose)',
+      'Control Flow': 'var(--accent-rose)',
+      'Loops': 'var(--accent-emerald)',
       'Scoping': 'var(--text-muted)'
     };
 
@@ -1749,29 +1779,40 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="doc-article">
         <div class="content-badge-row" style="margin-bottom: 1.5rem;">
           <span class="content-badge" style="background: rgba(248,113,113,0.12); color: var(--accent-rose);">🐛 Debugging Lab</span>
-          <span class="content-badge">${bugs.length} Bugs to Fix</span>
+          <span class="content-badge">${allBugs.length} Bug Scenarios</span>
         </div>
         <h1 class="content-title">Find the Bug — C Debugging Lab</h1>
-        <p class="content-lead">Each exercise shows a buggy program. Identify what is wrong and how to fix it. This is exactly what appears in university midterm exams.</p>
+        <p class="content-lead">Each exercise contains a subtle syntax or semantic bug frequently presented in midterm exams. Pinpoint the root cause, understand compiler diagnostics, and inspect the corrected code.</p>
+
+        <!-- Category Filter Pills -->
+        <div class="filter-pills-row">
+          <button class="filter-pill ${activeDebugFilter === 'all' ? 'active' : ''}" data-dbg-filter="all">All (${allBugs.length})</button>
+          <button class="filter-pill ${activeDebugFilter === 'operators' ? 'active' : ''}" data-dbg-filter="operators">Operators</button>
+          <button class="filter-pill ${activeDebugFilter === 'inputoutput' ? 'active' : ''}" data-dbg-filter="inputoutput">Input / Output</button>
+          <button class="filter-pill ${activeDebugFilter === 'controlflow' ? 'active' : ''}" data-dbg-filter="controlflow">Control Flow</button>
+          <button class="filter-pill ${activeDebugFilter === 'loops' ? 'active' : ''}" data-dbg-filter="loops">Loops</button>
+          <button class="filter-pill ${activeDebugFilter === 'preprocessor' ? 'active' : ''}" data-dbg-filter="preprocessor">Preprocessor</button>
+          <button class="filter-pill ${activeDebugFilter === 'scoping' ? 'active' : ''}" data-dbg-filter="scoping">Scoping</button>
+        </div>
 
         <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 1.5rem;">
-          ${bugs.map((bug, i) => `
+          ${filteredBugs.map((bug, i) => `
             <div class="study-card" style="border-left: 3px solid ${catColors[bug.category] || 'var(--border-subtle)'}; padding: 1.5rem;">
               <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
                 <div>
-                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Bug ${i + 1}</span>
+                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Exercise #${bug.id || (i + 1)}</span>
                   <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--accent-rose); margin: 0.25rem 0 0;">${bug.title}</h3>
                 </div>
                 <span class="content-badge" style="background: rgba(248,113,113,0.1); color: var(--accent-rose); font-size: 0.72rem;">${bug.category}</span>
               </div>
 
-              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">❌ <strong>Broken Code:</strong></p>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">❌ <strong>Broken C Code:</strong></p>
               <div class="code-block" style="margin-bottom: 1.25rem;">
                 <div class="code-body" style="border: 1px solid rgba(248,113,113,0.25);"><pre class="code-pre" style="color: #fca5a5;"><code>${escapeHtml(bug.brokenCode)}</code></pre></div>
               </div>
 
               <details style="border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.75rem 1rem;">
-                <summary style="cursor: pointer; font-weight: 700; color: var(--accent-rose); font-size: 0.9rem; user-select: none;">🔍 Reveal: What is Wrong & Fix</summary>
+                <summary style="cursor: pointer; font-weight: 700; color: var(--accent-rose); font-size: 0.9rem; user-select: none;">🔍 Reveal: What is Wrong & Exact Fix</summary>
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 0.9rem;">
                   <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65;">
                     <strong style="color: var(--accent-amber);">What is wrong:</strong> ${bug.whatIsWrong}
@@ -1786,7 +1827,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   <div class="callout callout-tip" style="padding: 0.65rem 0.9rem;">
                     <div class="callout-body" style="font-size: 0.85rem;">💡 <strong>Lesson:</strong> ${bug.lessonLearned}</div>
                   </div>
-                  <div style="font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 0.6rem;">⚠️ <strong>Trap:</strong> ${bug.trap}</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 0.6rem;">⚠️ <strong>Exam Trap:</strong> ${bug.trap}</div>
                 </div>
               </details>
             </div>
@@ -1794,6 +1835,414 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
+
+    mainCanvasEl.querySelectorAll('[data-dbg-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeDebugFilter = btn.dataset.dbgFilter;
+        renderDebuggingLabView();
+      });
+    });
+  }
+
+  // =========================================================================
+  // VIEW: THEORY QUESTION BANK (SHORT 2-MARK & LONG 8-10 MARK QUESTIONS)
+  // =========================================================================
+  function renderTheoryQuestionsView() {
+    const tq = HandbookData.theoryQuestions || { shortQuestions: [], longQuestions: [] };
+    const shorts = tq.shortQuestions || [];
+    const longs = tq.longQuestions || [];
+
+    const searchQuery = (activeQaSearch || '').toLowerCase().trim();
+
+    const filteredShorts = shorts.filter(q => {
+      if (activeQaFilter === 'long') return false;
+      if (!searchQuery) return true;
+      const haystack = `${q.question} ${q.answer} ${(q.keywords || []).join(' ')} ${q.category}`.toLowerCase();
+      return haystack.includes(searchQuery);
+    });
+
+    const filteredLongs = longs.filter(q => {
+      if (activeQaFilter === 'short') return false;
+      if (!searchQuery) return true;
+      const bp = q.blueprint || {};
+      const haystack = `${q.question} ${q.category} ${bp.definition || ''} ${bp.syntax || ''} ${bp.example || ''}`.toLowerCase();
+      return haystack.includes(searchQuery);
+    });
+
+    const totalCount = filteredShorts.length + filteredLongs.length;
+
+    mainCanvasEl.innerHTML = `
+      <div class="doc-article">
+        <div class="content-badge-row" style="margin-bottom: 1.5rem;">
+          <span class="content-badge" style="background: rgba(99,102,241,0.15); color: var(--accent-indigo);">📚 University Theory Bank</span>
+          <span class="content-badge">${shorts.length} Short Qs + ${longs.length} Long Blueprint Qs</span>
+        </div>
+        <h1 class="content-title">Midterm Theory Question Bank</h1>
+        <p class="content-lead">Model answers and blueprint structures for short-answer (2-mark) and descriptive (8–10 mark) university midterm exam questions. Focus on precise keywords and diagrams.</p>
+
+        <!-- Controls: Search & Filter Pills -->
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <input type="text" id="theorySearchInput" placeholder="🔍 Search questions, keywords (e.g. precedence, keyword, float)..." value="${escapeHtml(activeQaSearch)}" style="flex: 1; min-width: 260px; padding: 0.65rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); font-size: 0.9rem;" />
+            ${activeQaSearch ? '<button id="clearTheorySearchBtn" class="filter-pill" style="align-self: center;">Clear</button>' : ''}
+          </div>
+
+          <div class="filter-pills-row">
+            <button class="filter-pill ${activeQaFilter === 'all' ? 'active' : ''}" data-qa-filter="all">All Questions (${shorts.length + longs.length})</button>
+            <button class="filter-pill ${activeQaFilter === 'short' ? 'active' : ''}" data-qa-filter="short">Short Qs (2 Marks) [${shorts.length}]</button>
+            <button class="filter-pill ${activeQaFilter === 'long' ? 'active' : ''}" data-qa-filter="long">Long Qs Blueprint (8-10 Marks) [${longs.length}]</button>
+          </div>
+        </div>
+
+        ${totalCount === 0 ? `
+          <div class="callout callout-warn"><div class="callout-body">No questions match your search query: "<strong>${escapeHtml(activeQaSearch)}</strong>". Try clearing the search.</div></div>
+        ` : ''}
+
+        <!-- Short Questions Section -->
+        ${filteredShorts.length > 0 ? `
+          <div style="margin-bottom: 2.5rem;">
+            <div class="doc-section-title cyan" style="margin-bottom: 1.25rem;">
+              <span>⚡ Short Questions (2 Marks Each) — Precise Scoring Answers</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              ${filteredShorts.map(q => `
+                <div class="qa-card" id="qa-${q.id}">
+                  <div class="qa-header">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                      <span class="qa-badge">2 Marks</span>
+                      <span class="content-badge" style="font-size: 0.72rem;">${q.category}</span>
+                    </div>
+                    <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">ID: ${q.id}</span>
+                  </div>
+                  <div class="qa-question">Q: ${q.question}</div>
+                  <div class="qa-answer" style="margin-top: 0.75rem; color: var(--text-secondary); line-height: 1.6; font-size: 0.92rem;">
+                    <strong style="color: var(--text-primary);">Model Answer:</strong> ${q.answer}
+                  </div>
+                  ${(q.keywords && q.keywords.length > 0) ? `
+                    <div class="qa-keywords-row">
+                      <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; align-self: center;">Mandatory Keywords:</span>
+                      ${q.keywords.map(kw => `<span class="qa-keyword-tag">${kw}</span>`).join('')}
+                    </div>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Long Questions Section -->
+        ${filteredLongs.length > 0 ? `
+          <div>
+            <div class="doc-section-title cyan" style="margin-bottom: 1.25rem;">
+              <span>📘 Long Questions (8–10 Marks) — 5-Part Exam Blueprint</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+              ${filteredLongs.map(q => {
+                const bp = q.blueprint || {};
+                return `
+                  <div class="qa-card" id="qa-${q.id}" style="border-left: 3px solid var(--accent-indigo);">
+                    <div class="qa-header">
+                      <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <span class="qa-badge" style="background: rgba(99,102,241,0.2); color: var(--accent-indigo);">${q.marks || '8-10 Marks'}</span>
+                        <span class="content-badge" style="font-size: 0.72rem;">${q.category}</span>
+                      </div>
+                      <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">Blueprint ID: ${q.id}</span>
+                    </div>
+                    <div class="qa-question" style="font-size: 1.1rem;">Q: ${q.question}</div>
+                    
+                    <div style="margin-top: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                      <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+                        <div style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 0.4rem;">1. Formal Definition & Role</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">${bp.definition || 'Key theoretical principle.'}</div>
+                      </div>
+
+                      ${bp.syntax ? `
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+                          <div style="font-size: 0.82rem; font-weight: 800; color: var(--accent-sky); text-transform: uppercase; margin-bottom: 0.4rem;">2. Formal Syntax & Structure</div>
+                          <pre class="code-pre" style="margin: 0; padding: 0.75rem; font-size: 0.85rem;"><code>${escapeHtml(bp.syntax)}</code></pre>
+                        </div>
+                      ` : ''}
+
+                      ${bp.diagram ? `
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+                          <div style="font-size: 0.82rem; font-weight: 800; color: var(--accent-emerald); text-transform: uppercase; margin-bottom: 0.4rem;">3. Flowchart / Architecture Diagram</div>
+                          <div class="flow-diagram-box"><pre>${escapeHtml(bp.diagram)}</pre></div>
+                        </div>
+                      ` : ''}
+
+                      ${bp.example ? `
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem;">
+                          <div style="font-size: 0.82rem; font-weight: 800; color: var(--accent-amber); text-transform: uppercase; margin-bottom: 0.4rem;">4. Working C Program Example</div>
+                          <pre class="code-pre" style="margin: 0; padding: 0.75rem; font-size: 0.85rem;"><code>${escapeHtml(bp.example)}</code></pre>
+                        </div>
+                      ` : ''}
+
+                      ${bp.commonMistakes ? `
+                        <div class="callout callout-warn" style="margin: 0; padding: 0.85rem 1rem;">
+                          <div class="callout-body" style="font-size: 0.86rem;">
+                            ⚠️ <strong>5. Common Student Mistakes to Avoid:</strong> ${bp.commonMistakes}
+                          </div>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    // Bind Theory Search
+    const searchInput = document.getElementById('theorySearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        activeQaSearch = e.target.value;
+        renderTheoryQuestionsView();
+        const updatedInput = document.getElementById('theorySearchInput');
+        if (updatedInput) {
+          updatedInput.focus();
+          updatedInput.setSelectionRange(updatedInput.value.length, updatedInput.value.length);
+        }
+      });
+    }
+
+    const clearBtn = document.getElementById('clearTheorySearchBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        activeQaSearch = '';
+        renderTheoryQuestionsView();
+      });
+    }
+
+    // Bind QA Filter Pills
+    mainCanvasEl.querySelectorAll('[data-qa-filter]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        activeQaFilter = pill.dataset.qaFilter;
+        renderTheoryQuestionsView();
+      });
+    });
+  }
+
+  // =========================================================================
+  // VIEW: FLOWCHARTS & ALGORITHMIC PATTERNS
+  // =========================================================================
+  function renderFlowchartsView() {
+    const fcBank = HandbookData.flowchartBank || { algorithms: [], symbols: [] };
+    const algos = fcBank.algorithms || [];
+    const symbols = fcBank.symbols || [];
+    const patterns = HandbookData.algorithmPatterns || [];
+
+    mainCanvasEl.innerHTML = `
+      <div class="doc-article">
+        <div class="content-badge-row" style="margin-bottom: 1.5rem;">
+          <span class="content-badge" style="background: rgba(16,185,129,0.15); color: var(--accent-emerald);">📊 Visual Algorithms</span>
+          <span class="content-badge">${algos.length} Flowcharts • ${patterns.length} Patterns</span>
+        </div>
+        <h1 class="content-title">Flowcharts & Algorithmic Patterns Bank</h1>
+        <p class="content-lead">Visual logic representations, ANSI flowchart conventions, and the 26 reusable algorithmic patterns required for writing defect-free C code in midterms.</p>
+
+        <!-- Sub-Navigation Tabs -->
+        <div class="filter-pills-row" style="margin-bottom: 2rem;">
+          <button class="filter-pill ${activeFlowchartTab === 'flowcharts' ? 'active' : ''}" data-fc-tab="flowcharts">
+            📊 15 Flowchart Bank (${algos.length})
+          </button>
+          <button class="filter-pill ${activeFlowchartTab === 'patterns' ? 'active' : ''}" data-fc-tab="patterns">
+            ⚡ 26 Algorithmic Patterns (${patterns.length})
+          </button>
+          <button class="filter-pill ${activeFlowchartTab === 'symbols' ? 'active' : ''}" data-fc-tab="symbols">
+            📐 ANSI Flowchart Symbols (${symbols.length})
+          </button>
+        </div>
+
+        <!-- TAB 1: 15 FLOWCHART ALGORITHMS -->
+        ${activeFlowchartTab === 'flowcharts' ? `
+          <div style="display: flex; flex-direction: column; gap: 2.25rem;">
+            ${algos.map((item, idx) => `
+              <div class="study-card" id="fc-${item.id}" style="padding: 1.75rem; border-left: 3px solid var(--accent-emerald);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                  <div>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: var(--accent-emerald); text-transform: uppercase;">Algorithm #${idx + 1}</span>
+                    <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0.25rem 0 0;">${item.title}</h3>
+                  </div>
+                  <span class="content-badge" style="font-size: 0.72rem;">${item.category}</span>
+                </div>
+
+                <!-- Steps & ASCII Flowchart Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.25rem;">
+                  <!-- Algorithm Steps -->
+                  <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.15rem;">
+                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 0.75rem;">Step-by-Step Algorithm:</div>
+                    <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; display: flex; flex-direction: column; gap: 0.4rem;">
+                      ${(item.algorithmSteps || []).map(step => `<li>${step}</li>`).join('')}
+                    </ol>
+                  </div>
+
+                  <!-- Visual Flowchart Diagram Box -->
+                  <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.15rem; display: flex; flex-direction: column;">
+                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent-emerald); text-transform: uppercase; margin-bottom: 0.75rem;">ANSI Flowchart Diagram:</div>
+                    <div class="flow-diagram-box" style="flex: 1;"><pre>${escapeHtml(item.flow || '')}</pre></div>
+                  </div>
+                </div>
+
+                <!-- Implementation C Code -->
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent-sky); text-transform: uppercase; margin-bottom: 0.5rem;">C Language Implementation:</div>
+                  <pre class="code-pre" style="margin: 0; padding: 0.85rem; font-size: 0.85rem;"><code>${escapeHtml(item.cCode || '')}</code></pre>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <!-- TAB 2: 26 ALGORITHMIC PATTERNS -->
+        ${activeFlowchartTab === 'patterns' ? `
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            ${patterns.map((pat, idx) => `
+              <div class="pattern-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">Pattern #${idx + 1} (${pat.id})</span>
+                  <span class="content-badge" style="font-size: 0.68rem;">${pat.category}</span>
+                </div>
+                <div class="pattern-title">${pat.name}</div>
+                <div class="pattern-desc">${pat.template}</div>
+                <div style="margin-top: 0.75rem;">
+                  <div style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.3rem;">Code Blueprint:</div>
+                  <pre class="code-pre" style="margin: 0; padding: 0.6rem; font-size: 0.8rem;"><code style="color: var(--accent-emerald);">${escapeHtml(pat.snippet || '')}</code></pre>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <!-- TAB 3: ANSI SYMBOLS REFERENCE -->
+        ${activeFlowchartTab === 'symbols' ? `
+          <div class="study-card" style="padding: 1.5rem;">
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Official ANSI Flowchart Standard Symbols</div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Standard flowchart symbols used across Computer Science midterm examinations:</p>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th style="width: 20%;">Symbol Name</th>
+                  <th style="width: 20%;">Geometric Shape</th>
+                  <th style="width: 35%;">Official Function / Meaning</th>
+                  <th style="width: 25%;">C Equivalent</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${symbols.map(s => `
+                  <tr>
+                    <td><strong>${s.name}</strong></td>
+                    <td><code style="color: var(--accent-cyan);">${s.shape}</code></td>
+                    <td>${s.meaning}</td>
+                    <td><code style="color: var(--accent-emerald);">${s.example}</code></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    mainCanvasEl.querySelectorAll('[data-fc-tab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFlowchartTab = btn.dataset.fcTab;
+        renderFlowchartsView();
+      });
+    });
+  }
+
+  // Helper function to render dynamic Quick Revision modal content
+  function renderQuickSheetContent(tier = '15min') {
+    const qr = HandbookData.quickRevision || {};
+    const modalBody = document.querySelector('#quickSheetModalOverlay .problem-modal-body');
+    if (!modalBody) return;
+
+    let contentHtml = `
+      <!-- Modal Navigation Tabs -->
+      <div class="quick-modal-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+        <button class="filter-pill ${tier === '15min' ? 'active' : ''}" data-qr-tier="15min">⚡ 15-Minute Flash Card</button>
+        <button class="filter-pill ${tier === '1hour' ? 'active' : ''}" data-qr-tier="1hour">⏱️ 1-Hour Traps & Flow</button>
+        <button class="filter-pill ${tier === '3hour' ? 'active' : ''}" data-qr-tier="3hour">📘 3-Hour Core Traces</button>
+        <button class="filter-pill ${tier === '1day' ? 'active' : ''}" data-qr-tier="1day">📚 1-Day Full Drill</button>
+      </div>
+    `;
+
+    if (tier === '15min') {
+      const card = qr.fifteenMinCard || { title: '15-Minute Flash Truths', items: [] };
+      contentHtml += `
+        <div class="study-card" style="margin: 0; padding: 1.25rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.75rem;">
+            ⚡ ${card.title} (10 Absolute Truths)
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            ${(card.items || []).map((item, i) => `
+              <div style="padding: 0.65rem 0.85rem; background: rgba(56, 189, 248, 0.06); border-left: 3px solid var(--accent-sky); border-radius: 4px; font-size: 0.88rem;">
+                <strong style="color: var(--accent-cyan);">${i + 1}.</strong> ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else if (tier === '1hour') {
+      const items = qr.oneHourChecklist || [];
+      contentHtml += `
+        <div class="study-card" style="margin: 0; padding: 1.25rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-sky); margin-bottom: 0.75rem;">
+            ⏱️ 1-Hour Exam Traps & Flow Check
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            ${items.map((item, i) => `
+              <div style="padding: 0.65rem 0.85rem; background: rgba(99, 102, 241, 0.06); border-left: 3px solid var(--accent-indigo); border-radius: 4px; font-size: 0.88rem;">
+                <strong style="color: var(--accent-indigo);">${i + 1}.</strong> ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else if (tier === '3hour') {
+      const items = qr.threeHourChecklist || [];
+      contentHtml += `
+        <div class="study-card" style="margin: 0; padding: 1.25rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-indigo); margin-bottom: 0.75rem;">
+            📘 3-Hour Core Traces & Skeletons Drill
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            ${items.map((item, i) => `
+              <div style="padding: 0.65rem 0.85rem; background: rgba(16, 185, 129, 0.06); border-left: 3px solid var(--accent-emerald); border-radius: 4px; font-size: 0.88rem;">
+                <strong style="color: var(--accent-emerald);">${i + 1}.</strong> ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else if (tier === '1day') {
+      const items = qr.oneDayChecklist || [];
+      contentHtml += `
+        <div class="study-card" style="margin: 0; padding: 1.25rem;">
+          <div style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--accent-emerald); margin-bottom: 0.75rem;">
+            📚 1-Day Full Syllabus Master Drill
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            ${items.map((item, i) => `
+              <div style="padding: 0.65rem 0.85rem; background: rgba(245, 158, 11, 0.06); border-left: 3px solid var(--accent-amber); border-radius: 4px; font-size: 0.88rem;">
+                <strong style="color: var(--accent-amber);">${i + 1}.</strong> ${item}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    modalBody.innerHTML = contentHtml;
+
+    modalBody.querySelectorAll('[data-qr-tier]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        renderQuickSheetContent(btn.dataset.qrTier);
+      });
+    });
   }
 
   function escapeHtml(str) {
